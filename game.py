@@ -24,12 +24,24 @@ while run:
     key = pygame.key.get_pressed()
     if key[pygame.K_a] == True:     # Move left using A
         player.move_ip(-1, 0)
+        if player.left < 0:             # Keeps player from going past left edge of screen
+            player.left = 0
     if key[pygame.K_d] == True:     # Move right using D
         player.move_ip(1, 0)
+        if player.right > screen_width:      # Keeps player from going past right edge of screen
+            player.right = screen_width
     if key[pygame.K_w] == True:     # Move up using W
         player.move_ip(0, -1)
+        if player.top < 0:             # Keeps player from going past top edge of screen
+            player.top = 0
     if key[pygame.K_s] == True:     # Move down using S
         player.move_ip(0, 1)
+        if player.bottom > screen_height:     # Keeps player from going past bottom edge of screen
+            player.bottom = screen_height
+
+
+
+
 
     # ends main game loop
     for event in pygame.event.get():
