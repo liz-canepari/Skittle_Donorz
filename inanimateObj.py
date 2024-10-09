@@ -1,9 +1,10 @@
 # There are two classes in this file. The "NPC class" (or items) and the "Character class" (actual NPC's). 
 # The character classes inherits from NPC class. 
 # As of right now 10/8/24, this file does not interact with the game.py file, this is just an outline file.
+# maybe collsions
 
 class NPC:
-    def item(self, skin, position, interact):
+    def item(self, skin, position, interact ):
         # image.png hopefully
         self.skin = skin
 
