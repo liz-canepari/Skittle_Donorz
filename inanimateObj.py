@@ -1,9 +1,9 @@
-# There are two classes in this file. The "NPC class" (or items) and the "Character class" (actual NPC's). 
+# There are two classes in this file. The "object class" (or items ex: box, apple, anythning you can pickup) and the "Character class" (actual NPC's). 
 # The character classes inherits from NPC class. 
 # As of right now 10/8/24, this file does not interact with the game.py file, this is just an outline file.
 # maybe collsions
 
-class NPC:
+class object:
     def item(self, skin, position, interact ):
         # image.png hopefully
         self.skin = skin
@@ -29,7 +29,7 @@ class NPC:
                 print("You interacted with an NPC!")
 
 
-class Character(NPC):
+class character(object):
     def __init__(self, skin, position, interact, dialogue):
         super().__init__(skin, position, interact)
         self.dialogue = dialogue
