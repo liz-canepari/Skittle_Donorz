@@ -28,6 +28,7 @@ while run:
     screen.fill((0, 0, 0))
     bg.draw(screen)
 
+ player-class-+
     #update animation
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= animation_cooldown:
@@ -37,6 +38,19 @@ while run:
         if frame >= len(player.get_animation()):
             player.set_frame(0)
             frame = player.get_frame()
+            
+    pygame.draw.rect(screen, (105, 200, 55), player)
+
+    key = pygame.key.get_pressed()
+    if key[pygame.K_a] == True:
+        player.move_ip(-1, 0)
+    if key[pygame.K_d] == True:
+        player.move_ip(1, 0)
+    if key[pygame.K_w] == True:
+        player.move_ip(0, -1)
+    if key[pygame.K_s] == True:
+        player.move_ip(0, 1)
+main
 
     #show frame image
     player.draw(screen)
