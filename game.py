@@ -1,19 +1,40 @@
 import pygame
+import constants
 import player
 import background
+from world import World
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
 pygame.init()
  
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 600
- 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Sprite")
  
-bg = background.Background("images/scenes/room.png", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
- 
+bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
+
+
+# --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
+#load tilemap images
+tile_list = []
+for x in range(constants.TILE_TYPES):
+    tile_image = pygame.image.load(f"images/tiles/{x}.png").convert_alpha()
+    tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
+    tile_list.append(tile_image)
+
+#create empty tile list
+world_data = []
+
+world = World()
+world.process_data(world_data, tile_list)
+
+def draw_grid():
+    for x in range(30):
+        pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
+        pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
+
+# --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
+
 player = player.Player(400, 250, 0, 0, "images/sprites/chameleon-sprite.png")
  
 action = player.get_action()
@@ -21,12 +42,18 @@ last_update = pygame.time.get_ticks()
 animation_cooldown = 110
 frame = player.get_frame()
  
- 
+
+
+# --------------------------------------------------------------------------Main Game Loop---------------------------------------------------------------------------
+
 run = True
 while run:
     #update background
     screen.fill((0, 0, 0))
     bg.draw(screen)
+
+    world.draw(screen)
+    #draw_grid()
  
     #update animation
     current_time = pygame.time.get_ticks()
@@ -38,12 +65,17 @@ while run:
             player.set_frame(0)
             frame = player.get_frame()
  
+
     #show frame image
     player.draw(screen)
+
+
     #event handler
     for event in pygame.event.get():
+        # close the game
         if event.type == pygame.QUIT:
             run = False
+        # take keyboard presses
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 player.set_action(1)

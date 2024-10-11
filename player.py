@@ -33,10 +33,13 @@ class Player():
         self.image = self.animation_list[0][0]
         self.velocity = [velocity_x, velocity_y]
         self.position = [x, y]
+
     def set_frame(self, frame):
         self.current_frame=frame
+
     def set_action(self, action):
         self.current_action=action
+
     def get_frame(self):
         return self.current_frame
     
@@ -58,6 +61,7 @@ class Player():
     def update(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
+        
     def draw(self, surface):
         surface.blit(self.get_animation_frame(), self.position)
 
