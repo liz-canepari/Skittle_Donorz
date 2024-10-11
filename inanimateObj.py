@@ -28,6 +28,15 @@ class object:
             if self.interact:
                 print("You interacted with an NPC!")
 
+        def player_is_near(obj_position, player_position=[400, 250], threshold=50):
+            # Calculate the distance between the player and the object
+            distance_x = abs(player_position[0] - obj_position[0])
+            distance_y = abs(player_position[1] - obj_position[1])
+            
+            # If within a certain threshold, allow interaction
+            return distance_x < threshold and distance_y < threshold
+
+
 
 class character(object):
     def __init__(self, skin, position, interact, dialogue):

@@ -1,6 +1,7 @@
 import pygame
 import player
 import background
+from inanimateObj import Object, Character
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
@@ -20,6 +21,9 @@ action = player.get_action()
 last_update = pygame.time.get_ticks()
 animation_cooldown = 110
 frame = player.get_frame()
+
+box = Object(box_image, [100, 150], interact=True)
+npc = Character(npc_image, [300, 200], interact=True, dialogue="Hello there!")
  
  
 run = True
@@ -39,6 +43,8 @@ while run:
             frame = player.get_frame()
  
     #show frame image
+    box.draw(screen)
+    npc.draw(screen)
     player.draw(screen)
     #event handler
     for event in pygame.event.get():
@@ -82,6 +88,18 @@ while run:
                 frame = player.get_frame()
             player.stand_still()
     player.update()
+
+    # event interaction
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:  # Press E to interact
+                if player_is_near(box.position):  # Custom function to detect proximity
+                    box.onInteract()
+                if player_is_near(npc.position):
+                    npc.speak()
     pygame.display.update()
  
 pygame.quit()
