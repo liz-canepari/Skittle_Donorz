@@ -3,6 +3,9 @@ import constants
 import player
 import background
 from world import World
+from dialouge import setup_npc_data 
+from inanimateObj import Character
+
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
@@ -41,10 +44,18 @@ action = player.get_action()
 last_update = pygame.time.get_ticks()
 animation_cooldown = 110
 frame = player.get_frame()
+
+#---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
+# NPCs and their dialogue managers from the dialouge.py file
+npc_data = setup_npc_data()
+font = pygame.font.Font(None, 36)
+
+# Track dialogue state
+current_dialogue = ""
+current_dialogue_manager = None
+showing_dialogue = False
  
-
-
-# --------------------------------------------------------------------------Main Game Loop---------------------------------------------------------------------------
+# --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 run = True
 while run:
@@ -67,6 +78,9 @@ while run:
  
 
     #show frame image
+    # box.draw(screen)
+    for npc_entry in npc_data:
+        npc_entry['npc'].draw(screen)
     player.draw(screen)
 
 
@@ -101,6 +115,17 @@ while run:
                 player.set_frame(0)
                 frame = player.get_frame()
                 player.move_down()
+            if event.key == pygame.K_e:         # NPC dialouge manager logic 
+                for npc_entry in npc_data:
+                    if npc_entry['npc'].interact:
+                        dialogue_manager = npc_entry['dialogue_manager']
+                        if dialogue_manager.has_more_dialogues():
+                            current_dialogue = dialogue_manager.next_line()
+                            current_dialogue_manager = dialogue_manager
+                            showing_dialogue = True
+                        else:
+                            showing_dialogue = False
+                    
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
                 player.set_action(0)
@@ -113,6 +138,18 @@ while run:
                 player.set_frame(0)
                 frame = player.get_frame()
             player.stand_still()
+
+    # if npc had dialouge, print to the screen
+    if showing_dialogue:
+        bubble_width = constants.SCREEN_WIDTH 
+        bubble_height = 100
+        bubble_x = 0
+        bubble_y = constants.SCREEN_HEIGHT - bubble_height
+        pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
+        pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
+        text_surface = font.render(current_dialogue, True, (0, 0, 0))
+        screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+
     player.update()
     pygame.display.update()
  
