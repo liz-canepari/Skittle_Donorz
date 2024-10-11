@@ -1,7 +1,7 @@
 # Porter Brien
 
 class DialogueManager:
-    def init(self, character_name, dialogues):
+    def __init__(self, character_name, dialogues):
         """
         Initialize the dialogue manager with a character's name and a list of dialogues.
         """
@@ -31,16 +31,3 @@ class DialogueManager:
         Check if there are more dialogues to show.
         """
         return self.current_index < len(self.dialogues)
-
-# Example Usage
-# npc_dialogues = [
-#     "Hello, traveler!",
-#     "It’s dangerous ahead. Be careful.",
-#     "Good luck on your journey."
-# ]
-
-# npc = DialogueManager("Old Man", npc_dialogues)
-
-# In your game loop or event
-# while npc.has_more_dialogues():
-#     print(npc.next_line())
