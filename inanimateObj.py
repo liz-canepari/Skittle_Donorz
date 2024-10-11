@@ -3,50 +3,27 @@
 # As of right now 10/8/24, this file does not interact with the game.py file, this is just an outline file.
 # maybe collsions
 
-class object:
-    def item(self, skin, position, interact ):
-        # image.png hopefully
-        self.skin = skin
+class Object:  # Capitalize the class name
+    def __init__(self, skin, position, interact=False):
+        self.skin = skin  # Image file for the object or character
+        self.position = position  # Position on the screen
+        self.interact = interact  # Boolean to track if interaction is possible
 
-        # tuple??? we just talked and said tuple was bad (try list)
-        # position on screen (x and y)
-        self.position = position
+    def draw(self, surface):
+        # Draw the object/character on the given surface
+        surface.blit(self.skin, self.position)
 
-        # press E to interact
-        # this will be the True or false value
-        self.interact = interact
+    def onInteract(self):
+        if self.interact:
+            print("You interacted with the object!")
 
-        ...
-
-        def draw(self, surface):
-            surface.blit(self.skin, self.position)
-            # surface.blit(self.skin, self.position): blit is a method in pygame that draws one surface (in this case, the NPC’s skin) onto another surface (in this case, the surface where it will appear).
-
-        # find out the the True or false value, then print the dialouge (this is like "you found the apple!").
-        # call this function like "NPC1.onInteract()"
-        def onInteract(self):
-            if self.interact:
-                print("You interacted with an NPC!")
-
-        def player_is_near(obj_position, player_position=[400, 250], threshold=50):
-            # Calculate the distance between the player and the object
-            distance_x = abs(player_position[0] - obj_position[0])
-            distance_y = abs(player_position[1] - obj_position[1])
-            
-            # If within a certain threshold, allow interaction
-            return distance_x < threshold and distance_y < threshold
-
-
-
-class character(object):
-    def __init__(self, skin, position, interact, dialogue):
-        super().__init__(skin, position, interact)
-        self.dialogue = dialogue
+class Character(Object):  # Inherit from your custom Object class
+    def __init__(self, skin, position, interact=False, dialogue=""):
+        super().__init__(skin, position, interact)  # Correct call to the parent class
+        self.dialogue = dialogue  # NPC dialogue
     
     def speak(self):
         if self.interact:
             print(f"NPC says: {self.dialogue}")
-
-    # Create Characters down here >>>>
 
 
