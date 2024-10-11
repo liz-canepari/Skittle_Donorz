@@ -115,7 +115,9 @@ while run:
                 player.set_frame(0)
                 frame = player.get_frame()
                 player.move_down()
-            if event.key == pygame.K_e:         # NPC dialouge manager logic 
+
+# NPC dialouge manager logic 
+            if event.key == pygame.K_e:
                 for npc_entry in npc_data:
                     if npc_entry['npc'].interact:
                         dialogue_manager = npc_entry['dialogue_manager']
@@ -139,12 +141,12 @@ while run:
                 frame = player.get_frame()
             player.stand_still()
 
-    # if npc had dialouge, print to the screen
+            # if npc had dialouge, print to the screen
     if showing_dialogue:
-        bubble_width = constants.SCREEN_WIDTH 
+        bubble_width = SCREEN_WIDTH 
         bubble_height = 100
         bubble_x = 0
-        bubble_y = constants.SCREEN_HEIGHT - bubble_height
+        bubble_y = SCREEN_HEIGHT - bubble_height
         pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
         pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
