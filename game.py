@@ -1,6 +1,9 @@
 import pygame
 import player
 import background
+from dialouge import DialogueManager
+from inanimateObj import Character
+
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
@@ -20,8 +23,35 @@ action = player.get_action()
 last_update = pygame.time.get_ticks()
 animation_cooldown = 110
 frame = player.get_frame()
- 
- 
+
+# box = Object(box_image, [100, 150], interact=True)
+
+
+# This is the mentor's code. load the image, then pass the params. we draw mentor in code below.
+npc_image = pygame.image.load("images/sprites/mentor.png").convert_alpha()
+npc_image = pygame.transform.scale(npc_image, (64, 64))
+mentor = Character(npc_image, [350, 245], interact=True, dialogue="Hello there!")
+
+
+font = pygame.font.Font(None, 36)
+
+mentor_dialogues = [
+    "Success...",
+    "And Failure...",
+    "Are Both Signs Of Progress.",
+    "My Spikes Have Become Dull",
+    "My Breath Weak",
+    "The Blood I Shed...",
+    "No Longer Your Shield",
+    "I love you...",
+    "But Never Come Back Home"
+]
+
+npc_dialogue_manager = DialogueManager("Mentor", mentor_dialogues)
+# see if dialogue is active
+showing_dialogue = False
+current_dialogue = ""
+    
 run = True
 while run:
     #update background
@@ -39,6 +69,8 @@ while run:
             frame = player.get_frame()
  
     #show frame image
+    # box.draw(screen)
+    mentor.draw(screen)
     player.draw(screen)
     #event handler
     for event in pygame.event.get():
@@ -69,6 +101,14 @@ while run:
                 player.set_frame(0)
                 frame = player.get_frame()
                 player.move_down()
+
+            if event.key == pygame.K_e and mentor.interact:
+                if npc_dialogue_manager.has_more_dialogues():
+                    current_dialogue = npc_dialogue_manager.next_line()
+                    showing_dialogue = True
+                else:
+                    showing_dialogue = False 
+                    
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
                 player.set_action(0)
@@ -81,6 +121,19 @@ while run:
                 player.set_frame(0)
                 frame = player.get_frame()
             player.stand_still()
+
+            # if npc had dialouge, print to the screen
+    if showing_dialogue:
+        bubble_width = 400
+        bubble_height = 100
+        bubble_x = 50
+        bubble_y = 450
+        pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
+        pygame.draw.polygon(screen, (255, 255, 255), [(bubble_x + 50, bubble_y + bubble_height), (bubble_x + 70, bubble_y + bubble_height), (bubble_x + 60, bubble_y + bubble_height + 20)])
+        pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
+        text_surface = font.render(current_dialogue, True, (0, 0, 0))
+        screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+
     player.update()
     pygame.display.update()
  
