@@ -120,7 +120,7 @@ while run:
                 frame = player.get_frame()
             player.stand_still()
 
-            # if npc had dialouge, print to the screen
+# if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
         bubble_width = SCREEN_WIDTH 
         bubble_height = 100
