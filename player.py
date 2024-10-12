@@ -82,9 +82,12 @@ class Player():
         self.velocity = [x, y]
     
     # Calculate the distance between the player and the object. -Porter
-    def player_is_near(obj_position, player_position, threshold=50):
-        distance_x = abs(player_position[4] - obj_position[4])
-        distance_y = abs(player_position[4] - obj_position[4])
+    def player_is_near(self, obj_position, threshold=40):
+        player_x = self.get_x()
+        player_y = self.get_y()
+        
+        distance_x = abs(player_x - obj_position[0])
+        distance_y = abs(player_y - obj_position[1])
         
         return distance_x < threshold and distance_y < threshold
 
