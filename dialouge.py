@@ -55,7 +55,7 @@ def setup_npc_data():
         "My Breath Weak,",
         "And The Blood I Shed...",
         "Is No Longer Your Shield.",
-        "I Love You My Dear Student...",
+        "I Love You...",
         "But Never Come Back Home."
     ])
     
