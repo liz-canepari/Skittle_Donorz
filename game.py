@@ -143,10 +143,10 @@ while run:
 
             # if npc had dialouge, print to the screen
     if showing_dialogue:
-        bubble_width = SCREEN_WIDTH 
+        bubble_width = constants.SCREEN_WIDTH 
         bubble_height = 100
         bubble_x = 0
-        bubble_y = SCREEN_HEIGHT - bubble_height
+        bubble_y = constants.SCREEN_HEIGHT - bubble_height
         pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
         pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
