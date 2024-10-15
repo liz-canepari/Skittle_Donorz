@@ -10,7 +10,7 @@ class Player():
     current_action = 0
     position = [0, 0]
     velocity = [0, 0]
-    SPEED = .15
+    SPEED = .50
     
     def __init__(self, x, y, velocity_x, velocity_y, image_path):
         sprite_sheet_image = pygame.image.load(image_path).convert_alpha()

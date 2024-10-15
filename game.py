@@ -1,4 +1,5 @@
 import pygame
+import csv
 import constants
 import player
 import background
@@ -16,17 +17,30 @@ pygame.display.set_caption("Sprite")
  
 bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
+#define game variables
+level = 1
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/{x}.png").convert_alpha()
+    tile_image = pygame.image.load(f"images/tiles/test_tiles/{x}.png").convert_alpha()
     tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
     tile_list.append(tile_image)
 
 #create empty tile list
 world_data = []
+for row in range(constants.ROWS):
+    r = [-1] * constants.COLS
+    world_data.append(r)
+#load in level data and create world
+with open("levels/test_level_1.csv", newline="") as csvfile:
+    reader = csv.reader(csvfile, delimiter = ",")
+    for x, row in enumerate(reader):
+        for y, tile in enumerate(row):
+            print(f"{x}, {y}")
+            world_data[x][y] = int(tile)
+
 
 world = World()
 world.process_data(world_data, tile_list)
@@ -64,7 +78,7 @@ while run:
     bg.draw(screen)
 
     world.draw(screen)
-    #draw_grid()
+    draw_grid()
  
     #update animation
     current_time = pygame.time.get_ticks()
