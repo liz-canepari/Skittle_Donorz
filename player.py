@@ -63,19 +63,29 @@ class Player():
 
     def move_left(self):
         self.velocity[0] = -(self.SPEED)
+        self.set_action(1)
+        self.set_frame(0)
     
     def move_right(self):
         self.velocity[0] = (self.SPEED)
+        self.set_action(2)
+        self.set_frame(0)
     
     def move_up(self):
         self.velocity[1] = -(self.SPEED)
+        self.set_action(4)
+        self.set_frame(0)
     
     def move_down(self):
         self.velocity[1] = (self.SPEED)
+        self.set_action(3)
+        self.set_frame(0)
     
     def stand_still(self):
         self.velocity[0] = 0
         self.velocity[1] = 0
+        self.set_action(0)
+        self.set_frame(0)
 
     def set_velocity_x(self, x, y):
         

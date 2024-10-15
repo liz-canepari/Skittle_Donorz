@@ -71,31 +71,24 @@ while run:
             run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                player.set_action(1)
-                action = player.get_action()
-                player.set_frame(0)
-                frame = player.get_frame()
                 player.move_left()
+                action = player.get_action()
+                frame = player.get_frame()
             if event.key == pygame.K_d:
-                player.set_action(2)
-                action = player.get_action()
-                player.set_frame(0)
-                frame = player.get_frame()
                 player.move_right()
+                action = player.get_action()
+                frame = player.get_frame()
             if event.key == pygame.K_w:
-                player.set_action(4)
-                action = player.get_action()
-                player.set_frame(0)
-                frame = player.get_frame()
                 player.move_up()
-            if event.key == pygame.K_s:
-                player.set_action(3)
                 action = player.get_action()
-                player.set_frame(0)
                 frame = player.get_frame()
+            if event.key == pygame.K_s:
                 player.move_down()
+                action = player.get_action()
+                frame = player.get_frame()
 
-# NPC dialouge manager logic 
+
+# NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 for npc_entry in npc_data:
                     if npc_entry['npc'].interact:
@@ -108,17 +101,39 @@ while run:
                             showing_dialogue = False
                     
         if event.type == pygame.KEYUP:
+            pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
-                player.set_action(0)
-                action = player.get_action()
-                player.set_frame(0)
-                frame = player.get_frame()
-            if event.key == pygame.K_d or event.key == pygame.K_w or event.key == pygame.K_s or event.key == pygame.K_a:
-                player.set_action(0)
-                action = player.get_action()
-                player.set_frame(0)
-                frame = player.get_frame()
-            player.stand_still()
+                player.stand_still()
+                if pressed[pygame.K_w]:
+                    player.move_up()
+                elif pressed[pygame.K_s]:
+                    player.move_down()
+                elif pressed[pygame.K_d]:
+                    player.move_right()
+            if event.key == pygame.K_d:
+                player.stand_still()
+                if pressed[pygame.K_w]:
+                    player.move_up()
+                elif pressed[pygame.K_s]:
+                    player.move_down()
+                elif pressed[pygame.K_a]:
+                    player.move_left()
+            if event.key == pygame.K_w:
+                player.stand_still()
+                if pressed[pygame.K_a]:
+                    player.move_left()
+                elif pressed[pygame.K_d]:
+                    player.move_right()
+                elif pressed[pygame.K_s]:
+                    player.move_down()
+            if event.key == pygame.K_s:
+                player.stand_still()
+                if pressed[pygame.K_a]:
+                    player.move_left()
+                elif pressed[pygame.K_d]:
+                    player.move_right()
+                elif pressed[pygame.K_w]:
+                    player.move_up()
 
 # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
