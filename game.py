@@ -1,8 +1,7 @@
 import pygame
-import player
 import background
+import player
 from dialouge import setup_npc_data 
-from inanimateObj import Character
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -56,6 +55,16 @@ while run:
         npc_entry['npc'].draw(screen)
 
     player.draw(screen)
+
+# threshold is number of pixels the user has to be in order to interact with the object.
+    for npc_entry in npc_data:
+        npc = npc_entry['npc']
+        if player.player_is_near(npc.position, threshold=40):
+            npc.interact = True
+        else:
+            npc.interact = False
+
+
     #event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -111,7 +120,7 @@ while run:
                 frame = player.get_frame()
             player.stand_still()
 
-            # if npc had dialouge, print to the screen
+# if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
         bubble_width = SCREEN_WIDTH 
         bubble_height = 100
