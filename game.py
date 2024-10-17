@@ -14,7 +14,7 @@ pygame.init()
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Sprite")
  
-bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
+#bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
 #define game variables
 level = 1
@@ -74,7 +74,7 @@ run = True
 while run:
     #update background
     screen.fill((0, 0, 0))
-    bg.draw(screen)
+    #bg.draw(screen)
 
     world.draw(screen)
     #draw_grid()
