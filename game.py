@@ -23,7 +23,7 @@ level = 1
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/test_tiles/{x}.png").convert_alpha()
+    tile_image = pygame.image.load(f"images/tiles/j_test_tiles/{x}.png").convert_alpha()
     tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
     tile_list.append(tile_image)
 
@@ -33,7 +33,7 @@ for row in range(constants.ROWS):
     r = [-1] * constants.COLS
     world_data.append(r)
 #load in level data and create world
-with open("levels/test_level_1.csv", newline="") as csvfile:
+with open("levels/j_test_level.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
@@ -77,7 +77,7 @@ while run:
     bg.draw(screen)
 
     world.draw(screen)
-    draw_grid()
+    #draw_grid()
  
     #update animation
     current_time = pygame.time.get_ticks()
