@@ -11,12 +11,13 @@ class Player():
     current_action = 0 
     position = [0, 0] #coordinates of character on screen
     velocity = [0, 0] #controls how quickly character moves and in what direction 
-    SPEED = .50 #controls how quickly character moves --- used in when changing velocity
+    SPEED = .25 #controls how quickly character moves --- used in when changing velocity
     
     def __init__(self, x, y, velocity_x, velocity_y, image_path):
 
         #load sprite sheet
         sprite_sheet_image = pygame.image.load(image_path).convert_alpha()
+        #create spritesheet object
         sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
        
         #load animation frames
@@ -65,6 +66,9 @@ class Player():
     
     def set_velocity_x(self, x, y):
         self.velocity = [x, y]
+
+    def set_speed(self, num):
+        self.SPEED = num
 
     #Updates position of the player using velocity
     def update(self):
