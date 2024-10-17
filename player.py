@@ -67,28 +67,41 @@ class Player():
 
     def move_left(self):
         self.velocity[0] = -(self.SPEED)
+        self.set_action(1)
+        self.set_frame(0)
     
     def move_right(self):
         self.velocity[0] = (self.SPEED)
+        self.set_action(2)
+        self.set_frame(0)
     
     def move_up(self):
         self.velocity[1] = -(self.SPEED)
+        self.set_action(4)
+        self.set_frame(0)
     
     def move_down(self):
         self.velocity[1] = (self.SPEED)
+        self.set_action(3)
+        self.set_frame(0)
     
     def stand_still(self):
         self.velocity[0] = 0
         self.velocity[1] = 0
+        self.set_action(0)
+        self.set_frame(0)
 
     def set_velocity_x(self, x, y):
         
         self.velocity = [x, y]
     
     # Calculate the distance between the player and the object. -Porter
-    def player_is_near(obj_position, player_position, threshold=50):
-        distance_x = abs(player_position[4] - obj_position[4])
-        distance_y = abs(player_position[4] - obj_position[4])
+    def player_is_near(self, obj_position, threshold=40):
+        player_x = self.get_x()
+        player_y = self.get_y()
+        
+        distance_x = abs(player_x - obj_position[0])
+        distance_y = abs(player_y - obj_position[1])
         
         return distance_x < threshold and distance_y < threshold
 
