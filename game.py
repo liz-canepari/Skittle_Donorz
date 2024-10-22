@@ -3,6 +3,7 @@ import csv
 import constants
 import player
 import background
+import tutorial
 from world import World
 from dialouge import setup_npc_data 
 
@@ -67,6 +68,14 @@ font = pygame.font.Font(None, 36)
 current_dialogue = ""
 current_dialogue_manager = None
 showing_dialogue = False
+
+# --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
+
+game_tutorial = tutorial.Tutorial(constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT, font)
+player_moved = False
+game_tutorial.show_movement_instruction() # Show the movement instruction
+
+
  
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
@@ -98,14 +107,19 @@ while run:
 
 
 # threshold is number of pixels the user has to be in order to interact with the object.
+    is_near_npc = False
     for npc_entry in npc_data:
         npc = npc_entry['npc']
         if player.player_is_near(npc.position, threshold=40):
             npc.interact = True
+            is_near_npc = True
         else:
             npc.interact = False
 
-
+    if is_near_npc and not showing_dialogue:
+        game_tutorial.show_interaction_instruction() # Show the interaction instruction
+    else:
+        game_tutorial.hide_tutorial() # Hide the tutorial
 
     #event handler
     for event in pygame.event.get():
@@ -114,6 +128,10 @@ while run:
             run = False
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
+            if not player_moved and (event.key in [pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s]):
+                player_moved = True
+                game_tutorial.hide_tutorial() # Hide the tutorial
+             
             if event.key == pygame.K_a:
                 player.move_left()
                 action = player.get_action()
@@ -141,8 +159,10 @@ while run:
                             current_dialogue = dialogue_manager.next_line()
                             current_dialogue_manager = dialogue_manager
                             showing_dialogue = True
+                            game_tutorial.hide_tutorial() # Hide the tutorial
                         else:
                             showing_dialogue = False
+                            game_tutorial.hide_tutorial() # Hide the tutorial
                     
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
@@ -189,6 +209,10 @@ while run:
         pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+
+# Draw tutorial if not finished
+    if game_tutorial.is_active():
+        game_tutorial.draw(screen)
 
     player.update()
     pygame.display.update()
