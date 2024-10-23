@@ -119,6 +119,17 @@ while run:
             run = False
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
+            # NPC dialogue manager logic 
+            if event.key == pygame.K_e:
+                for npc_entry in npc_data:
+                    if npc_entry['npc'].interact:
+                        dialogue_manager = npc_entry['dialogue_manager']
+                        if dialogue_manager.has_more_dialogues():
+                            current_dialogue = dialogue_manager.next_line()
+                            current_dialogue_manager = dialogue_manager
+                            showing_dialogue = True
+                        else:
+                            showing_dialogue = False
                 # inventory
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
@@ -200,17 +211,6 @@ while run:
                     player.move_up()
 
 
-# NPC dialogue manager logic 
-            if event.key == pygame.K_e:
-                for npc_entry in npc_data:
-                    if npc_entry['npc'].interact:
-                        dialogue_manager = npc_entry['dialogue_manager']
-                        if dialogue_manager.has_more_dialogues():
-                            current_dialogue = dialogue_manager.next_line()
-                            current_dialogue_manager = dialogue_manager
-                            showing_dialogue = True
-                        else:
-                            showing_dialogue = False
 
 
 # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
