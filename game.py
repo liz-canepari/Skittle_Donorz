@@ -6,6 +6,7 @@ import background
 from inventory import Inventory
 from world import World
 from dialouge import setup_npc_data 
+from inanimateObj import red_item
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -137,8 +138,25 @@ while run:
                 # inventory
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
-        if inventory_open:
-            player_inventory.draw()
+
+    if inventory_open:
+        player_inventory.draw()
+        
+        # if event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_1:
+        #         player_inventory.add_item(red_item, 0)
+            # elif event.key == pygame.K_2:
+            #     player_inventory.add_item(green_item, 1)
+            # elif event.key == pygame.K_3:
+            #     player_inventory.add_item(yellow_item, 2)
+        # if event.key == pygame.K_1:  # Press 1 to add a red item to slot 0
+        #     player_inventory.add_item(red_item, 0)
+            # if event.key == pygame.K_2:  # Press 2 to add a green item to slot 1
+            #     player_inventory.add_item(green_item, 1)
+            # if event.key == pygame.K_3:  # Press 3 to add a yellow item to slot 2
+            #     player_inventory.add_item(yellow_item, 2)
+            # if event.key == pygame.K_4:  # Press 4 to add a blue item to slot 3
+            #     player_inventory.add_item(blue_item, 3)
 
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()

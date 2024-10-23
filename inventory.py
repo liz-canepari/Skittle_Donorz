@@ -1,8 +1,6 @@
 import pygame
 
-
 pygame.init()
-
 
 # Set up display
 screen = pygame.display.set_mode((500, 500))
@@ -22,13 +20,13 @@ pygame.draw.circle(items[3], (0, 0, 255), (25, 25), 25)  # Blue circle
 # The inventory system
 class Inventory:
     def __init__(self):
-        self.rows = 3
-        self.col = 9
+        self.rows = 1  # Single row for simplicity
+        self.col = 4  # Four columns for four items
         self.items = [[None for _ in range(self.rows)] for _ in range(self.col)]
-        self.box_size = 40
+        self.box_size = 50
         self.x = 50
-        self.y = 50
-        self.border = 3
+        self.y = 400  # Place the inventory bar lower on the screen
+        self.border = 5
 
     # Draw everything
     def draw(self):
@@ -44,43 +42,15 @@ class Inventory:
                 pygame.draw.rect(screen, (180, 180, 180), rect)
                 if self.items[x][y]:
                     # Draw the item image in the slot
-                    screen.blit(self.items[x][y][0].resize(self.box_size), rect)
+                    screen.blit(self.items[x][y][0], (rect[0], rect[1]))
                     # Display the item count
                     obj = font.render(str(self.items[x][y][1]), True, (0, 0, 0))
                     screen.blit(obj, (rect[0] + self.box_size // 2, rect[1] + self.box_size // 2))
 
-    # Get the square that the mouse is over
-    def Get_pos(self):
-        mouse = pygame.mouse.get_pos()
-        x = mouse[0] - self.x
-        y = mouse[1] - self.y
-        x = x // (self.box_size + self.border)
-        y = y // (self.box_size + self.border)
-        return (x, y)
-
-    # Add an item/s
-    def Add(self, item, xy):
-        x, y = xy
-        if self.items[x][y]:
-            if self.items[x][y][0].id == item[0].id:
-                self.items[x][y][1] += item[1]
+    # Add an item to a specific slot based on keypress (e.g., 1 for slot 0, 2 for slot 1, etc.)
+    def add_item(self, item, slot):
+        if 0 <= slot < self.col:
+            if self.items[slot][0]:  # If the slot already has an item
+                self.items[slot][1] += item[1]  # Add the item count
             else:
-                temp = self.items[x][y]
-                self.items[x][y] = item
-                return temp
-        else:
-            self.items[x][y] = item
-
-    # Check whether the mouse is in the grid
-    def In_grid(self, x, y):
-        if 0 > x > self.col - 1:
-            return False
-        if 0 > y > self.rows - 1:
-            return False
-        return True
-
-# Initialize player inventory
-player_inventory = Inventory()
-
-
-
+                self.items[slot] = item  # Place the item in the slot
