@@ -3,7 +3,7 @@ import csv
 import constants
 import player
 import background
-import tutorial
+from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
 
@@ -70,7 +70,8 @@ current_dialogue_manager = None
 showing_dialogue = False
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
- 
+tutorial = Tutorial(font)
+tutorial.show_message("Use WASD to move")
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 run = True
@@ -119,18 +120,22 @@ while run:
             
             if event.key == pygame.K_a:
                 player.move_left()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_d:
                 player.move_right()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_w:
                 player.move_up()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_s:
                 player.move_down()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
 
@@ -194,7 +199,8 @@ while run:
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
 
 # Draw tutorial if not finished
-    
+    tutorial.draw(screen)
+
     player.update()
     pygame.display.update()
  
