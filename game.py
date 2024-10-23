@@ -1,7 +1,8 @@
 import pygame
 import background
 import player
-from dialouge import setup_npc_data 
+from dialogue import setup_npc_data
+from dialogue import DialogueManager
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -65,75 +66,80 @@ while run:
             npc.interact = False
 
 
-    #event handler
+    # Event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
+            if not showing_dialogue:  # Allow movement only if not showing dialogue
+                if event.key == pygame.K_a:
+                    player.move_left()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                if event.key == pygame.K_d:
+                    player.move_right()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                if event.key == pygame.K_w:
+                    player.move_up()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                if event.key == pygame.K_s:
+                    player.move_down()
+                    action = player.get_action()
+                    frame = player.get_frame()
+
+
+            if event.key == pygame.K_e:  # Interact with NPC or advance dialogue
+                if showing_dialogue:
+                    # If already showing dialogue, advance to the next line or end dialogue
+                    if current_dialogue_manager.has_more_dialogues():
+                        current_dialogue = current_dialogue_manager.next_line()
+                    else:
+                        # End of dialogue, reset states
+                        showing_dialogue = False
+                        current_dialogue = ""  # Clear dialogue once finished
+                        current_dialogue_manager = None  # Clear current dialogue manager
+                else:
+                    # Interact with NPC to start dialogue
+                    for npc_entry in npc_data:
+                        npc = npc_entry['npc']
+                        if npc.interact:  # Check if NPC is interactable (near the player)
+                            dialogue_manager = npc_entry['dialogue_manager']
+                            if dialogue_manager.has_more_dialogues():
+                                current_dialogue = dialogue_manager.next_line()
+                                current_dialogue_manager = dialogue_manager
+                                showing_dialogue = True
+                            else:
+                                # Reset the dialogue manager to allow repeated conversation
+                                dialogue_manager.reset_dialogue()
+                                showing_dialogue = False
+
+                    
+        if event.type == pygame.KEYUP:
+            if not showing_dialogue:
+                player.stand_still()
+
+        # Handle continuous movement by checking keys directly
+        keys = pygame.key.get_pressed()
+        if not showing_dialogue:  # Prevent movement while showing dialogue
+            if keys[pygame.K_a]:
                 player.move_left()
                 action = player.get_action()
                 frame = player.get_frame()
-            if event.key == pygame.K_d:
+            elif keys[pygame.K_d]:
                 player.move_right()
                 action = player.get_action()
                 frame = player.get_frame()
-            if event.key == pygame.K_w:
+            elif keys[pygame.K_w]:
                 player.move_up()
                 action = player.get_action()
                 frame = player.get_frame()
-            if event.key == pygame.K_s:
+            elif keys[pygame.K_s]:
                 player.move_down()
                 action = player.get_action()
                 frame = player.get_frame()
-
-
-# NPC dialogue manager logic 
-            if event.key == pygame.K_e:
-                for npc_entry in npc_data:
-                    if npc_entry['npc'].interact:
-                        dialogue_manager = npc_entry['dialogue_manager']
-                        if dialogue_manager.has_more_dialogues():
-                            current_dialogue = dialogue_manager.next_line()
-                            current_dialogue_manager = dialogue_manager
-                            showing_dialogue = True
-                        else:
-                            showing_dialogue = False
-                    
-        if event.type == pygame.KEYUP:
-            pressed = pygame.key.get_pressed()
-            if event.key == pygame.K_a:
-                player.stand_still()
-                if pressed[pygame.K_w]:
-                    player.move_up()
-                elif pressed[pygame.K_s]:
-                    player.move_down()
-                elif pressed[pygame.K_d]:
-                    player.move_right()
-            if event.key == pygame.K_d:
-                player.stand_still()
-                if pressed[pygame.K_w]:
-                    player.move_up()
-                elif pressed[pygame.K_s]:
-                    player.move_down()
-                elif pressed[pygame.K_a]:
-                    player.move_left()
-            if event.key == pygame.K_w:
-                player.stand_still()
-                if pressed[pygame.K_a]:
-                    player.move_left()
-                elif pressed[pygame.K_d]:
-                    player.move_right()
-                elif pressed[pygame.K_s]:
-                    player.move_down()
-            if event.key == pygame.K_s:
-                player.stand_still()
-                if pressed[pygame.K_a]:
-                    player.move_left()
-                elif pressed[pygame.K_d]:
-                    player.move_right()
-                elif pressed[pygame.K_w]:
-                    player.move_up()
+    
 
 # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:

@@ -58,6 +58,14 @@ class Player():
     def update(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
+
+        self.clamp_position(screen_width=600, screen_height=600)
+
+    def clamp_position(self, screen_width, screen_height):
+        # Assuming the player's image width and height are 32x32 pixels
+        self.position[0] = max(0, min(self.position[0], screen_width - 32))
+        self.position[1] = max(0, min(self.position[1], screen_height - 32))
+
     def draw(self, surface):
         surface.blit(self.get_animation_frame(), self.position)
 
