@@ -70,6 +70,7 @@ current_dialogue_manager = None
 showing_dialogue = False
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
+npc_interaction_shown = False
 tutorial = Tutorial(font)
 tutorial.show_message("Use WASD to move")
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
@@ -106,6 +107,8 @@ while run:
         npc = npc_entry['npc']
         if player.player_is_near(npc.position, threshold=40):
             npc.interact = True
+            if not npc_interaction_shown:
+                tutorial.show_message("Press E to interact")
         else:
             npc.interact = False
 
@@ -149,6 +152,9 @@ while run:
                             current_dialogue = dialogue_manager.next_line()
                             current_dialogue_manager = dialogue_manager
                             showing_dialogue = True
+                            if not npc_interaction_shown:
+                                npc_interaction_shown = True
+                                tutorial.hide_message()
                         else:
                             showing_dialogue = False
                     
