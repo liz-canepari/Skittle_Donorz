@@ -119,6 +119,9 @@ while run:
             run = False
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
+                # inventory
+            if event.key == pygame.K_i:
+                inventory_open = not inventory_open
             if event.key == pygame.K_a:
                 player.move_left()
                 action = player.get_action()
@@ -135,29 +138,32 @@ while run:
                 player.move_down()
                 action = player.get_action()
                 frame = player.get_frame()
-                # inventory
-            if event.key == pygame.K_i:
-                inventory_open = not inventory_open
+            if not inventory_open:
+                if event.key == pygame.K_a:
+                    player.move_left()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                elif event.key == pygame.K_d:
+                    player.move_right()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                elif event.key == pygame.K_w:
+                    player.move_up()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                elif event.key == pygame.K_s:
+                    player.move_down()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                    
+        if event.type == pygame.KEYUP:
+            if not inventory_open:
+                if event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_w or event.key == pygame.K_s:
+                    player.stand_still()
 
     if inventory_open:
         player_inventory.draw()
         
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_1:
-        #         player_inventory.add_item(red_item, 0)
-            # elif event.key == pygame.K_2:
-            #     player_inventory.add_item(green_item, 1)
-            # elif event.key == pygame.K_3:
-            #     player_inventory.add_item(yellow_item, 2)
-        # if event.key == pygame.K_1:  # Press 1 to add a red item to slot 0
-        #     player_inventory.add_item(red_item, 0)
-            # if event.key == pygame.K_2:  # Press 2 to add a green item to slot 1
-            #     player_inventory.add_item(green_item, 1)
-            # if event.key == pygame.K_3:  # Press 3 to add a yellow item to slot 2
-            #     player_inventory.add_item(yellow_item, 2)
-            # if event.key == pygame.K_4:  # Press 4 to add a blue item to slot 3
-            #     player_inventory.add_item(blue_item, 3)
-
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
