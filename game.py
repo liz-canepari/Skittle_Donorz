@@ -2,14 +2,11 @@ import pygame
 import csv
 import constants
 import player
-<<<<<<< HEAD
 from dialogue import setup_npc_data
 from dialogue import DialogueManager
-=======
 import background
 from world import World
-from dialouge import setup_npc_data 
->>>>>>> 24ff85ac1710a2df188f2a19b88e96c7602353f0
+
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -111,12 +108,9 @@ while run:
             npc.interact = False
 
 
-<<<<<<< HEAD
     # Event handler
-=======
 
     #event handler
->>>>>>> 24ff85ac1710a2df188f2a19b88e96c7602353f0
     for event in pygame.event.get():
         # close the game
         if event.type == pygame.QUIT:

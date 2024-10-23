@@ -74,7 +74,6 @@ class Player():
     def update(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
-<<<<<<< HEAD
 
         self.clamp_position(screen_width=600, screen_height=600)
 
@@ -83,10 +82,8 @@ class Player():
         self.position[0] = max(0, min(self.position[0], screen_width - 32))
         self.position[1] = max(0, min(self.position[1], screen_height - 32))
 
-=======
         
     #put character on screen
->>>>>>> 24ff85ac1710a2df188f2a19b88e96c7602353f0
     def draw(self, surface):
         surface.blit(self.get_animation_frame(), self.position)
 
