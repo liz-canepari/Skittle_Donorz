@@ -12,7 +12,7 @@ from dialouge import setup_npc_data
 pygame.init()
  
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-pygame.display.set_caption("Sprite")
+pygame.display.set_caption("Skittle Game")
  
 #define game variables
 level = 1
