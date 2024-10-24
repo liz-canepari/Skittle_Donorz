@@ -80,9 +80,9 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
-    draw_grid()
+    #draw_grid()
  
-    #update animation
+    #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= animation_cooldown:
         player.set_frame(frame + 1)
@@ -139,7 +139,6 @@ while run:
                 action = player.get_action()
                 frame = player.get_frame()
 
-
 # NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 tutorial.complete_step("interaction")
@@ -152,7 +151,7 @@ while run:
                             showing_dialogue = True
                         else:
                             showing_dialogue = False
-                    
+        #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
