@@ -1,25 +1,32 @@
 import pygame
 import constants
-class Tutorial():
-    def __init__(self, font):
+class Tutorial:
+    def __init__(self, font, screen):
         self.font = font
-        self.message = None
-        self.showing = False
+        self.screen = screen
+        self.steps = {}
+        self.completed_steps = set()
 
-    def show_message(self, message):
-        self.message = message
-        self.showing = True
+    def add_step(self, key, message, position):
+         """Add a tutorial step identified by a key (e.g., 'movement', 'interaction')."""
+         self.steps[key] = {"message": message, "position": position}
 
-    def hide_message(self):
-        self.showing = False
+    def show_step(self, key):
+        """Show the tutorial message for a specific key if it hasn't been completed."""
+        if key not in self.completed_steps and key in self.steps:
+            message = self.steps[key]["message"]
+            position = self.steps[key]["position"]
+            self.displayMessage(message, position)
 
-    def draw(self, screen):
-        if self.showing and self.message:
-            bubble_width = 400
-            bubble_height = 50
-            bubble_x = (constants.SCREEN_WIDTH - bubble_width) // 2
-            bubble_y = constants.SCREEN_HEIGHT - 100
-            pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
-            pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
-            text_surface = self.font.render(self.message, True, (0, 0, 0))
-            screen.blit(text_surface, (bubble_x + 20, bubble_y + 10))
+    def complete_step(self, key):
+        """Mark a tutorial step as completed."""
+        self.completed_steps.add(key)
+
+    def displayMessage(self, message, position):
+        """Display the tutorial message on the screen."""
+        text_surface = self.font.render(message, True, (255, 255, 255))
+        self.screen.blit(text_surface, position)
+
+    def reset(self):
+        """Reset all tutorial steps (for debugging or game replay)."""
+        self.completed_steps.clear()
