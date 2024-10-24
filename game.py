@@ -13,10 +13,8 @@ from dialouge import setup_npc_data
 pygame.init()
  
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-pygame.display.set_caption("Sprite")
+pygame.display.set_caption("Skittle Game")
  
-bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
-
 #define game variables
 level = 1
 
@@ -24,7 +22,7 @@ level = 1
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/test_tiles/{x}.png").convert_alpha()
+    tile_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
     tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
     tile_list.append(tile_image)
 
@@ -34,7 +32,7 @@ for row in range(constants.ROWS):
     r = [-1] * constants.COLS
     world_data.append(r)
 #load in level data and create world
-with open("levels/test_level_1.csv", newline="") as csvfile:
+with open("levels/mentors_hut_data.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
@@ -79,7 +77,6 @@ run = True
 while run:
     #update background
     screen.fill((0, 0, 0))
-    bg.draw(screen)
 
     world.draw(screen)
     draw_grid()
