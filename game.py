@@ -124,9 +124,7 @@ while run:
             run = False
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
-<<<<<<< HEAD
             
-=======
             # NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 for npc_entry in npc_data:
@@ -141,7 +139,6 @@ while run:
                 # inventory
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
->>>>>>> f8a4669bf1a3dc40fc04d5ad26dd35170ba8334e
             if event.key == pygame.K_a:
                 player.move_left()
                 tutorial.hide_message()
@@ -185,7 +182,6 @@ while run:
                 if event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_w or event.key == pygame.K_s:
                     player.stand_still()
 
-<<<<<<< HEAD
 # NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 for npc_entry in npc_data:
@@ -201,11 +197,9 @@ while run:
                         else:
                             showing_dialogue = False
         #Logic for if key is released
-=======
     if inventory_open:
         player_inventory.draw()
         
->>>>>>> f8a4669bf1a3dc40fc04d5ad26dd35170ba8334e
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
