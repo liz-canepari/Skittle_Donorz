@@ -124,7 +124,24 @@ while run:
             run = False
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
+<<<<<<< HEAD
             
+=======
+            # NPC dialogue manager logic 
+            if event.key == pygame.K_e:
+                for npc_entry in npc_data:
+                    if npc_entry['npc'].interact:
+                        dialogue_manager = npc_entry['dialogue_manager']
+                        if dialogue_manager.has_more_dialogues():
+                            current_dialogue = dialogue_manager.next_line()
+                            current_dialogue_manager = dialogue_manager
+                            showing_dialogue = True
+                        else:
+                            showing_dialogue = False
+                # inventory
+            if event.key == pygame.K_i:
+                inventory_open = not inventory_open
+>>>>>>> f8a4669bf1a3dc40fc04d5ad26dd35170ba8334e
             if event.key == pygame.K_a:
                 player.move_left()
                 tutorial.hide_message()
@@ -145,10 +162,30 @@ while run:
                 tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
-                # inventory
-            if event.key == pygame.K_i:
-                inventory_open = not inventory_open
+            if not inventory_open:
+                if event.key == pygame.K_a:
+                    player.move_left()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                elif event.key == pygame.K_d:
+                    player.move_right()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                elif event.key == pygame.K_w:
+                    player.move_up()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                elif event.key == pygame.K_s:
+                    player.move_down()
+                    action = player.get_action()
+                    frame = player.get_frame()
+                    
+        if event.type == pygame.KEYUP:
+            if not inventory_open:
+                if event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_w or event.key == pygame.K_s:
+                    player.stand_still()
 
+<<<<<<< HEAD
 # NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 for npc_entry in npc_data:
@@ -164,6 +201,11 @@ while run:
                         else:
                             showing_dialogue = False
         #Logic for if key is released
+=======
+    if inventory_open:
+        player_inventory.draw()
+        
+>>>>>>> f8a4669bf1a3dc40fc04d5ad26dd35170ba8334e
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
@@ -200,17 +242,6 @@ while run:
                     player.move_up()
 
 
-# NPC dialogue manager logic 
-            if event.key == pygame.K_e:
-                for npc_entry in npc_data:
-                    if npc_entry['npc'].interact:
-                        dialogue_manager = npc_entry['dialogue_manager']
-                        if dialogue_manager.has_more_dialogues():
-                            current_dialogue = dialogue_manager.next_line()
-                            current_dialogue_manager = dialogue_manager
-                            showing_dialogue = True
-                        else:
-                            showing_dialogue = False
 
 
 # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
