@@ -4,6 +4,7 @@ import constants
 import player
 import background
 from inventory import Inventory
+from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
 from inanimateObj import red_item
@@ -14,10 +15,8 @@ from inanimateObj import red_item
 pygame.init()
  
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-pygame.display.set_caption("Sprite")
+pygame.display.set_caption("Skittle Game")
  
-bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
-
 #define game variables
 level = 1
 
@@ -25,7 +24,7 @@ level = 1
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/test_tiles/{x}.png").convert_alpha()
+    tile_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
     tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
     tile_list.append(tile_image)
 
@@ -35,7 +34,7 @@ for row in range(constants.ROWS):
     r = [-1] * constants.COLS
     world_data.append(r)
 #load in level data and create world
-with open("levels/test_level_1.csv", newline="") as csvfile:
+with open("levels/mentors_hut_data.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
@@ -76,18 +75,22 @@ inventory_open = False
 selected = None 
 
 
+
+# --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
+npc_interaction_shown = False
+tutorial = Tutorial(font)
+tutorial.show_message("Use WASD to move")
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 run = True
 while run:
     #update background
     screen.fill((0, 0, 0))
-    bg.draw(screen)
 
     world.draw(screen)
-    draw_grid()
+    #draw_grid()
  
-    #update animation
+    #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= animation_cooldown:
         player.set_frame(frame + 1)
@@ -109,6 +112,8 @@ while run:
         npc = npc_entry['npc']
         if player.player_is_near(npc.position, threshold=40):
             npc.interact = True
+            if not npc_interaction_shown:
+                tutorial.show_message("Press E to interact")
         else:
             npc.interact = False
 
@@ -119,45 +124,46 @@ while run:
             run = False
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_a:
                 player.move_left()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_d:
                 player.move_right()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_w:
                 player.move_up()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_s:
                 player.move_down()
+                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
                 # inventory
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
 
-    if inventory_open:
-        player_inventory.draw()
-        
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_1:
-        #         player_inventory.add_item(red_item, 0)
-            # elif event.key == pygame.K_2:
-            #     player_inventory.add_item(green_item, 1)
-            # elif event.key == pygame.K_3:
-            #     player_inventory.add_item(yellow_item, 2)
-        # if event.key == pygame.K_1:  # Press 1 to add a red item to slot 0
-        #     player_inventory.add_item(red_item, 0)
-            # if event.key == pygame.K_2:  # Press 2 to add a green item to slot 1
-            #     player_inventory.add_item(green_item, 1)
-            # if event.key == pygame.K_3:  # Press 3 to add a yellow item to slot 2
-            #     player_inventory.add_item(yellow_item, 2)
-            # if event.key == pygame.K_4:  # Press 4 to add a blue item to slot 3
-            #     player_inventory.add_item(blue_item, 3)
-
+# NPC dialogue manager logic 
+            if event.key == pygame.K_e:
+                for npc_entry in npc_data:
+                    if npc_entry['npc'].interact:
+                        dialogue_manager = npc_entry['dialogue_manager']
+                        if dialogue_manager.has_more_dialogues():
+                            current_dialogue = dialogue_manager.next_line()
+                            current_dialogue_manager = dialogue_manager
+                            showing_dialogue = True
+                            if not npc_interaction_shown:
+                                npc_interaction_shown = True
+                                tutorial.hide_message()
+                        else:
+                            showing_dialogue = False
+        #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
@@ -217,6 +223,9 @@ while run:
         pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+
+# Draw tutorial if not finished
+    tutorial.draw(screen)
 
     player.update()
     pygame.display.update()
