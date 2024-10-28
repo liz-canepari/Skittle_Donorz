@@ -18,6 +18,7 @@ bg = background.Background("images/scenes/room.png", 0, 0, constants.SCREEN_WIDT
 
 #define game variables
 level = 1
+[0, 0]
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 #load tilemap images
@@ -190,7 +191,7 @@ while run:
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
 
-    player.update()
+    screen_scroll = player.update()
     pygame.display.update()
  
 pygame.quit()
