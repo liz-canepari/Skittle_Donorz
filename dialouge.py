@@ -4,6 +4,7 @@ import pygame
 from inanimateObj import Character
 
 
+
 class DialogueManager:
     def __init__(self, character_name, dialogues):
         """
