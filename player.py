@@ -92,16 +92,21 @@ class Player():
         surface.blit(self.get_animation_frame(), self.rect.center)
 
 #---------------------------------------------------------movement functions----------------------------------
+#---------------------------------------------------------movement functions----------------------------------
     def move_left(self):
         # change velocity x value
+        # change velocity x value
         self.velocity[0] = -(self.SPEED)
+        #set animation to left facing walking animation
         #set animation to left facing walking animation
         self.set_action(1)
         self.set_frame(0)
     
     def move_right(self):
         #change velocity x value
+        #change velocity x value
         self.velocity[0] = (self.SPEED)
+        #set animation to right facing walking animation
         #set animation to right facing walking animation
         self.set_action(2)
         self.set_frame(0)
@@ -110,21 +115,27 @@ class Player():
         #change velocity y value
         self.velocity[1] = -(self.SPEED)
         #set animation to backwards facing walking animation
+        #set animation to backwards facing walking animation
         self.set_action(4)
         self.set_frame(0)
     
     def move_down(self):
         #change velocity y value
+        #change velocity y value
         self.velocity[1] = (self.SPEED)
+        #set to move forward facing walking animation
         #set to move forward facing walking animation
         self.set_action(3)
         self.set_frame(0)
     
     #Character goes back to idle and stops moving
+    #Character goes back to idle and stops moving
     def stand_still(self):
+        #change velocity
         #change velocity
         self.velocity[0] = 0
         self.velocity[1] = 0
+        #set to idle animation
         #set to idle animation
         self.set_action(0)
         self.set_frame(0)
