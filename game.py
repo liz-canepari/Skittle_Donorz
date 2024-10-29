@@ -64,6 +64,7 @@ font = pygame.font.Font(None, 36)
 
 # Track dialogue state
 current_dialogue = ""
+current_dialogue_img = None
 current_dialogue_manager = None
 showing_dialogue = False
 
@@ -189,13 +190,18 @@ while run:
 
 # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
-        bubble_width = constants.SCREEN_WIDTH 
+        current_dialogue_img = pygame.image.load("images\sprites\mentor-dialogue-img.png").convert_alpha()
+        dialogue_frame = pygame.image.load("images/dialogueframe.png").convert_alpha()
+        dialogue_frame.set_colorkey((0, 0, 0))
+        bubble_width = constants.SCREEN_WIDTH - 100
         bubble_height = 100
-        bubble_x = 0
+        bubble_x = 100
         bubble_y = constants.SCREEN_HEIGHT - bubble_height
-        pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
-        pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
-        text_surface = font.render(current_dialogue, True, (0, 0, 0))
+        screen.blit(current_dialogue_img, (0, bubble_y))
+        pygame.draw.rect(screen, (214, 210, 185), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
+        screen.blit(dialogue_frame, (bubble_x, bubble_y))
+        #pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
+        text_surface = font.render(current_dialogue, True, (41, 25, 21))
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
 
 # Draw tutorial if not finished
