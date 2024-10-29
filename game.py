@@ -38,7 +38,6 @@ with open("levels/test_level_1.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
-            print(f"{x}, {y}")
             world_data[x][y] = int(tile)
 
 
@@ -193,6 +192,9 @@ while run:
 
     screen_scroll = player.update()
     world.update(screen_scroll)
+    for npc in npc_data:
+        npc['npc'].update(screen_scroll)
+
     pygame.display.update()
  
 pygame.quit()

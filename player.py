@@ -94,7 +94,6 @@ class Player():
             screen_scroll[1] = constants.SCROLL_THRESH - self.position[1]
             self.position[1] = constants.SCROLL_THRESH
         
-        print(screen_scroll)
         return screen_scroll
         
     #put character on screen
