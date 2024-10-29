@@ -3,11 +3,17 @@
 # As of right now 10/8/24, this file does not interact with the game.py file, this is just an outline file.
 # maybe collsions
 
-class Object:
+import pygame
+
+class Object(pygame.sprite.Sprite):
     def __init__(self, skin, position, interact=False):
+
+        pygame.sprite.Sprite.__init__(self)
+
         self.skin = skin  # Image file for the object or character
         self.position = position  # Position on the screen
-        self.interact = interact  # Boolean to track if interaction is possible
+        self.interact = interact # Boolean to track if interaction is possible
+   
 
     # Draw the object/character on the given surface
     def draw(self, surface):
@@ -19,6 +25,9 @@ class Object:
 
 class Character(Object):  # Inherit from your custom Object class
     def __init__(self, skin, position, interact=False, dialogue=""):
+
+        pygame.sprite.Sprite.__init__(self)
+
         super().__init__(skin, position, interact) 
         self.dialogue = dialogue
     

@@ -3,6 +3,7 @@ import csv
 import constants
 import player
 import background
+import inanimateObj
 from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
@@ -11,7 +12,7 @@ from dialouge import setup_npc_data
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
 pygame.init()
- 
+
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Skittle Game")
  
@@ -49,13 +50,17 @@ def draw_grid():
         pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
+#object to test collisions
 
-player = player.Player(400, 250, 0, 0, "images/sprites/chameleon-sprite.png")
- 
-action = player.get_action()
+#cat is solely for testing collisions
+cat = player.Player(200, 200, 0, 0, "images/sprites/cat-sprite.png", 48, 48)
+npc_group = pygame.sprite.GroupSingle(cat)
+mc = player.Player(400, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+
+action = mc.get_action()
 last_update = pygame.time.get_ticks()
-animation_cooldown = 110
-frame = player.get_frame()
+FPS = 110
+frame = mc.get_frame()
 
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
@@ -83,33 +88,40 @@ while run:
  
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
-    if current_time - last_update >= animation_cooldown:
-        player.set_frame(frame + 1)
-        frame = player.get_frame()
+    if current_time - last_update >= FPS:
+        mc.set_frame(frame + 1)
+        frame = mc.get_frame()
         last_update = current_time
-        if frame >= len(player.get_animation()):
-            player.set_frame(0)
-            frame = player.get_frame()
+        if frame >= len(mc.get_animation()):
+            mc.set_frame(0)
+            frame = mc.get_frame()
  
 
     #show frame image
     # box.draw(screen)
     for npc_entry in npc_data:
         npc_entry['npc'].draw(screen)
-    player.draw(screen)
+
+    #draw player
+    mc.draw(screen)
+    npc_group.draw(screen)
 
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc_entry in npc_data:
         npc = npc_entry['npc']
-        if player.player_is_near(npc.position, threshold=40):
+        if mc.player_is_near(npc.position, threshold=40):
             npc.interact = True
             if not npc_interaction_shown:
                 tutorial.show_message("Press E to interact")
         else:
             npc.interact = False
 
-    
+    #collision test code
+    collide = pygame.sprite.collide_rect(mc, cat)
+    if collide:
+        print("They touched 0.0")
+
     #event handler
     for event in pygame.event.get():
         # close the game
@@ -119,25 +131,25 @@ while run:
         if event.type == pygame.KEYDOWN:
             
             if event.key == pygame.K_a:
-                player.move_left()
+                mc.move_left()
                 tutorial.hide_message()
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
             if event.key == pygame.K_d:
-                player.move_right()
+                mc.move_right()
                 tutorial.hide_message()
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
             if event.key == pygame.K_w:
-                player.move_up()
+                mc.move_up()
                 tutorial.hide_message()
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
             if event.key == pygame.K_s:
-                player.move_down()
+                mc.move_down()
                 tutorial.hide_message()
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
 
 # NPC dialogue manager logic 
             if event.key == pygame.K_e:
@@ -157,37 +169,37 @@ while run:
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
-                player.stand_still()
+                mc.stand_still()
                 if pressed[pygame.K_w]:
-                    player.move_up()
+                    mc.move_up()
                 elif pressed[pygame.K_s]:
-                    player.move_down()
+                    mc.move_down()
                 elif pressed[pygame.K_d]:
-                    player.move_right()
+                    mc.move_right()
             if event.key == pygame.K_d:
-                player.stand_still()
+                mc.stand_still()
                 if pressed[pygame.K_w]:
-                    player.move_up()
+                    mc.move_up()
                 elif pressed[pygame.K_s]:
-                    player.move_down()
+                    mc.move_down()
                 elif pressed[pygame.K_a]:
-                    player.move_left()
+                    mc.move_left()
             if event.key == pygame.K_w:
-                player.stand_still()
+                mc.stand_still()
                 if pressed[pygame.K_a]:
-                    player.move_left()
+                    mc.move_left()
                 elif pressed[pygame.K_d]:
-                    player.move_right()
+                    mc.move_right()
                 elif pressed[pygame.K_s]:
-                    player.move_down()
+                    mc.move_down()
             if event.key == pygame.K_s:
-                player.stand_still()
+                mc.stand_still()
                 if pressed[pygame.K_a]:
-                    player.move_left()
+                    mc.move_left()
                 elif pressed[pygame.K_d]:
-                    player.move_right()
+                    mc.move_right()
                 elif pressed[pygame.K_w]:
-                    player.move_up()
+                    mc.move_up()
 
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
@@ -203,7 +215,7 @@ while run:
 # Draw tutorial if not finished
     tutorial.draw(screen)
 
-    player.update()
+    mc.update()
     pygame.display.update()
  
 pygame.quit()
