@@ -44,7 +44,7 @@ def setup_npc_data():
     # Mentor NPC
     mentor_image = pygame.image.load("images/sprites/mentor.png").convert_alpha()
     mentor_image = pygame.transform.scale(mentor_image, (64, 64))
-    mentor = Character(mentor_image, [350, 245], interact=True, dialogue="Hello there!")
+    mentor = Character(mentor_image, [328, 212], interact=True, dialogue="Hello there!")
 
     mentor_dialogues = DialogueManager("Mentor", [
         "Success...",
