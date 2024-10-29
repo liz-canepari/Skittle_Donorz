@@ -77,12 +77,23 @@ class Player():
         self.position[1] += self.velocity[1]
 
         screen_scroll = [0, 0]
+
+        #Moves the camera left and right 
         if self.position[0] > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
             screen_scroll[0] = (constants.SCREEN_WIDTH - constants.SCROLL_THRESH) - self.position[0]
             self.position[0] = constants.SCREEN_WIDTH - constants.SCROLL_THRESH
         if self.position[0] < constants.SCROLL_THRESH:
             screen_scroll[0] = constants.SCROLL_THRESH - self.position[0]
             self.position[0] = constants.SCROLL_THRESH
+
+        #Moves the camera up and down
+        if self.position[1] > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
+            screen_scroll[1] = (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH) - self.position[1]
+            self.position[1] = constants.SCREEN_HEIGHT - constants.SCROLL_THRESH
+        if self.position[1] < constants.SCROLL_THRESH:
+            screen_scroll[1] = constants.SCROLL_THRESH - self.position[1]
+            self.position[1] = constants.SCROLL_THRESH
+        
         print(screen_scroll)
         return screen_scroll
         
