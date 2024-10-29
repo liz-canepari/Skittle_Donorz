@@ -50,11 +50,6 @@ def draw_grid():
         pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-#object to test collisions
-
-#cat is solely for testing collisions
-cat = player.Player(200, 200, 0, 0, "images/sprites/cat-sprite.png", 48, 48)
-npc_group = pygame.sprite.GroupSingle(cat)
 mc = player.Player(400, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
 action = mc.get_action()
@@ -104,7 +99,6 @@ while run:
 
     #draw player
     mc.draw(screen)
-    npc_group.draw(screen)
 
 
 # threshold is number of pixels the user has to be in order to interact with the object.
@@ -116,11 +110,6 @@ while run:
                 tutorial.show_message("Press E to interact")
         else:
             npc.interact = False
-
-    #collision test code
-    collide = pygame.sprite.collide_rect(mc, cat)
-    if collide:
-        print("They touched 0.0")
 
     #event handler
     for event in pygame.event.get():

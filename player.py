@@ -79,6 +79,8 @@ class Player(pygame.sprite.Sprite):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
         self.image = self.get_animation_frame()
+        self.rect = self.image.get_rect()
+        self.rect.center = self.position
         self.mask = pygame.mask.from_surface(self.image)
         
     #put character on screen
