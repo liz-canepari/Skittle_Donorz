@@ -1,7 +1,7 @@
 import pygame
 import spritesheet
 
-class Player():
+class Player(pygame.sprite.Sprite):
     #Animation code from Coding with Russ tutorial
     #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
 
@@ -15,6 +15,7 @@ class Player():
     
     def __init__(self, x, y, velocity_x, velocity_y, image_path):
 
+        pygame.sprite.Sprite.__init__(self)
         #load sprite sheet
         sprite_sheet_image = pygame.image.load(image_path).convert_alpha()
         #create spritesheet object
@@ -36,6 +37,7 @@ class Player():
         self.animation_list = animation_list
         self.animation_steps = animation_steps
         self.image = self.animation_list[0][0]
+        self.mask = pygame.mask.from_surface(self.image)
         self.velocity = [velocity_x, velocity_y]
         self.position = [x, y]
 #-----------------------------------------------getters---------------------------------------
@@ -74,6 +76,8 @@ class Player():
     def update(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
+        self.image = self.get_animation_frame()
+        self.mask = pygame.mask.from_surface(self.image)
         
     #put character on screen
     def draw(self, surface):
