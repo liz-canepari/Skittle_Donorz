@@ -1,5 +1,6 @@
 import pygame
 import spritesheet
+import constants
 
 class Player():
     #Animation code from Coding with Russ tutorial
@@ -74,6 +75,16 @@ class Player():
     def update(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
+
+        screen_scroll = [0, 0]
+        if self.position[0] > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
+            screen_scroll[0] = (constants.SCREEN_WIDTH - constants.SCROLL_THRESH) - self.position[0]
+            self.position[0] = constants.SCREEN_WIDTH - constants.SCROLL_THRESH
+        if self.position[0] < constants.SCROLL_THRESH:
+            screen_scroll[0] = constants.SCROLL_THRESH - self.position[0]
+            self.position[0] = constants.SCROLL_THRESH
+        print(screen_scroll)
+        return screen_scroll
         
     #put character on screen
     def draw(self, surface):
