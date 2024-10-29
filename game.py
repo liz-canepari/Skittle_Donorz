@@ -6,7 +6,7 @@ import background
 from inventory import player_inventory
 from tutorial import Tutorial
 from world import World
-from dialouge import setup_npc_data 
+from dialogue import DialogueManager, check_npc_interaction, setup_npc_data
 from inanimateObj import red_item
 
 #animation code from coding with russ tutorial
@@ -65,9 +65,10 @@ npc_data = setup_npc_data()
 font = pygame.font.Font(None, 36)
 
 # Track dialogue state
-current_dialogue = ""
+current_dialogue = None
 current_dialogue_manager = None
 showing_dialogue = False
+dialogue_manager_ref = {'current': None}    
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
 inventory_open = False
@@ -102,16 +103,8 @@ while run:
         npc_entry['npc'].draw(screen)
     player.draw(screen)
 
-
-# threshold is number of pixels the user has to be in order to interact with the object.
-    for npc_entry in npc_data:
-        npc = npc_entry['npc']
-        if player.player_is_near(npc.position, threshold=40):
-            npc.interact = True
-            if not npc_interaction_shown:
-                tutorial.show_message("Press E to interact")
-        else:
-            npc.interact = False
+    # see if player is near npc
+    check_npc_interaction(player, npc_data, tutorial)
 
    
     #event handler
@@ -142,6 +135,16 @@ while run:
                 tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
+            if event.key == pygame.K_e:
+            # Check if player is close enough to an NPC
+                npc_interaction_shown == True
+                DialogueManager.process_npc_dialogue_interaction(event, npc_data, tutorial, dialogue_manager_ref)
+
+                if npc_interaction_shown:
+                    DialogueManager.display_bubble(current_dialogue)
+
+                # If interacting with an NPC, process dialogue
+                    
 
         #Logic for if key is released
         if event.type == pygame.KEYUP:
@@ -182,27 +185,14 @@ while run:
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
 
-            # NPC dialogue manager logic
-            if event.key == pygame.K_e:
-                for npc_entry in npc_data:
-                    if npc_entry['npc'].interact:
-                        dialogue_manager = npc_entry['dialogue_manager']
-                        if dialogue_manager.has_more_dialogues():
-                            current_dialogue = dialogue_manager.next_line()
-                            current_dialogue_manager = dialogue_manager
-                            showing_dialogue = True
-                            if not npc_interaction_shown:
-                                npc_interaction_shown = True
-                                tutorial.hide_message()
-                        else:
-                            showing_dialogue = False
 
+            # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if inventory_open:
         player_inventory.draw()
 
-# if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
-    if showing_dialogue:
-        player_inventory.display_bubble(constants, current_dialogue)
+    # if npc_interaction_shown:
+    #     display_bubble(current_dialogue)
+
 # Draw tutorial if not finished
     tutorial.draw(screen)
 # update player logic

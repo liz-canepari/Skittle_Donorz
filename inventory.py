@@ -55,15 +55,4 @@ class Inventory:
             else:
                 self.items[slot] = item  # Place the item in the slot
 
-    def display_bubble(self, constants, current_dialogue):
-    
-        bubble_width = constants.SCREEN_WIDTH
-        bubble_height = 100
-        bubble_x = 0
-        bubble_y = constants.SCREEN_HEIGHT - bubble_height
-        pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
-        pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
-        text_surface = font.render(current_dialogue, True, (0, 0, 0))
-        screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
-
 player_inventory = Inventory()
