@@ -62,6 +62,10 @@ frame = mc.get_frame()
 npc_data = setup_npc_data()
 font = pygame.font.Font(None, 36)
 
+# create npc sprite group for collision testing
+npc_group = pygame.sprite.GroupSingle()
+npc_group.add(npc_data[0]['npc'])
+
 # Track dialogue state
 current_dialogue = ""
 current_dialogue_manager = None
@@ -99,7 +103,6 @@ while run:
 
     #draw player
     mc.draw(screen)
-
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc_entry in npc_data:
