@@ -123,25 +123,25 @@ while run:
         if event.type == pygame.KEYDOWN:
             
             if event.key == pygame.K_a:
-                player.move_left()
-                action = player.get_action()
-                frame = player.get_frame()
+                mc.move_left()
+                action = mc.get_action()
+                frame = mc.get_frame()
                 show_movement_tutorial = False
             if event.key == pygame.K_d:
-                player.move_right()
+                mc.move_right()
                 show_movement_tutorial = False
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
             if event.key == pygame.K_w:
-                player.move_up()
+                mc.move_up()
                 show_movement_tutorial = False
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
             if event.key == pygame.K_s:
-                player.move_down()
+                mc.move_down()
                 show_movement_tutorial = False
-                action = player.get_action()
-                frame = player.get_frame()
+                action = mc.get_action()
+                frame = mc.get_frame()
 
 # NPC dialogue manager logic 
             if event.key == pygame.K_e:
