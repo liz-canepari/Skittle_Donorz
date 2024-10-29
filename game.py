@@ -189,7 +189,7 @@ while run:
                 elif pressed[pygame.K_w]:
                     player.move_up()
 
-# if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
+# if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
         bubble_width = constants.SCREEN_WIDTH 
         bubble_height = 100
