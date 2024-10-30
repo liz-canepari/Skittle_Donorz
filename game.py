@@ -200,7 +200,7 @@ while run:
         pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
-
+# update objects currently being used in the loops
     screen_scroll = player.update()
     world.update(screen_scroll)
     for npc in npc_data:
