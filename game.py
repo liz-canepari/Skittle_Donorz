@@ -192,7 +192,7 @@ while run:
 # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:
         current_dialogue_img = pygame.image.load("images\sprites\mentor-dialogue-img.png").convert_alpha()
-        dialogue_frame = pygame.image.load("images/dialogueframe.png").convert_alpha()
+        dialogue_frame = pygame.image.load("images/dialogue-frame.png").convert_alpha()
         dialogue_frame.set_colorkey((0, 0, 0))
         bubble_width = constants.SCREEN_WIDTH - 100
         bubble_height = 100
