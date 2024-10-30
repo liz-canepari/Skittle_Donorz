@@ -68,9 +68,10 @@ current_dialogue_manager = None
 showing_dialogue = False
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
-npc_interaction_shown = False
-tutorial = Tutorial(font)
-tutorial.show_message("Use WASD to move")
+tutorial = Tutorial(font, screen)
+tutorial.add_step("movement", "Move with WASD", (50, 50))
+tutorial.add_step("interaction", "Interact with NPCs with E", (50, 100))
+show_movement_tutorial = True
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 run = True
@@ -105,8 +106,7 @@ while run:
         npc = npc_entry['npc']
         if player.player_is_near(npc.position, threshold=40):
             npc.interact = True
-            if not npc_interaction_shown:
-                tutorial.show_message("Press E to interact")
+            tutorial.show_step("interaction")
         else:
             npc.interact = False
 
@@ -121,27 +121,28 @@ while run:
             
             if event.key == pygame.K_a:
                 player.move_left()
-                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
+                show_movement_tutorial = False
             if event.key == pygame.K_d:
                 player.move_right()
-                tutorial.hide_message()
+                show_movement_tutorial = False
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_w:
                 player.move_up()
-                tutorial.hide_message()
+                show_movement_tutorial = False
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_s:
                 player.move_down()
-                tutorial.hide_message()
+                show_movement_tutorial = False
                 action = player.get_action()
                 frame = player.get_frame()
 
 # NPC dialogue manager logic 
             if event.key == pygame.K_e:
+                tutorial.complete_step("interaction")
                 for npc_entry in npc_data:
                     if npc_entry['npc'].interact:
                         dialogue_manager = npc_entry['dialogue_manager']
@@ -149,9 +150,6 @@ while run:
                             current_dialogue = dialogue_manager.next_line()
                             current_dialogue_manager = dialogue_manager
                             showing_dialogue = True
-                            if not npc_interaction_shown:
-                                npc_interaction_shown = True
-                                tutorial.hide_message()
                         else:
                             showing_dialogue = False
         #Logic for if key is released
@@ -200,12 +198,18 @@ while run:
         pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
         text_surface = font.render(current_dialogue, True, (0, 0, 0))
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+
+# Draw tutorial if not finished
+    tutorial.draw(screen)
+    if show_movement_tutorial:
+        tutorial.show_step("movement")
 # update objects currently being used in the loops
     screen_scroll = player.update()
     world.update(screen_scroll)
     for npc in npc_data:
         npc['npc'].update(screen_scroll)
 
+    player.update()
     pygame.display.update()
  
 pygame.quit()
