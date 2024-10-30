@@ -6,6 +6,8 @@ import background
 from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
+from forground import Forground
+from tree import Tree
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -22,7 +24,7 @@ level = 1
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
+    tile_image = pygame.image.load(f"images/tiles/forest/background-tiles/{x}.png").convert_alpha()
     tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
     tile_list.append(tile_image)
 
@@ -32,7 +34,7 @@ for row in range(constants.ROWS):
     r = [-1] * constants.COLS
     world_data.append(r)
 #load in level data and create world
-with open("levels/mentors_hut_data.csv", newline="") as csvfile:
+with open("levels/forest/forest-floor-data.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
@@ -43,7 +45,13 @@ with open("levels/mentors_hut_data.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
+t = Tree("images/tiles/forest/tree.png", 180, 180)
+fg = Forground()
+fg.add_object("levels/forest/forest-trees.data.csv", t)
+
+
 def draw_grid():
+    
     for x in range(30):
         pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
         pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
@@ -80,6 +88,8 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
+
+    fg.draw(screen)
     #draw_grid()
  
     #update animations (currently only chameleon, but can add other animated sprites here)
