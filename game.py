@@ -64,13 +64,13 @@ frame = player.get_frame()
 # NPCs and their dialogue managers from the dialouge.py file
 dialogue_manager = DialogueManager()
 font = pygame.font.Font(None, 36)
-the_npc_list = get_npc_list()
 # Track dialogue state
 current_npc = None
 current_dialogue = None
 current_dialogue_manager = None
 showing_dialogue = False
-dialogue_manager_ref = {'current': None}    
+dialogue_manager_ref = {'current': None} 
+npc_list = get_npc_list()   
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
 inventory_open = False
@@ -89,12 +89,16 @@ while run:
     #draw_grid()
     screen.fill((0, 0, 0))
     world.draw(screen)
-    tutorial_manager.show_message(screen)
 
-    for npc in the_npc_list:
+    for npc in npc_list:
         npc.draw(screen)
+        if player.player_is_near(npc.position):
+            tutorial_manager.display_proximity_message(player.position, 40, screen, font)
 
     player.draw(screen)
+
+    # tutorial_manager.display_proximity_message()
+
  
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -106,7 +110,7 @@ while run:
             player.set_frame(0)
             frame = player.get_frame()
 
-    interacting_npc = check_npc_interaction(player, the_npc_list, dialogue_manager)
+    interacting_npc = check_npc_interaction(player, npc_list, dialogue_manager)
 
     #event handler
     for event in pygame.event.get():
@@ -114,6 +118,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         process_npc_dialogue(event, dialogue_manager, interacting_npc)
+
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
@@ -132,9 +137,16 @@ while run:
                 player.move_down()
                 action = player.get_action()
                 frame = player.get_frame()
+
+
+
+
+
+
+
             if event.key == pygame.K_e:
                 if not dialogue_manager.showing_dialogue:
-                    current_npc = check_npc_interaction(player, the_npc_list, dialogue_manager)
+                    current_npc = check_npc_interaction(player, npc_list, dialogue_manager)
                     if current_npc:
                         # Load NPC's dialogue and activate dialogue
                         dialogue_manager.load_dialogue(current_npc.dialogue)
@@ -148,6 +160,12 @@ while run:
                         else:
                             # End of dialogue, deactivate
                             dialogue_active = False
+
+
+
+
+
+
         #Logic for if key is releasedw
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()

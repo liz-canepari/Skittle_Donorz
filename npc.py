@@ -22,17 +22,24 @@ class Npc:
     def draw(self, screen):
         screen.blit(self.skin, self.rect)
 
+    def get_x(self):
+        return self.position[0]
+    
+    def get_y(self):
+        return self.position[1]
+
 def get_npc_list():
     return [
-        Npc(name="Mentor", position=(328, 212), size=(64, 64), skin="images/sprites/mentor.png", can_interact=True,
-            dialogue=[
-                "Success...", "And Failure...", "Are Both Signs Of Progress.",
-                "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
-                "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
-                "But Never Come Back Home."
+            Npc(name="Mentor", position=(328, 212), size=(64, 64), skin="images/sprites/mentor.png", can_interact=True,
+                dialogue=[
+                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
+                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
+                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
+                    "But Never Come Back Home."
             ]),
         # Add more NPCs here...
     ] # Draw the NPC image on the screen at its position
+
 
 
 # create an NPC! here is the EX:

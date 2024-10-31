@@ -1,9 +1,10 @@
 # dialogue.py
-
+import datetime
 import pygame
 import constants
 import tutorial
 from npc import get_npc_list
+from datetime import datetime, timedelta
 
 pygame.init()
 
@@ -13,11 +14,15 @@ screen = pygame.display.set_mode((500, 500))
 # Font setup
 font = pygame.font.Font(None, 36)
 
+# 
+DIALOGUE_DELAY = 1
+last_dialogue_time = datetime.now()
+
 class DialogueManager:
     def __init__(self):
         self.current_dialogue = None
         self.dialogue_index = 0
-        self.showing_dialogue = False 
+        self.showing_dialogue = False
 
     def load_dialogue(self, dialogue):
         """Load a new dialogue sequence for an NPC."""
@@ -44,8 +49,7 @@ class DialogueManager:
 
     def display_bubble(self, text):
         """Display the dialogue bubble with the given text on screen."""
-        if self.showing_dialogue: 
-            print("Displaying text:", text)
+        if self.showing_dialogue:
             bubble_width = constants.SCREEN_WIDTH
             bubble_height = 100
             bubble_x = 0
@@ -66,11 +70,12 @@ def process_npc_dialogue(event, dialogue_manager, npc):
     """Process the dialogue for the current NPC interaction."""
     if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
         # Start or continue dialogue
-        if dialogue_manager.has_more_dialogues():
-            line = dialogue_manager.next_line()
-            return line 
-        else:
-            dialogue_manager.showing_dialogue = False
-            dialogue_manager.current_dialogue = None
-            dialogue_manager.dialogue_index = 0
+        if datetime.now() - last_dialogue_time > timedelta(seconds = DIALOGUE_DELAY):
+            if dialogue_manager.has_more_dialogues():
+                line = dialogue_manager.next_line()
+                return line 
+            else:
+                dialogue_manager.showing_dialogue = False
+                dialogue_manager.current_dialogue = None
+                dialogue_manager.dialogue_index = 0
     return None 

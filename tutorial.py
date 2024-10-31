@@ -57,15 +57,18 @@ class TutorialManager:
 
             # Check distance only if the message hasn't been displayed
             if not tutorial["displayed"]:
-                distance = math.sqrt((player_position[0] - position[0]) ** 2 + (player_position[1] - position[1]) ** 2)
-                if distance < threshold:
-                    self._draw_message_bubble(screen, font, message)
-                    tutorial["displayed"] = True  # Mark as displayed once shown
+                self.draw_message_bubble(screen, font, message)
+                # distance = math.sqrt((player_position[0] - position[0]) ** 2 + (player_position[1] - position[1]) ** 2)
+                # if distance < threshold:
+                #     print('over here')
+                #     self._draw_message_bubble(screen, font, message)
+                #     tutorial["displayed"] = True  # Mark as displayed once shown
+                tutorial["displayed"] = True
 
     def show_message(self, message):
         self.current_message = message 
 
-    def _draw_message_bubble(self, screen, font, message):
+    def draw_message_bubble(self, screen, font, message):
         """Draws the message bubble on the screen."""
         bubble_width = 200
         bubble_height = 40
