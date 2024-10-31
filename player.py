@@ -1,5 +1,6 @@
 import pygame
 import spritesheet
+import constants
 
 class Player(pygame.sprite.Sprite):
     #Animation code from Coding with Russ tutorial
@@ -82,6 +83,28 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.position
         self.mask = pygame.mask.from_surface(self.image)
+        
+        
+        screen_scroll = [0, 0]
+
+        #Moves the camera left and right 
+        if self.position[0] > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
+            screen_scroll[0] = (constants.SCREEN_WIDTH - constants.SCROLL_THRESH) - self.position[0]
+            self.position[0] = constants.SCREEN_WIDTH - constants.SCROLL_THRESH
+        if self.position[0] < constants.SCROLL_THRESH:
+            screen_scroll[0] = constants.SCROLL_THRESH - self.position[0]
+            self.position[0] = constants.SCROLL_THRESH
+
+        #Moves the camera up and down
+        if self.position[1] > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
+            screen_scroll[1] = (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH) - self.position[1]
+            self.position[1] = constants.SCREEN_HEIGHT - constants.SCROLL_THRESH
+        if self.position[1] < constants.SCROLL_THRESH:
+            screen_scroll[1] = constants.SCROLL_THRESH - self.position[1]
+            self.position[1] = constants.SCROLL_THRESH
+        
+        return screen_scroll
+
         
     #put character on screen
     def draw(self, surface):

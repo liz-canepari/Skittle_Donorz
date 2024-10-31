@@ -18,6 +18,7 @@ pygame.display.set_caption("Skittle Game")
  
 #define game variables
 level = 1
+screen_scroll = [0, 0]
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 #load tilemap images
@@ -37,7 +38,6 @@ with open("levels/mentors_hut_data.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
-            print(f"{x}, {y}")
             world_data[x][y] = int(tile)
 
 
@@ -86,6 +86,7 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
+    #draw_grid()
     #draw_grid()
  
     #update animations (currently only chameleon, but can add other animated sprites here)
@@ -210,8 +211,14 @@ while run:
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
 
 # Draw tutorial if not finished
+    tutorial.draw(screen)
     if show_movement_tutorial:
         tutorial.show_step("movement")
+# update objects currently being used in the loops
+    screen_scroll = player.update()
+    world.update(screen_scroll)
+    for npc in npc_data:
+        npc['npc'].update(screen_scroll)
 
     mc.update()
     pygame.display.update()

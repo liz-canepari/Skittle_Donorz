@@ -22,6 +22,12 @@ class Object(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.skin, self.position)
 
+    #reposition the object by the screen_scroll 
+    def update(self, screen_scroll):
+        self.position[0] += screen_scroll[0]
+        self.position[1] += screen_scroll[1]
+
+    
     def onInteract(self):
         if self.interact:
             print("You interacted with the object!")
@@ -36,7 +42,7 @@ class Character(Object):  # Inherit from your custom Object class
         self.rect.center = self.position
         self.mask = pygame.mask.from_surface(self.skin)
         self.dialogue = dialogue
-    
+
     def speak(self):
         if self.interact:
             print(f"NPC says: {self.dialogue}")
