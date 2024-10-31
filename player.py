@@ -2,7 +2,7 @@ import pygame
 import spritesheet
 import constants
 
-class Player():
+class Player(pygame.sprite.Sprite):
     #Animation code from Coding with Russ tutorial
     #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
 
@@ -14,15 +14,16 @@ class Player():
     velocity = [0, 0] #controls how quickly character moves and in what direction 
     SPEED = .25 #controls how quickly character moves --- used in when changing velocity
     
-    def __init__(self, x, y, velocity_x, velocity_y, image_path):
+    def __init__(self, x, y, velocity_x, velocity_y, image_path, image_width, image_height):
 
+        pygame.sprite.Sprite.__init__(self)
         #load sprite sheet
         sprite_sheet_image = pygame.image.load(image_path).convert_alpha()
         #create spritesheet object
         sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
        
         #load animation frames
-        frame_0 = sprite_sheet.get_image(0, 0, 32)
+        frame_0 = sprite_sheet.get_image(0, 0, image_width)
         animation_list = []
         animation_steps = [3, 4, 4, 4, 4]
         step_counter = 0
@@ -30,15 +31,18 @@ class Player():
         for animation in animation_steps:
             temp_img_list = []
             for _ in range(animation):
-                temp_img_list.append(sprite_sheet.get_image(step_counter, 32, 32, 2))
+                temp_img_list.append(sprite_sheet.get_image(step_counter, image_width, image_height, 2))
                 step_counter += 1
             animation_list.append(temp_img_list)
         
         self.animation_list = animation_list
         self.animation_steps = animation_steps
         self.image = self.animation_list[0][0]
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.velocity = [velocity_x, velocity_y]
         self.position = [x, y]
+        self.rect.center = self.position
 #-----------------------------------------------getters---------------------------------------
     def get_frame(self):
         return self.current_frame
@@ -75,7 +79,12 @@ class Player():
     def update(self):
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
-
+        self.image = self.get_animation_frame()
+        self.rect = self.image.get_rect()
+        self.rect.center = self.position
+        self.mask = pygame.mask.from_surface(self.image)
+        
+        
         screen_scroll = [0, 0]
 
         #Moves the camera left and right 
@@ -95,9 +104,16 @@ class Player():
             self.position[1] = constants.SCROLL_THRESH
         
         return screen_scroll
+
         
     #put character on screen
     def draw(self, surface):
+        #draw rect for development purposes
+        rect_img = pygame.surface.Surface(self.rect.size)
+        rect_img.fill((0, 0, 255))
+        surface.blit(rect_img, self.position)
+
+        #draw character
         surface.blit(self.get_animation_frame(), self.position)
 
 #---------------------------------------------------------movement functions----------------------------------
