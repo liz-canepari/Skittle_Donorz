@@ -39,6 +39,7 @@ class Forground():
                 for y, tile in enumerate(row):
                     print(f"{x}, {y}")
                     placement_data[x][y] = int(tile)
+                    #need to copy object to avoid reference issues
                     
         
 
