@@ -8,6 +8,7 @@ from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
 import object
+from forground import Forground
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -45,7 +46,7 @@ with open("levels/forest/forest-floor-data.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
-t = Object("images/tiles/forest/tree.png", 180, 180)
+tree = object.Object("images/tiles/forest/tree.png", 180, 180)
 fg = Forground()
 fg.add_object("levels/forest/forest-trees.data.csv", t)
 
