@@ -7,6 +7,7 @@ import inanimateObj
 from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
+import object
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
