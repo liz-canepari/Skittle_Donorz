@@ -1,5 +1,5 @@
 import pygame
-class Tree(pygame.sprite.Sprite):
+class Object(pygame.sprite.Sprite):
 
     def __init__(self,file_path, width, height):
         self.width = width
