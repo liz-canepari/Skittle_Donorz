@@ -215,7 +215,7 @@ while run:
     if show_movement_tutorial:
         tutorial.show_step("movement")
 # update objects currently being used in the loops
-    screen_scroll = player.update()
+    screen_scroll = mc.update()
     world.update(screen_scroll)
     for npc in npc_data:
         npc['npc'].update(screen_scroll)
