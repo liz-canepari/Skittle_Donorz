@@ -212,7 +212,6 @@ while run:
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
 
 # Draw tutorial if not finished
-    tutorial.draw(screen)
     if show_movement_tutorial:
         tutorial.show_step("movement")
 # update objects currently being used in the loops
