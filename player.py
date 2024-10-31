@@ -14,7 +14,6 @@ class Player():
     SPEED = .25 #controls how quickly character moves --- used in when changing velocity
     
     def __init__(self, x, y, velocity_x, velocity_y, image_path):
-
         #load sprite sheet
         sprite_sheet_image = pygame.image.load(image_path).convert_alpha()
         #create spritesheet object
@@ -38,6 +37,7 @@ class Player():
         self.image = self.animation_list[0][0]
         self.velocity = [velocity_x, velocity_y]
         self.position = [x, y]
+        self.rect = self.image.get_rect(topleft=(x, y)) 
 #-----------------------------------------------getters---------------------------------------
     def get_frame(self):
         return self.current_frame
@@ -75,6 +75,8 @@ class Player():
         self.position[0] += self.velocity[0]
         self.position[1] += self.velocity[1]
         
+        # porter added this
+        self.rect.topleft = (self.position[0], self.position[1])
     #put character on screen
     def draw(self, surface):
         surface.blit(self.get_animation_frame(), self.position)
@@ -86,6 +88,7 @@ class Player():
         #set animation to left facing walking animation
         self.set_action(1)
         self.set_frame(0)
+        self.update()
     
     def move_right(self):
         #change velocity x value
@@ -93,6 +96,7 @@ class Player():
         #set animation to right facing walking animation
         self.set_action(2)
         self.set_frame(0)
+        self.update()
     
     def move_up(self):
         #change velocity y value
@@ -100,6 +104,7 @@ class Player():
         #set animation to backwards facing walking animation
         self.set_action(4)
         self.set_frame(0)
+        self.update()
     
     def move_down(self):
         #change velocity y value
@@ -107,6 +112,42 @@ class Player():
         #set to move forward facing walking animation
         self.set_action(3)
         self.set_frame(0)
+        self.update()
+
+    # def handle_key_release(self):
+    #         pressed = pygame.key.get_pressed()
+    #         if event.key == pygame.K_a:
+    #             player.stand_still()
+    #             if pressed[pygame.K_w]:
+    #                 player.move_up()
+    #             elif pressed[pygame.K_s]:
+    #                 player.move_down()
+    #             elif pressed[pygame.K_d]:
+    #                 player.move_right()
+    #         if event.key == pygame.K_d:
+    #             player.stand_still()
+    #             if pressed[pygame.K_w]:
+    #                 player.move_up()
+    #             elif pressed[pygame.K_s]:
+    #                 player.move_down()
+    #             elif pressed[pygame.K_a]:
+    #                 player.move_left()
+    #         if event.key == pygame.K_w:
+    #             player.stand_still()
+    #             if pressed[pygame.K_a]:
+    #                 player.move_left()
+    #             elif pressed[pygame.K_d]:
+    #                 player.move_right()
+    #             elif pressed[pygame.K_s]:
+    #                 player.move_down()
+    #         if event.key == pygame.K_s:
+    #             player.stand_still()
+    #             if pressed[pygame.K_a]:
+    #                 player.move_left()
+    #             elif pressed[pygame.K_d]:
+    #                 player.move_right()
+    #             elif pressed[pygame.K_w]:
+    #                 player.move_up()
     
     #Character goes back to idle and stops moving
     def stand_still(self):
@@ -116,6 +157,7 @@ class Player():
         #set to idle animation
         self.set_action(0)
         self.set_frame(0)
+        self.update()
     
     # Calculate the distance between the player and the object. -Porter
     def player_is_near(self, obj_position, threshold=40):

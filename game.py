@@ -3,11 +3,13 @@ import csv
 import constants
 import player
 import background
+import npc
+from tutorial import TutorialManager
+from npc import get_npc_list
 from inventory import player_inventory
-from tutorial import Tutorial
 from world import World
-from dialogue import DialogueManager, check_npc_interaction, setup_npc_data
-from inanimateObj import red_item
+from dialogue import DialogueManager, check_npc_interaction, process_npc_dialogue
+
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -38,7 +40,6 @@ with open("levels/mentors_hut_data.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
-            print(f"{x}, {y}")
             world_data[x][y] = int(tile)
 
 
@@ -61,10 +62,11 @@ frame = player.get_frame()
 
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
-npc_data = setup_npc_data()
+dialogue_manager = DialogueManager()
 font = pygame.font.Font(None, 36)
-
+the_npc_list = get_npc_list()
 # Track dialogue state
+current_npc = None
 current_dialogue = None
 current_dialogue_manager = None
 showing_dialogue = False
@@ -74,17 +76,25 @@ dialogue_manager_ref = {'current': None}
 inventory_open = False
 selected = None 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
+tutorial_manager = TutorialManager()
 npc_interaction_shown = False
-tutorial = Tutorial(font)
-tutorial.show_message("Use WASD to move")
+# tutorial = Tutorial(font)
+# tutorial.show_message("Use WASD to move")
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 run = True
 while run:
     #update background
     screen.fill((0, 0, 0))
-
-    world.draw(screen)
+    # world.draw(screen)
     #draw_grid()
+    screen.fill((0, 0, 0))
+    world.draw(screen)
+    tutorial_manager.show_message(screen)
+
+    for npc in the_npc_list:
+        npc.draw(screen)
+
+    player.draw(screen)
  
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -95,58 +105,50 @@ while run:
         if frame >= len(player.get_animation()):
             player.set_frame(0)
             frame = player.get_frame()
- 
 
-    #show frame image
-    # box.draw(screen)
-    for npc_entry in npc_data:
-        npc_entry['npc'].draw(screen)
-    player.draw(screen)
+    interacting_npc = check_npc_interaction(player, the_npc_list, dialogue_manager)
 
-    # see if player is near npc
-    check_npc_interaction(player, npc_data, tutorial)
-
-   
     #event handler
     for event in pygame.event.get():
         # close the game
         if event.type == pygame.QUIT:
             run = False
+        process_npc_dialogue(event, dialogue_manager, interacting_npc)
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
-           
             if event.key == pygame.K_a:
                 player.move_left()
-                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_d:
                 player.move_right()
-                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_w:
                 player.move_up()
-                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_s:
                 player.move_down()
-                tutorial.hide_message()
                 action = player.get_action()
                 frame = player.get_frame()
             if event.key == pygame.K_e:
-            # Check if player is close enough to an NPC
-                npc_interaction_shown == True
-                DialogueManager.process_npc_dialogue_interaction(event, npc_data, tutorial, dialogue_manager_ref)
-
-                if npc_interaction_shown:
-                    DialogueManager.display_bubble(current_dialogue)
-
-                # If interacting with an NPC, process dialogue
-                    
-
-        #Logic for if key is released
+                if not dialogue_manager.showing_dialogue:
+                    current_npc = check_npc_interaction(player, the_npc_list, dialogue_manager)
+                    if current_npc:
+                        # Load NPC's dialogue and activate dialogue
+                        dialogue_manager.load_dialogue(current_npc.dialogue)
+                        dialogue_active = True
+                    # If dialogue is active, process the next line
+                    if dialogue_active:
+                        line = process_npc_dialogue(event, dialogue_manager, current_npc)
+                        if line:
+                            # Display the current line of dialogue
+                            dialogue_manager.display_bubble(line)
+                        else:
+                            # End of dialogue, deactivate
+                            dialogue_active = False
+        #Logic for if key is releasedw
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
@@ -181,20 +183,16 @@ while run:
                     player.move_right()
                 elif pressed[pygame.K_w]:
                     player.move_up()
-
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
 
+    if dialogue_manager.showing_dialogue and dialogue_manager.has_more_dialogues():
+        line = dialogue_manager.next_line()  # Fetch the current dialogue line
+        dialogue_manager.display_bubble(line)
 
-            # if npc had dialouge, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if inventory_open:
         player_inventory.draw()
 
-    # if npc_interaction_shown:
-    #     display_bubble(current_dialogue)
-
-# Draw tutorial if not finished
-    tutorial.draw(screen)
-# update player logic
+    # Update player logic
     player.update()
     pygame.display.update()
