@@ -212,11 +212,10 @@ while run:
         screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
 
 # Draw tutorial if not finished
-    tutorial.draw(screen)
     if show_movement_tutorial:
         tutorial.show_step("movement")
 # update objects currently being used in the loops
-    screen_scroll = player.update()
+    screen_scroll = mc.update()
     world.update(screen_scroll)
     for npc in npc_data:
         npc['npc'].update(screen_scroll)
