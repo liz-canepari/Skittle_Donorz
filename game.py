@@ -18,7 +18,7 @@ pygame.init()
  
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Skittle Game")
- 
+
 #define game variables
 level = 1
 
@@ -92,14 +92,13 @@ while run:
 
     for npc in npc_list:
         npc.draw(screen)
-        if player.player_is_near(npc.position):
-            tutorial_manager.display_proximity_message(player.position, 40, screen, font)
-
+            
     player.draw(screen)
+        #     tutorial_manager.display_proximity_message(player.position, 40, screen, font)
+
 
     # tutorial_manager.display_proximity_message()
 
- 
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= animation_cooldown:
@@ -110,14 +109,14 @@ while run:
             player.set_frame(0)
             frame = player.get_frame()
 
-    interacting_npc = check_npc_interaction(player, npc_list, dialogue_manager)
+    # interacting_npc = check_npc_interaction(player, npc_list, dialogue_manager)
 
     #event handler
     for event in pygame.event.get():
         # close the game
         if event.type == pygame.QUIT:
             run = False
-        process_npc_dialogue(event, dialogue_manager, interacting_npc)
+        # process_npc_dialogue(event, dialogue_manager, interacting_npc)
 
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
@@ -139,32 +138,13 @@ while run:
                 frame = player.get_frame()
 
 
-
-
-
-
-
             if event.key == pygame.K_e:
-                if not dialogue_manager.showing_dialogue:
-                    current_npc = check_npc_interaction(player, npc_list, dialogue_manager)
-                    if current_npc:
-                        # Load NPC's dialogue and activate dialogue
-                        dialogue_manager.load_dialogue(current_npc.dialogue)
-                        dialogue_active = True
-                    # If dialogue is active, process the next line
-                    if dialogue_active:
-                        line = process_npc_dialogue(event, dialogue_manager, current_npc)
-                        if line:
-                            # Display the current line of dialogue
-                            dialogue_manager.display_bubble(line)
-                        else:
-                            # End of dialogue, deactivate
-                            dialogue_active = False
-
-
-
-
-
+                for npc in npc_list:
+                    if player.player_is_near(npc.position):
+                        process_npc_dialogue(dialogue_manager, npc, npc.can_interact)
+                        print(dialogue_manager)
+                        print(npc)
+                        print(npc.can_interact)
 
         #Logic for if key is releasedw
         if event.type == pygame.KEYUP:
@@ -204,9 +184,9 @@ while run:
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
 
-    if dialogue_manager.showing_dialogue and dialogue_manager.has_more_dialogues():
-        line = dialogue_manager.next_line()  # Fetch the current dialogue line
-        dialogue_manager.display_bubble(line)
+    # if dialogue_manager.showing_dialogue and dialogue_manager.has_more_dialogues():
+    #     line = dialogue_manager.next_line()  # Fetch the current dialogue line
+    #     dialogue_manager.display_bubble(line)
 
     if inventory_open:
         player_inventory.draw()

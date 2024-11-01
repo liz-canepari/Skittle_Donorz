@@ -24,12 +24,6 @@ class DialogueManager:
         self.dialogue_index = 0
         self.showing_dialogue = False
 
-    def load_dialogue(self, dialogue):
-        """Load a new dialogue sequence for an NPC."""
-        self.current_dialogue = dialogue
-        self.dialogue_index = 0
-        self.showing_dialogue = True
-
     def next_line(self):
         """Return the next line of dialogue or end if complete."""
         if self.current_dialogue and self.dialogue_index < len(self.current_dialogue):
@@ -66,16 +60,21 @@ def check_npc_interaction(player, npc_list, dialogue_manager):
             dialogue_manager.display_bubble(f"Press E to interact with {npc.name}")
             return npc
 
-def process_npc_dialogue(event, dialogue_manager, npc):
+def process_npc_dialogue(dialogue_manager, npc, can_interact):
     """Process the dialogue for the current NPC interaction."""
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-        # Start or continue dialogue
-        if datetime.now() - last_dialogue_time > timedelta(seconds = DIALOGUE_DELAY):
-            if dialogue_manager.has_more_dialogues():
-                line = dialogue_manager.next_line()
-                return line 
-            else:
-                dialogue_manager.showing_dialogue = False
-                dialogue_manager.current_dialogue = None
-                dialogue_manager.dialogue_index = 0
-    return None 
+    print(dialogue_manager)
+    print(npc)
+    print(npc.can_interact)
+    print(npc.dialogue)
+    if can_interact:
+        # Check if there are more lines to display
+        if npc.dialogue and dialogue_manager.dialogue_index < len(npc.dialogue):
+            # Get the next line of dialogue
+            line = npc.dialogue[dialogue_manager.dialogue_index]
+            dialogue_manager.display_bubble(line)  # Display the dialogue bubble with the line
+            dialogue_manager.dialogue_index += 1  # Move to the next line
+        else:
+            # If no more dialogue, hide the dialogue
+            dialogue_manager.showing_dialogue = False
+            dialogue_manager.current_dialogue = None
+            dialogue_manager.dialogue_index = 0

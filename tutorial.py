@@ -54,7 +54,6 @@ class TutorialManager:
         for tutorial in self.messages:
             position = tutorial["position"]
             message = tutorial["message"]
-
             # Check distance only if the message hasn't been displayed
             if not tutorial["displayed"]:
                 self.draw_message_bubble(screen, font, message)
