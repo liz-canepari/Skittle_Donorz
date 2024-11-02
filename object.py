@@ -1,10 +1,10 @@
 import pygame
 class Object(pygame.sprite.Sprite):
 
-    def __init__(self,file_path, width, height):
+    def __init__(self,file_path, width, height, position = [0,0]):
         self.width = width
         self.height = height
-        self.position = [0, 0]
+        self.position = position
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(file_path).convert_alpha()
         self.image = pygame.transform.scale(self.image, (width, height))
@@ -18,3 +18,17 @@ class Object(pygame.sprite.Sprite):
     
     def draw(self, surface):
         surface.blit(self.image, self.position)
+    
+    def update(self, screen_scroll):
+        self.position[0] += screen_scroll[0]
+        self.position[1] += screen_scroll[1]
+
+class ObjectCopy(Object):
+    def __init__(self, object):
+        self.width = object.width
+        self.height = object.height
+        self.position = object.position
+        pygame.sprite.Sprite.__init__(self)
+        self.image = object.image
+        self.rect = object.rect
+        self.mask = object.mask

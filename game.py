@@ -9,6 +9,7 @@ from world import World
 from dialouge import setup_npc_data 
 import object
 from foreground import Foreground
+import copy
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -48,8 +49,8 @@ world.process_data(world_data, tile_list)
 
 tree = object.Object("images/tiles/forest/tree.png", 180, 180)
 fg = Foreground()
-fg.add_single_object(tree, "trees","levels/forest/forest-trees.data.csv")
-
+fg.add_copy_group(tree, "trees","levels/forest/forest-trees.data.csv")
+print(fg.get_groups())
 
 def draw_grid():
     
@@ -96,6 +97,7 @@ while run:
     world.draw(screen)
     #draw_grid()
     #draw_grid()
+    fg.draw(screen)
  
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -226,6 +228,8 @@ while run:
     world.update(screen_scroll)
     for npc in npc_data:
         npc['npc'].update(screen_scroll)
+
+    fg.update(screen_scroll)
 
     mc.update()
     pygame.display.update()

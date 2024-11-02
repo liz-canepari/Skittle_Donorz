@@ -1,7 +1,7 @@
 import pygame
 import constants
 import csv
-import copy
+from object import ObjectCopy
 
 class Foreground():
 
@@ -11,41 +11,18 @@ class Foreground():
     def get_group(self, name):
         return self.groups[name]
     
+    def get_groups(self):
+        return self.groups
+    
     '''
     ADD SINGLE OBJECT
     Add a single object to the map, in its own sprite group
     *Object: The object to add
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
-    *Data:
-    If given a data sheet with multiple placements, will place the same object in multiple locations
-    (the same as in exact same reference just in different places.)
-    If no data is given, the object will keep what ever position it was given when initiated
     '''
-    def add_single_object(self, object, name, data=None):
-        #init list for placement info
-        if data == None:
-            group = pygame.sprite.GroupSingle()
-            group.add(object)
-        else:
-            placement_data = []
-            group = pygame.sprite.Group()
-            #create empty tile list
-            for row in range(constants.ROWS):
-                r = [-1] * constants.COLS
-                placement_data.append(r)
-            #load in level data
-            with open(data, newline="") as csvfile:
-                reader = csv.reader(csvfile, delimiter = ",")
-                for x, row in enumerate(reader):
-                    for y, tile in enumerate(row):
-                        print(f"{x}, {y}")
-                        placement_data[x][y] = int(tile)
-            #place object in each location
-            for x, row in enumerate(placement_data):
-                for y, tile in enumerate(row):
-                    if tile == 1:
-                        object.set_position(x * constants.TILESIZE, y * constants.TILESIZE)
-                        group.add(object)
+    def add_single_object(self, object, name):
+        group = pygame.sprite.GroupSingle()
+        group.add(object)
         self.groups[name] = group
 
     '''
@@ -58,7 +35,7 @@ class Foreground():
 
         placement_data = []
         group = pygame.sprite.Group()
-
+        #create empty tile list
         for row in range(constants.ROWS):
             r = [-1] * constants.COLS
             placement_data.append(r)
@@ -69,10 +46,10 @@ class Foreground():
                 for y, tile in enumerate(row):
                     print(f"{x}, {y}")
                     placement_data[x][y] = int(tile)
-                    if tile == 1:
-                        object_copy = copy.deepcopy(object)
-                        object_copy.set_position(x * constants.TILESIZE, y * constants.TILESIZE)
-                        group.add(object_copy)
+                    if placement_data[x][y] == 0:
+                        new_object = ObjectCopy(object)
+                        new_object.set_position(y * constants.TILESIZE, x * constants.TILESIZE)
+                        group.add(new_object)
 
         self.groups[name] = group   
 
@@ -89,7 +66,13 @@ class Foreground():
 
     def draw(self, surface):
         for group in self.groups.values():
-            pygame.sprite.Group.draw(group, surface)
+            for object in group:
+                object.draw(surface)
+
+    def update(self, screen_scroll):
+        for group in self.groups.values():
+            for object in group:
+                object.update(screen_scroll)
 
     '''
     CHECK ALL COLLIDE
