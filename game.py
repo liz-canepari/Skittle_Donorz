@@ -8,7 +8,7 @@ from tutorial import Tutorial
 from world import World
 from dialouge import setup_npc_data 
 import object
-from forground import Forground
+from foreground import Foreground
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -47,8 +47,8 @@ world = World()
 world.process_data(world_data, tile_list)
 
 tree = object.Object("images/tiles/forest/tree.png", 180, 180)
-fg = Forground()
-fg.add_object("levels/forest/forest-trees.data.csv", t)
+fg = Foreground()
+fg.add_single_object(tree, "trees","levels/forest/forest-trees.data.csv")
 
 
 def draw_grid():
