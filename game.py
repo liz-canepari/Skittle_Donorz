@@ -203,6 +203,8 @@ while run:
                     mc.move_right()
                 elif pressed[pygame.K_w]:
                     mc.move_up()
+        #Manage Collisions
+
 
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if showing_dialogue:

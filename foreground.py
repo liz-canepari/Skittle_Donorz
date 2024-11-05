@@ -48,7 +48,7 @@ class Foreground():
                     placement_data[x][y] = int(tile)
                     if placement_data[x][y] == 0:
                         new_object = ObjectCopy(object)
-                        new_object.set_position(y * constants.TILESIZE, x * constants.TILESIZE)
+                        new_object.set_position(y * constants.TILESIZE - (object.width/2), x * constants.TILESIZE - object.height)
                         group.add(new_object)
 
         self.groups[name] = group   
@@ -99,4 +99,6 @@ class Foreground():
     RETURNS: List of collided objects
     '''
     def check_collide(self, sprite, group_name, kill=False):
-        return pygame.sprite.spritecollide(sprite, self.groups[group_name], kill)
+        collisions = pygame.sprite.spritecollide(sprite, self.groups[group_name], kill)
+        print(collisions)
+        return collisions

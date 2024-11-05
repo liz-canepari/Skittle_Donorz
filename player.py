@@ -109,9 +109,9 @@ class Player(pygame.sprite.Sprite):
     #put character on screen
     def draw(self, surface):
         #draw rect for development purposes
-        rect_img = pygame.surface.Surface(self.rect.size)
-        rect_img.fill((0, 0, 255))
-        surface.blit(rect_img, self.position)
+        #rect_img = pygame.surface.Surface(self.rect.size)
+        #rect_img.fill((0, 0, 255))
+        #surface.blit(rect_img, self.position)
 
         #draw character
         surface.blit(self.get_animation_frame(), self.position)

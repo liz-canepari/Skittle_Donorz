@@ -15,6 +15,7 @@ class Object(pygame.sprite.Sprite):
 
     def set_position(self, x, y):
         self.position = [x, y]
+        self.rect.center = self.position
     
     def draw(self, surface):
         surface.blit(self.image, self.position)
@@ -22,6 +23,7 @@ class Object(pygame.sprite.Sprite):
     def update(self, screen_scroll):
         self.position[0] += screen_scroll[0]
         self.position[1] += screen_scroll[1]
+        self.rect.center = self.position
 
 class ObjectCopy(Object):
     def __init__(self, object):
