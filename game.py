@@ -20,6 +20,7 @@ pygame.display.set_caption("Skittle Game")
 #define game variables
 level = 1
 screen_scroll = [0, 0]
+clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 #load tilemap images
@@ -51,7 +52,7 @@ def draw_grid():
         pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(400, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+mc = player.Player(250, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
@@ -83,12 +84,15 @@ show_movement_tutorial = True
 
 run = True
 while run:
+    #control FPS
+    clock.tick(constants.FPS)
+
     #update background
     screen.fill((0, 0, 0))
 
     world.draw(screen)
     #draw_grid()
-    #draw_grid()
+
  
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -215,12 +219,11 @@ while run:
     if show_movement_tutorial:
         tutorial.show_step("movement")
 # update objects currently being used in the loops
-    screen_scroll = mc.update()
+    screen_scroll = mc.update(world.obstacle_tiles)
     world.update(screen_scroll)
     for npc in npc_data:
         npc['npc'].update(screen_scroll)
 
-    mc.update()
     pygame.display.update()
  
 pygame.quit()

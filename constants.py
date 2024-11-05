@@ -1,5 +1,8 @@
+FPS = 60
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 600
+
+PLAYER_HITBOX = 60
 
 #Tileset Constants
 ROWS = 13

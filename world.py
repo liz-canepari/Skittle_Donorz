@@ -4,6 +4,7 @@ import constants
 class World():
     def __init__(self):
         self.map_tiles = []
+        self.obstacle_tiles = []
 
     def process_data(self, data, tile_list):
         self.level_length = len(data)
@@ -16,11 +17,14 @@ class World():
                 image_y = y * constants.TILESIZE
                 image_rect.x = image_x
                 image_rect.y = image_y
+                #image_rect.center = (image_x, image_y)
                 tile_data = [image, image_rect, image_x, image_y]
 
                 #add image data to main tiles list
                 if tile >= 0:
                     self.map_tiles.append(tile_data)
+                if 1 <= tile <= 11:
+                    self.obstacle_tiles.append(tile_data)
 
     def update(self, screen_scroll):
         for tile in self.map_tiles:
