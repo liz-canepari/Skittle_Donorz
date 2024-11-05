@@ -8,7 +8,7 @@ from tutorial import TutorialManager
 from npc import get_npc_list
 from inventory import player_inventory
 from world import World
-from dialogue import DialogueManager, check_npc_interaction, process_npc_dialogue
+from dialogue import DialogueManager, process_npc_dialogue
 
 
 #animation code from coding with russ tutorial
@@ -62,15 +62,18 @@ frame = player.get_frame()
 
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
-dialogue_manager = DialogueManager()
+dialogue_manager = DialogueManager() #this is needed
 font = pygame.font.Font(None, 36)
 # Track dialogue state
+dialogue_index = 0
+advance_dialogue = False
 current_npc = None
 current_dialogue = None
 current_dialogue_manager = None
 showing_dialogue = False
+speaker = None
 dialogue_manager_ref = {'current': None} 
-npc_list = get_npc_list()   
+npc_list = get_npc_list()   #please work
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
 inventory_open = False
@@ -83,21 +86,16 @@ npc_interaction_shown = False
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 run = True
 while run:
-    #update background
+    #update background/ draw everything necessary on screen
     screen.fill((0, 0, 0))
-    # world.draw(screen)
-    #draw_grid()
     screen.fill((0, 0, 0))
+
     world.draw(screen)
 
     for npc in npc_list:
         npc.draw(screen)
-            
+
     player.draw(screen)
-        #     tutorial_manager.display_proximity_message(player.position, 40, screen, font)
-
-
-    # tutorial_manager.display_proximity_message()
 
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -109,14 +107,12 @@ while run:
             player.set_frame(0)
             frame = player.get_frame()
 
-    # interacting_npc = check_npc_interaction(player, npc_list, dialogue_manager)
-
-    #event handler
     for event in pygame.event.get():
         # close the game
         if event.type == pygame.QUIT:
             run = False
-        # process_npc_dialogue(event, dialogue_manager, interacting_npc)
+            
+        can_interact = npc is not None 
 
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
@@ -137,16 +133,14 @@ while run:
                 action = player.get_action()
                 frame = player.get_frame()
 
-
             if event.key == pygame.K_e:
                 for npc in npc_list:
                     if player.player_is_near(npc.position):
-                        process_npc_dialogue(dialogue_manager, npc, npc.can_interact)
-                        print(dialogue_manager)
-                        print(npc)
-                        print(npc.can_interact)
+                        speaker = npc
+                        showing_dialogue = True
+                        dialogue_index += 1
 
-        #Logic for if key is releasedw
+        #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
@@ -184,12 +178,11 @@ while run:
             if event.key == pygame.K_i:
                 inventory_open = not inventory_open
 
-    # if dialogue_manager.showing_dialogue and dialogue_manager.has_more_dialogues():
-    #     line = dialogue_manager.next_line()  # Fetch the current dialogue line
-    #     dialogue_manager.display_bubble(line)
-
     if inventory_open:
         player_inventory.draw()
+    
+    if showing_dialogue:
+        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
 
     # Update player logic
     player.update()
