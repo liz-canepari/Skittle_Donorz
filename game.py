@@ -23,33 +23,18 @@ screen_scroll = [0, 0]
 clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
+world = World()
 #load tilemap images
 tile_list = []
-for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
-    tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
-    tile_list.append(tile_image)
+world.load_tilemap_images(tile_list)
 
 #create empty tile list
 world_data = []
-for row in range(constants.ROWS):
-    r = [-1] * constants.COLS
-    world_data.append(r)
+world.world_fill_defaults(world_data)
+
 #load in level data and create world
-with open("levels/mentors_hut_data.csv", newline="") as csvfile:
-    reader = csv.reader(csvfile, delimiter = ",")
-    for x, row in enumerate(reader):
-        for y, tile in enumerate(row):
-            world_data[x][y] = int(tile)
-
-
-world = World()
+world.load_csv_level(world_data)
 world.process_data(world_data, tile_list)
-
-def draw_grid():
-    for x in range(30):
-        pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
-        pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(250, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
@@ -91,7 +76,7 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
-    #draw_grid()
+    #world.draw_grid(screen)
 
  
     #update animations (currently only chameleon, but can add other animated sprites here)
