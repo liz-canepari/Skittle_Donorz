@@ -108,7 +108,7 @@ while run:
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
-        if mc.player_is_near(npc.position, threshold=40):
+        if mc.player_is_near((npc.rect.center), threshold=40):
             npc.interact = True
             tutorial_manager.show_step("interaction")
         else:
@@ -146,7 +146,7 @@ while run:
         # NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 for npc in npc_list:
-                    if mc.player_is_near(npc.position):
+                    if mc.player_is_near(npc.rect.center):
                         speaker = npc
                         showing_dialogue = True
                         dialogue_index += 1
@@ -207,9 +207,9 @@ while run:
     screen_scroll = mc.update(world.obstacle_tiles)
     world.update(screen_scroll)
     for npc in npc_list:
+        
         npc.update(screen_scroll)
     
-
     pygame.display.update()
  
 pygame.quit()
