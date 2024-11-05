@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
     current_action = 0 
     position = [0, 0] #coordinates of character on screen
     velocity = [0, 0] #controls how quickly character moves and in what direction 
-    SPEED = .25 #controls how quickly character moves --- used in when changing velocity
+    SPEED = 5 #controls how quickly character moves --- used in when changing velocity
     
     def __init__(self, x, y, velocity_x, velocity_y, image_path, image_width, image_height):
 
@@ -38,11 +38,9 @@ class Player(pygame.sprite.Sprite):
         self.animation_list = animation_list
         self.animation_steps = animation_steps
         self.image = self.animation_list[0][0]
-        self.rect = self.image.get_rect()
+        self.rect = pygame.Rect(x, y, 60, 60)
         self.mask = pygame.mask.from_surface(self.image)
         self.velocity = [velocity_x, velocity_y]
-        self.position = [x, y]
-        self.rect.center = self.position
 #-----------------------------------------------getters---------------------------------------
     def get_frame(self):
         return self.current_frame
@@ -57,10 +55,10 @@ class Player(pygame.sprite.Sprite):
         return self.animation_list[self.current_action][self.current_frame]
     
     def get_x(self):
-        return self.position[0]
+        return self.rect.centerx
     
     def get_y(self):
-        return self.position[1]
+        return self.rect.centery
 #-----------------------------------------------setters---------------------------------------
     def set_frame(self, frame):
         self.current_frame=frame
@@ -76,32 +74,55 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self):
-        self.position[0] += self.velocity[0]
-        self.position[1] += self.velocity[1]
+    def update(self, obstacle_tiles):
+        self.rect.centerx += self.velocity[0]
+        #check for collision with map in x direction
+        for obstacle in obstacle_tiles:
+            if obstacle[1].colliderect(self.rect):
+                if self.velocity[0] > 0:
+                    self.rect.right = obstacle[1].left
+                if self.velocity[0] < 0:
+                    self.rect.left = obstacle[1].right
+
+
+        self.rect.centery += self.velocity[1]
+        for obstacle in obstacle_tiles:
+            if obstacle[1].colliderect(self.rect):
+                if self.velocity[1] > 0:
+                    self.rect.bottom = obstacle[1].top
+                if self.velocity[1] < 0:
+                    self.rect.top = obstacle[1].bottom
+
+
+
         self.image = self.get_animation_frame()
-        self.rect = self.image.get_rect()
-        self.rect.center = self.position
         self.mask = pygame.mask.from_surface(self.image)
         
-        
+        for obstacle in obstacle_tiles:
+            if obstacle[1].colliderect(self.rect):
+                if self.velocity[0] > 0:
+                    self.rect.right = obstacle[1].left
+                if self.velocity[0] < 0:
+                    self.rect.left = obstacle[1].right
+
+                         
         screen_scroll = [0, 0]
 
         #Moves the camera left and right 
-        if self.position[0] > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
-            screen_scroll[0] = (constants.SCREEN_WIDTH - constants.SCROLL_THRESH) - self.position[0]
-            self.position[0] = constants.SCREEN_WIDTH - constants.SCROLL_THRESH
-        if self.position[0] < constants.SCROLL_THRESH:
-            screen_scroll[0] = constants.SCROLL_THRESH - self.position[0]
-            self.position[0] = constants.SCROLL_THRESH
+        if self.rect.right > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
+            screen_scroll[0] = (constants.SCREEN_WIDTH - constants.SCROLL_THRESH) - self.rect.right
+            self.rect.right = constants.SCREEN_WIDTH - constants.SCROLL_THRESH
+        if self.rect.left < constants.SCROLL_THRESH:
+            screen_scroll[0] = constants.SCROLL_THRESH - self.rect.left
+            self.rect.left = constants.SCROLL_THRESH
 
         #Moves the camera up and down
-        if self.position[1] > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
-            screen_scroll[1] = (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH) - self.position[1]
-            self.position[1] = constants.SCREEN_HEIGHT - constants.SCROLL_THRESH
-        if self.position[1] < constants.SCROLL_THRESH:
-            screen_scroll[1] = constants.SCROLL_THRESH - self.position[1]
-            self.position[1] = constants.SCROLL_THRESH
+        if self.rect.top > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
+            screen_scroll[1] = (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH) - self.rect.top
+            self.rect.top = constants.SCREEN_HEIGHT - constants.SCROLL_THRESH
+        if self.rect.bottom < constants.SCROLL_THRESH:
+            screen_scroll[1] = constants.SCROLL_THRESH - self.rect.bottom
+            self.rect.bottom = constants.SCROLL_THRESH
         
         return screen_scroll
 
@@ -111,10 +132,11 @@ class Player(pygame.sprite.Sprite):
         #draw rect for development purposes
         rect_img = pygame.surface.Surface(self.rect.size)
         rect_img.fill((0, 0, 255))
-        surface.blit(rect_img, self.position)
+        surface.blit(rect_img, (self.rect.x, self.rect.y))
 
+        
         #draw character
-        surface.blit(self.get_animation_frame(), self.position)
+        surface.blit(self.get_animation_frame(), (self.rect.x, self.rect.y))
 
 #---------------------------------------------------------movement functions----------------------------------
     def move_left(self):
