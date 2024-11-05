@@ -84,7 +84,6 @@ class Player(pygame.sprite.Sprite):
                 if self.velocity[0] < 0:
                     self.rect.left = obstacle[1].right
 
-
         self.rect.centery += self.velocity[1]
         for obstacle in obstacle_tiles:
             if obstacle[1].colliderect(self.rect):
@@ -92,8 +91,6 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = obstacle[1].top
                 if self.velocity[1] < 0:
                     self.rect.top = obstacle[1].bottom
-
-
 
         self.image = self.get_animation_frame()
         self.mask = pygame.mask.from_surface(self.image)
