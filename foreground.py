@@ -100,5 +100,4 @@ class Foreground():
     '''
     def check_collide(self, sprite, group_name, kill=False):
         collisions = pygame.sprite.spritecollide(sprite, self.groups[group_name], kill)
-        print(collisions)
         return collisions

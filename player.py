@@ -74,7 +74,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles):
+    def update(self, obstacle_tiles, collision_list):
         self.rect.centerx += self.velocity[0]
         #check for collision with map in x direction
         for obstacle in obstacle_tiles:
@@ -84,6 +84,12 @@ class Player(pygame.sprite.Sprite):
                 if self.velocity[0] < 0:
                     self.rect.left = obstacle[1].right
 
+        for collision in collision_list:
+            if collision.rect.colliderect(self.rect):
+                if self.velocity[0] > 0:
+                    self.rect.right = collision.rect.left
+                if self.velocity[0] < 0:
+                    self.rect.left = collision.rect.right
 
         self.rect.centery += self.velocity[1]
         for obstacle in obstacle_tiles:
@@ -93,7 +99,12 @@ class Player(pygame.sprite.Sprite):
                 if self.velocity[1] < 0:
                     self.rect.top = obstacle[1].bottom
 
-
+        for collision in collision_list:
+            if collision.rect.colliderect(self.rect):
+                if self.velocity[1] > 0:
+                    self.rect.bottom = collision.rect.top
+                if self.velocity[1] < 0:
+                    self.rect.top = collision.rect.bottom
 
         self.image = self.get_animation_frame()
         self.mask = pygame.mask.from_surface(self.image)
@@ -105,6 +116,12 @@ class Player(pygame.sprite.Sprite):
                 if self.velocity[0] < 0:
                     self.rect.left = obstacle[1].right
 
+        for collision in collision_list:
+            if collision.rect.colliderect(self.rect):
+                if self.velocity[0] > 0:
+                    self.rect.right = collision.rect.left
+                if self.velocity[0] < 0:
+                    self.rect.left = collision.rect.right
                          
         screen_scroll = [0, 0]
 
@@ -130,9 +147,9 @@ class Player(pygame.sprite.Sprite):
     #put character on screen
     def draw(self, surface):
         #draw rect for development purposes
-        rect_img = pygame.surface.Surface(self.rect.size)
-        rect_img.fill((0, 0, 255))
-        surface.blit(rect_img, (self.rect.x, self.rect.y))
+        # rect_img = pygame.surface.Surface(self.rect.size)
+        # rect_img.fill((0, 0, 255))
+        # surface.blit(rect_img, (self.rect.x, self.rect.y))
 
         
         #draw character
@@ -177,7 +194,7 @@ class Player(pygame.sprite.Sprite):
         self.set_frame(0)
     
     # Calculate the distance between the player and the object. -Porter
-    def player_is_near(self, obj_position, threshold=40):
+    def player_is_near(self, obj_position,  threshold=40):
         player_x = self.get_x()
         player_y = self.get_y()
         

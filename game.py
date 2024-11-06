@@ -9,6 +9,8 @@ from npc import get_npc_list
 from inventory import player_inventory
 from world import World
 from dialogue import DialogueManager
+from foreground import Foreground
+import object
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -94,6 +96,7 @@ while run:
 
     world.draw(screen)
     #draw_grid()
+    
 
     for npc in npc_list:
         npc.draw(screen)
@@ -111,6 +114,7 @@ while run:
 
     #draw player
     mc.draw(screen)
+    fg.draw(screen)
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
@@ -208,10 +212,21 @@ while run:
 
     if showing_dialogue:
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
+    
+    tree_collisions = fg.check_collide(mc, "trees")
+    collision_list = []
+    if tree_collisions:
+        if tree_collisions.__len__() == 1:
+            collision_list.append(tree_collisions.__getitem__(0))
+        for i in range(0, tree_collisions.__len__()-1):
+            collision_list.append(tree_collisions.__getitem__(i))
+        
 
 # update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles)
+    
+    screen_scroll = mc.update(world.obstacle_tiles, collision_list)
     world.update(screen_scroll)
+    fg.update(screen_scroll)
     for npc in npc_list:
         npc.update(screen_scroll)
     
