@@ -62,7 +62,6 @@ frame = mc.get_frame()
 
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
-font = pygame.font.Font(None, 36)
 dialogue_index = -1 #need this
 showing_dialogue = False # need this
 speaker = None # need this
@@ -72,6 +71,7 @@ npc_list = get_npc_list()
 inventory_open = False
 selected = None
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
+font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
