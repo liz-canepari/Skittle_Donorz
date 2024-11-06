@@ -201,7 +201,7 @@ while run:
         tutorial_manager.show_step("movement")
 
     if showing_dialogue:
-        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img)
+        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img, speaker.name)
 
 # update objects currently being used in the loops
     screen_scroll = mc.update(world.obstacle_tiles)
