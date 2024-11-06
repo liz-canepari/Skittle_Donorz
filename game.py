@@ -63,7 +63,7 @@ frame = mc.get_frame()
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
 font = pygame.font.Font(None, 36)
-dialogue_index = 0 #need this
+dialogue_index = -1 #need this
 showing_dialogue = False # need this
 speaker = None # need this
 npc_list = get_npc_list()
@@ -152,7 +152,7 @@ while run:
                         dialogue_index += 1
                         if dialogue_index > len(npc.dialogue)-1:
                             showing_dialogue = False
-                            dialogue_index = 0
+                            dialogue_index = -1
 
         #Logic for if key is released
         if event.type == pygame.KEYUP:
@@ -201,7 +201,7 @@ while run:
         tutorial_manager.show_step("movement")
 
     if showing_dialogue:
-        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
+        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img)
 
 # update objects currently being used in the loops
     screen_scroll = mc.update(world.obstacle_tiles)
