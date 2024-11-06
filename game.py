@@ -202,7 +202,7 @@ while run:
 
     if showing_dialogue:
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img, speaker.name)
-
+        mc.stand_still()
 # update objects currently being used in the loops
     screen_scroll = mc.update(world.obstacle_tiles)
     world.update(screen_scroll)
