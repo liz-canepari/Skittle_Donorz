@@ -11,8 +11,9 @@ pygame.init()
 screen = pygame.display.set_mode((500, 500))
  
 # Font setup
-font = pygame.font.Font(None, 36)
- 
+font = pygame.font.Font("fonts/Silkscreen-Regular.ttf", 24)
+name_font = pygame.font.Font("fonts/Silkscreen-Regular.ttf", 16)
+
 DIALOGUE_DELAY = 1
 last_dialogue_time = datetime.now()
  
@@ -31,16 +32,21 @@ class DialogueManager:
         self.dialogue_index = 0
         self.showing_dialogue = False
  
-    def display_bubble(self, text):
+    def display_bubble(self, text, img, name):
         """Display the dialogue bubble with the given text on screen."""
-        bubble_width = constants.SCREEN_WIDTH
+        bubble_width = constants.SCREEN_WIDTH-100
         bubble_height = 100
-        bubble_x = 0
+        bubble_x = 100
         bubble_y = constants.SCREEN_HEIGHT - bubble_height
-        pygame.draw.rect(screen, (255, 255, 255), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
-        pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
-        text_surface = font.render(text, True, (0, 0, 0))
-        screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+        frame = pygame.image.load("images/dialogue-frame.png").convert_alpha()
+        screen.blit(img, (0, bubble_y))
+        pygame.draw.rect(screen, (212, 213, 186), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
+        screen.blit(frame, (bubble_x, bubble_y))
+        #pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
+        text_surface = font.render(text, True, (55, 46, 46))
+        name_surface = name_font.render(name, True, (55, 46, 46))
+        screen.blit(name_surface, (bubble_x + 20, bubble_y + 10))
+        screen.blit(text_surface, (bubble_x + 20, bubble_y + 40))
  
 def process_npc_dialogue(npc, index):
     """Process and display the entire dialogue of the NPC if interaction is allowed."""
