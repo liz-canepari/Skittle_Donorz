@@ -5,7 +5,6 @@ import player
 import background
 import npc
 import tutorial
-from npc import get_npc_list
 from inventory import player_inventory
 from world import World
 from dialogue import DialogueManager
@@ -68,7 +67,18 @@ frame = mc.get_frame()
 dialogue_index = -1 #need this
 showing_dialogue = False # need this
 speaker = None # need this
-npc_list = get_npc_list()
+# create group of all npc sprites
+npc_list = pygame.sprite.Group()
+#initiate mentor sprite -- will later be moved to wherever we store room data
+mentor = npc.Npc(name="Mentor", x=305, y=180, size=(64, 64), skin="images/sprites/mentor.png", can_interact=True,
+                dialogue=[
+                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
+                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
+                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
+                    "But Never Come Back Home."
+            ], dialogue_img="images/sprites/mentor-dialogue-img.png")
+npc_list.add(mentor)
+
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
 inventory_open = False
