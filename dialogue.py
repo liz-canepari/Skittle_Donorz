@@ -2,7 +2,6 @@ import datetime
 import pygame
 import constants
 import tutorial
-from npc import get_npc_list
 from datetime import datetime, timedelta
  
 pygame.init()
