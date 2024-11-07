@@ -5,7 +5,6 @@ import player
 import background
 import npc
 import tutorial
-from npc import get_npc_list
 from inventory import player_inventory
 from world import World
 from dialogue import DialogueManager
@@ -70,16 +69,27 @@ frame = mc.get_frame()
 
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
-font = pygame.font.Font(None, 36)
-dialogue_index = 0 #need this
+dialogue_index = -1 #need this
 showing_dialogue = False # need this
 speaker = None # need this
-npc_list = get_npc_list()
+# create group of all npc sprites
+npc_list = pygame.sprite.Group()
+#initiate mentor sprite -- will later be moved to wherever we store room data
+mentor = npc.Npc(name="Mentor", x=305, y=180, size=(64, 64), skin="images/sprites/mentor.png", can_interact=True,
+                dialogue=[
+                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
+                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
+                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
+                    "But Never Come Back Home."
+            ], dialogue_img="images/sprites/mentor-dialogue-img.png")
+npc_list.add(mentor)
+
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
 inventory_open = False
 selected = None
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
+font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
@@ -118,7 +128,7 @@ while run:
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
-        if mc.player_is_near(npc.position, threshold=40):
+        if mc.player_is_near((npc.rect.center), threshold=40):
             npc.interact = True
             tutorial_manager.show_step("interaction")
         else:
@@ -156,13 +166,13 @@ while run:
         # NPC dialogue manager logic 
             if event.key == pygame.K_e:
                 for npc in npc_list:
-                    if mc.player_is_near(npc.position):
+                    if mc.player_is_near(npc.rect.center):
                         speaker = npc
                         showing_dialogue = True
                         dialogue_index += 1
                         if dialogue_index > len(npc.dialogue)-1:
                             showing_dialogue = False
-                            dialogue_index = 0
+                            dialogue_index = -1
 
         #Logic for if key is released
         if event.type == pygame.KEYUP:
@@ -228,9 +238,9 @@ while run:
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
+        
         npc.update(screen_scroll)
     
-
     pygame.display.update()
  
 pygame.quit()
