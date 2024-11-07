@@ -1,7 +1,7 @@
 import pygame
  
 class Npc:
-    def __init__(self, name, x, y, size, skin, can_interact, dialogue): 
+    def __init__(self, name, x, y, size, skin, can_interact, dialogue, dialogue_img): 
         self.name = name
         self.size = size
         self.skin = pygame.image.load(skin).convert_alpha()
