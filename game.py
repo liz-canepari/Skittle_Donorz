@@ -15,6 +15,9 @@ from dialogue import DialogueManager
  
 pygame.init()
 
+pygame_icon = pygame.image.load('images/sprites/mentor.png')
+pygame.display.set_icon(pygame_icon)
+
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Skittle Game")
  
