@@ -101,8 +101,6 @@ class Player(pygame.sprite.Sprite):
 
         for collision in collision_list:
             if collision.rect.colliderect(self.rect):
-                if self.velocity[1] > 0:
-                    self.rect.bottom = collision.rect.top
                 if self.velocity[1] < 0:
                     self.rect.top = collision.rect.bottom
 

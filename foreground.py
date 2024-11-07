@@ -68,8 +68,21 @@ class Foreground():
 
     '''
     ADD GROUP
+    add new sprite group with one object
+    *Object: The object to add
+    *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
+    '''
+    def add_group(self, object, name, top=False):
+        group = pygame.sprite.Group()
+        group.add(object)
+        if not top:
+            self.groups[name] = group
+        else: self.top[name] = group
+
+    '''
+    ADD EXISTING GROUP
     Add an already existing sprite group to the foreground dict for easy management'''
-    def add_group(self, name, group, top=False):
+    def add__existing_group(self, group, name, top=False):
         if not top:
             self.groups[name] = group
         else: self.top[name] = group

@@ -5,7 +5,7 @@ import player
 import background
 import npc
 import tutorial
-from inventory import player_inventory
+from inventory import Inventory 
 from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
@@ -55,7 +55,9 @@ fg = Foreground()
 fg.add_copy_group(trunk, "trees", "levels/forest/new-forest-trees.csv")
 fg.add_copy_group(treetop, "tops", "levels/forest/new-forest-trees.csv",True)
 # fg.add_copy_group(tree, "trees", "levels/forest/new-forest-trees.csv")
-print(fg.get_groups())
+chest = object.Object("images/sprites/chest.png", 48, 48, [175, 5], "images/sprites/chest-skit.png",)
+fg. add_group(chest, "skittle-chest")
+skittle_g = object.Object("images/sprites/green_skittle.png", 32, 32)
 
 def draw_grid():
     
@@ -92,6 +94,7 @@ npc_list.add(mentor)
 # Variable to track if inventory is open or closed
 inventory_open = False
 selected = None
+player_inventory = Inventory()
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
 font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
@@ -169,6 +172,13 @@ while run:
 
         # NPC dialogue manager logic 
             if event.key == pygame.K_e:
+                for item in fg.groups['skittle-chest']:
+                    if mc.player_is_near(item.rect.center):
+                        if item.interacted == False:
+                            item.interact()
+                        else: 
+                            fg.groups['skittle-chest'].remove(item)
+                            player_inventory.add_item(skittle_g, 0)
                 for npc in npc_list:
                     if mc.player_is_near(npc.rect.center):
                         speaker = npc
@@ -228,13 +238,12 @@ while run:
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
     
     collision_list = []
-    # tree_collisions = fg.check_collide(mc, "trees")
-    # collision_list = []
-    # if tree_collisions:
-    #     if tree_collisions.__len__() == 1:
-    #         collision_list.append(tree_collisions.__getitem__(0))
-    #     for i in range(0, tree_collisions.__len__()-1):
-    #         collision_list.append(tree_collisions.__getitem__(i))
+    # for name in fg.groups:
+    #     if name != "trees":
+    #         for sprite in fg.groups[name]:
+    #             if mc.rect.colliderect(sprite.rect):
+    #                 collision_list.append(sprite)
+
         
 
 # update objects currently being used in the loops

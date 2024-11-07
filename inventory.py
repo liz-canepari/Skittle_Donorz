@@ -55,4 +55,3 @@ class Inventory:
             else:
                 self.items[slot] = item  # Place the item in the slot
  
-player_inventory = Inventory()
