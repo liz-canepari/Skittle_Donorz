@@ -38,7 +38,7 @@ for row in range(constants.ROWS):
     r = [-1] * constants.COLS
     world_data.append(r)
 #load in level data and create world
-with open("levels/forest/forest-floor-data.csv", newline="") as csvfile:
+with open("levels/forest/new-forest-floor.csv", newline="") as csvfile:
     reader = csv.reader(csvfile, delimiter = ",")
     for x, row in enumerate(reader):
         for y, tile in enumerate(row):
@@ -48,9 +48,13 @@ with open("levels/forest/forest-floor-data.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
-tree = object.Object("images/tiles/forest/tree.png", 180, 180)
+trunk = object.Object("images/tiles/forest/trunk.png", 80, 80)
+treetop = object.Object("images/tiles/forest/treetop.png", 160, 160, [0, -20])
+# tree = object.Object("images/tiles/forest/tree.png", 160, 160)
 fg = Foreground()
-fg.add_copy_group(tree, "trees","levels/forest/forest-trees.data.csv")
+fg.add_copy_group(trunk, "trees", "levels/forest/new-forest-trees.csv")
+fg.add_copy_group(treetop, "tops", "levels/forest/new-forest-trees.csv",True)
+# fg.add_copy_group(tree, "trees", "levels/forest/new-forest-trees.csv")
 print(fg.get_groups())
 
 def draw_grid():
@@ -60,7 +64,7 @@ def draw_grid():
         pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(250, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+mc = player.Player(50, 864, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
@@ -106,7 +110,7 @@ while run:
 
     world.draw(screen)
     #draw_grid()
-    
+    fg.draw(screen)
 
     for npc in npc_list:
         npc.draw(screen)
@@ -124,7 +128,7 @@ while run:
 
     #draw player
     mc.draw(screen)
-    fg.draw(screen)
+    fg.draw_top(screen)
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
@@ -223,13 +227,14 @@ while run:
     if showing_dialogue:
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
     
-    tree_collisions = fg.check_collide(mc, "trees")
     collision_list = []
-    if tree_collisions:
-        if tree_collisions.__len__() == 1:
-            collision_list.append(tree_collisions.__getitem__(0))
-        for i in range(0, tree_collisions.__len__()-1):
-            collision_list.append(tree_collisions.__getitem__(i))
+    # tree_collisions = fg.check_collide(mc, "trees")
+    # collision_list = []
+    # if tree_collisions:
+    #     if tree_collisions.__len__() == 1:
+    #         collision_list.append(tree_collisions.__getitem__(0))
+    #     for i in range(0, tree_collisions.__len__()-1):
+    #         collision_list.append(tree_collisions.__getitem__(i))
         
 
 # update objects currently being used in the loops

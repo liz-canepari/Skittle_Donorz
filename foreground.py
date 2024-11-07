@@ -7,6 +7,7 @@ class Foreground():
 
     def __init__(self):
         self.groups = {}
+        self.top = {}
 
     def get_group(self, name):
         return self.groups[name]
@@ -20,10 +21,13 @@ class Foreground():
     *Object: The object to add
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     '''
-    def add_single_object(self, object, name):
+    def add_single_object(self, object, name, top=False):
         group = pygame.sprite.GroupSingle()
         group.add(object)
-        self.groups[name] = group
+    
+        if not top:
+            self.groups[name] = group
+        else: self.top[name] = group
 
     '''
     ADD COPY GROUP
@@ -31,7 +35,7 @@ class Foreground():
     *Object: The object that will be copied
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     *Data: CSV file with multiple placements. Anywhere with a 1 will have a copy of the object placed there'''
-    def add_copy_group(self, object, name, data,):
+    def add_copy_group(self, object, name, data, top=False):
 
         placement_data = []
         group = pygame.sprite.Group()
@@ -48,19 +52,27 @@ class Foreground():
                     placement_data[x][y] = int(tile)
                     if placement_data[x][y] == 0:
                         new_object = ObjectCopy(object)
-                        new_object.set_position(y * constants.TILESIZE - (object.width/2), x * constants.TILESIZE - object.height)
+                        if top:
+                            new_object.set_position(y * constants.TILESIZE - (object.width/2) + object.position[0], x * constants.TILESIZE - object.height + object.position[1])
+                        else:
+                            new_object.set_position(y * constants.TILESIZE - (object.width/2), x * constants.TILESIZE - object.height)
                         group.add(new_object)
+        if not top:
+            self.groups[name] = group   
+        else: self.top[name] = group
 
-        self.groups[name] = group   
-
-    def add_to_group(self, object, group_name):
-        self.groups[group_name].add(object)
+    def add_to_group(self, object, group_name, top=False):
+        if not top:
+            self.groups[group_name].add(object)
+        else: self.top[group_name].add(object)
 
     '''
     ADD GROUP
     Add an already existing sprite group to the foreground dict for easy management'''
-    def add_group(self, name, group):
-        self.groups[name] = group
+    def add_group(self, name, group, top=False):
+        if not top:
+            self.groups[name] = group
+        else: self.top[name] = group
 
                     
 
@@ -69,8 +81,17 @@ class Foreground():
             for object in group:
                 object.draw(surface)
 
+    def draw_top(self, surface):
+        for group in self.top.values():
+            for object in group:
+                object.draw(surface)
+
     def update(self, screen_scroll):
         for group in self.groups.values():
+            for object in group:
+                object.update(screen_scroll)
+
+        for group in self.top.values():
             for object in group:
                 object.update(screen_scroll)
 

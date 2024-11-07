@@ -9,6 +9,7 @@ class Object(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (width, height))
         self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
         self.mask = pygame.mask.from_surface(self.image)
+        self.position = position
 
     def set_position(self, x, y):
         self.rect.x = x
@@ -27,5 +28,8 @@ class ObjectCopy(Object):
         self.height = object.height
         pygame.sprite.Sprite.__init__(self)
         self.image = object.image
+        position = object.position
         self.rect = pygame.rect.Rect(object.rect.x, object.rect.y, object.width, object.height)
         self.mask = object.mask
+
+
