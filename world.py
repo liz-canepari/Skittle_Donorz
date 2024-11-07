@@ -23,7 +23,7 @@ class World():
                 #add image data to main tiles list
                 if tile >= 0:
                     self.map_tiles.append(tile_data)
-                if 1 <= tile <= 11:
+                if 0 <= tile <= 11:
                     self.obstacle_tiles.append(tile_data)
 
     def update(self, screen_scroll):
