@@ -2,8 +2,17 @@ import pygame
 import constants
 class Object(pygame.sprite.Sprite):
 
-    def __init__(self,file_path, width, height, position = [0,0],file_path_i = None):
-        self.interact_img = file_path_i
+    def __init__(self,file_path, name, width, height, position = [0,0],file_paths_i = None, holding_item = False, item = None):
+        self.name = name
+        if file_paths_i: #will be a list of the different interaction images
+            self.interact_imgs = file_paths_i
+            self.interact_index = 0
+            self.interactable = True
+            self.holding_item = holding_item
+        else: self.interactable = False
+        if holding_item:
+            self.item = item
+            self.open = False
         self.width = width
         self.height = height
         pygame.sprite.Sprite.__init__(self)
@@ -12,12 +21,28 @@ class Object(pygame.sprite.Sprite):
         self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
         self.mask = pygame.mask.from_surface(self.image)
         self.position = position
-        self.interacted = False
+        self.used = False
 
+
+    def get_image(self):
+        return self.image
+    
+    def get_name(self):
+        return self.name
+    
+    def is_used(self):
+        return self.used
+    
+    def is_holding_item(self):
+        return self.holding_item
+    
+    def is_open(self):
+        return self.open
     def set_position(self, x, y):
         self.rect.x = x
         self.rect.y = y
     
+
     def draw(self, surface):
         surface.blit(self.image, (self.rect.x, self.rect.y))
     
@@ -26,12 +51,25 @@ class Object(pygame.sprite.Sprite):
         self.rect.y += screen_scroll[1]
 
     def interact(self):
-        self.image = pygame.image.load(self.interact_img).convert_alpha()
-        self.interacted = True
+        if self.interact_index == 0:
+            self.og_image = self.image
+        self.image = pygame.image.load(self.interact_imgs[self.interact_index]).convert_alpha()
+        self.interact_index += 1
+        if self.interact_index >= len(self.interact_imgs):
+            self.interact_index = 0
+            self.used = True
+        
+    def in_inventory(self):
+        self.image = self.og_image
+
+
 
 class ObjectCopy(Object):
     def __init__(self, object):
-        self.interact_img = object.interact_img
+        if object.interactable:
+            self.interact_imgs = object.interact_imgs
+            self.interactable = True
+        else: self.interactable = False
         self.width = object.width
         self.height = object.height
         pygame.sprite.Sprite.__init__(self)

@@ -48,16 +48,16 @@ with open("levels/forest/new-forest-floor.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
-trunk = object.Object("images/tiles/forest/trunk.png", 80, 80)
-treetop = object.Object("images/tiles/forest/treetop.png", 160, 160, [0, -20])
+trunk = object.Object("images/tiles/forest/trunk.png", "trunk", 80, 80)
+treetop = object.Object("images/tiles/forest/treetop.png", "treetop", 160, 160, [0, -20])
 # tree = object.Object("images/tiles/forest/tree.png", 160, 160)
 fg = Foreground()
 fg.add_copy_group(trunk, "trees", "levels/forest/new-forest-trees.csv")
 fg.add_copy_group(treetop, "tops", "levels/forest/new-forest-trees.csv",True)
 # fg.add_copy_group(tree, "trees", "levels/forest/new-forest-trees.csv")
-chest = object.Object("images/sprites/chest.png", 48, 48, [175, 5], "images/sprites/chest-skit.png",)
+skittle_g = object.Object("images/sprites/green_skittle.png", "Green Skittle", 32, 32)
+chest = object.Object("images/sprites/chest.png", "chest", 48, 82, [175, 5], ["images/sprites/chest-skit.png", "images/sprites/chest-open.png"], True, skittle_g)
 fg. add_group(chest, "skittle-chest")
-skittle_g = object.Object("images/sprites/green_skittle.png", 32, 32)
 
 def draw_grid():
     
@@ -95,6 +95,10 @@ npc_list.add(mentor)
 inventory_open = False
 selected = None
 player_inventory = Inventory()
+showing_notification = False
+notification = None
+notification_length = 2000
+notification_start = 0
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
 font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
@@ -174,11 +178,27 @@ while run:
             if event.key == pygame.K_e:
                 for item in fg.groups['skittle-chest']:
                     if mc.player_is_near(item.rect.center):
-                        if item.interacted == False:
-                            item.interact()
-                        else: 
+                        if not item.is_used():
+                            if item.is_holding_item():
+                                if item.is_open():
+                                    item.interact() 
+                                    notification = player_inventory.add_item(item.item)
+                                    showing_notification = True
+                                    notification_start = pygame.time.get_ticks()
+                                    item.holding_item = False
+                                    item.item = None
+                                else: 
+                                    item.interact()
+                                    item.open = True
+                            else: item.used = True
+                        else:
+                            item.in_inventory()
+                            notification = player_inventory.add_item(item)
+                            showing_notification = True
+                            notification_start = pygame.time.get_ticks()
                             fg.groups['skittle-chest'].remove(item)
-                            player_inventory.add_item(skittle_g, 0)
+
+                            
                 for npc in npc_list:
                     if mc.player_is_near(npc.rect.center):
                         speaker = npc
@@ -229,7 +249,12 @@ while run:
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if inventory_open:
         player_inventory.draw()
-
+    
+    if showing_notification:
+        player_inventory.notify(notification, screen)
+        if pygame.time.get_ticks() - notification_start > notification_length:
+            showing_notification = False
+        
 # Draw tutorial if not finished
     if show_movement_tutorial:
         tutorial_manager.show_step("movement")
