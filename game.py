@@ -56,7 +56,7 @@ fg.add_copy_group(trunk, "trees", "levels/forest/new-forest-trees.csv")
 fg.add_copy_group(treetop, "tops", "levels/forest/new-forest-trees.csv",True)
 # fg.add_copy_group(tree, "trees", "levels/forest/new-forest-trees.csv")
 skittle_g = object.Object("images/sprites/green_skittle.png", "Green Skittle", 32, 32)
-chest = object.Object("images/sprites/chest.png", "chest", 48, 82, [175, 5], ["images/sprites/chest-skit.png", "images/sprites/chest-open.png"], True, skittle_g)
+chest = object.Object("images/sprites/chest-closed.png", "chest", 48, 82, [175, 5], ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png", "images/sprites/chest-opened.png"], True, skittle_g)
 fg. add_group(chest, "skittle-chest")
 
 def draw_grid():

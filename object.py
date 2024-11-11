@@ -6,7 +6,7 @@ class Object(pygame.sprite.Sprite):
         self.name = name
         if file_paths_i: #will be a list of the different interaction images
             self.interact_imgs = file_paths_i
-            self.interact_index = 0
+            self.interact_index = 1
             self.interactable = True
             self.holding_item = holding_item
         else: self.interactable = False
@@ -51,16 +51,18 @@ class Object(pygame.sprite.Sprite):
         self.rect.y += screen_scroll[1]
 
     def interact(self):
-        if self.interact_index == 0:
+        if self.interact_index == 1:
             self.og_image = self.image
         self.image = pygame.image.load(self.interact_imgs[self.interact_index]).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.interact_index += 1
         if self.interact_index >= len(self.interact_imgs):
-            self.interact_index = 0
+            self.interact_index = 1
             self.used = True
         
     def in_inventory(self):
-        self.image = self.og_image
+        self.image = pygame.image.load(self.interact_imgs[0]).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (32, 32))
 
 
 
