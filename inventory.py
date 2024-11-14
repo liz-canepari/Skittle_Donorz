@@ -32,7 +32,7 @@ class Inventory:
     # Draw everything
     def draw(self):
         # Draw background for inventory
-        pygame.draw.rect(screen, (100, 100, 100),
+        pygame.draw.rect(screen, (74, 56, 36),
                          (self.x, self.y, (self.box_size + self.border) * self.col + self.border,
                           (self.box_size + self.border) * self.rows + self.border))
         # Draw individual inventory slots
@@ -40,7 +40,7 @@ class Inventory:
             for y in range(self.rows):
                 rect = (self.x + (self.box_size + self.border) * x + self.border,
                         self.y + (self.box_size + self.border) * y + self.border, self.box_size, self.box_size)
-                pygame.draw.rect(screen, (180, 180, 180), rect)
+                pygame.draw.rect(screen, (195, 168, 137), rect)
                 if self.items[x][y]:
                     # Draw the item image in the slot
                     screen.blit(self.items[x][y][0].get_image(), (rect[0], rect[1]))

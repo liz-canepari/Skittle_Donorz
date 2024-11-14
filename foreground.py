@@ -58,8 +58,15 @@ class Foreground():
                             new_object.set_position(y * constants.TILESIZE - (object.width/2), x * constants.TILESIZE - object.height)
                         group.add(new_object)
         if not top:
-            self.groups[name] = group   
-        else: self.top[name] = group
+            if name in self.groups.keys():
+                self.groups[name].add(group)
+            else:
+                self.groups[name] = group   
+        else: 
+            if name in self.top.keys():
+                self.top[name].add(group)
+            else:
+                self.top[name] = group
 
     def add_to_group(self, object, group_name, top=False):
         if not top:

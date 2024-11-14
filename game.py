@@ -49,13 +49,14 @@ world = World()
 world.process_data(world_data, tile_list)
 
 trunk = object.Object("images/tiles/forest/trunk.png", "trunk", 80, 80)
-treetop = object.Object("images/tiles/forest/treetop.png", "treetop", 160, 160, [0, -20])
+treetop = object.Object("images/tiles/forest/treetop.png", "treetop", 160, 160, [0, 0])
+treetop2 = object.Object("images/tiles/forest/treetop2.png", "treetop2", 160, 160, [0, 0])
 # tree = object.Object("images/tiles/forest/tree.png", 160, 160)
 fg = Foreground()
 fg.add_copy_group(trunk, "trees", "levels/forest/new-forest-trees.csv")
 fg.add_copy_group(treetop, "tops", "levels/forest/new-forest-trees.csv",True)
 # fg.add_copy_group(tree, "trees", "levels/forest/new-forest-trees.csv")
-skittle_g = object.Object("images/sprites/green_skittle.png", "Green Skittle", 32, 32)
+skittle_g = object.Object("images/sprites/green-skittle.png", "Green Skittle", 32, 32)
 chest = object.Object("images/sprites/chest-closed.png", "chest", 48, 82, [175, 5], ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png", "images/sprites/chest-opened.png"], True, skittle_g)
 fg. add_group(chest, "skittle-chest")
 
@@ -186,6 +187,11 @@ while run:
                                     showing_notification = True
                                     notification_start = pygame.time.get_ticks()
                                     item.holding_item = False
+                                    if "skittle" in item.item.get_name():
+                                        #special skittle interaction
+                                        showing_dialogue = True
+                                        speaker = mc
+
                                     item.item = None
                                 else: 
                                     item.interact()
@@ -260,6 +266,8 @@ while run:
         tutorial_manager.show_step("movement")
 
     if showing_dialogue:
+        if speaker == mc:
+            DialogueManager.display_bubble(DialogueManager, "")
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
     
     collision_list = []
