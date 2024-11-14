@@ -121,7 +121,7 @@ while run:
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
-        if mc.player_is_near((npc.rect.center), threshold=40):
+        if mc.player_is_near((npc.rect.center), threshold=80):
             npc.interact = True
             tutorial_manager.show_step("interaction")
         else:
@@ -217,7 +217,7 @@ while run:
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img, speaker.name)
         mc.stand_still()
 # update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles)
+    screen_scroll = mc.update(world.obstacle_tiles, npc_list)
     world.update(screen_scroll)
     for npc in npc_list:
         
