@@ -55,7 +55,7 @@ def draw_grid():
         pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(250, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
