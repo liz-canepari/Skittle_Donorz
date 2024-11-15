@@ -8,6 +8,7 @@ import tutorial
 from inventory import player_inventory
 from world import World
 from dialogue import DialogueManager
+from foreground import Foreground
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -29,9 +30,10 @@ clock = pygame.time.Clock()
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
+    gray_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha() #currently don't have different gray vs colored images for mentors hut so they are the same
+    color_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
     tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
-    tile_list.append(tile_image)
+    tile_list.append([tile_image, color_image])
 
 #create empty tile list
 world_data = []
@@ -49,6 +51,7 @@ with open("levels/mentors_hut_data.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
+fg = Forground()
 def draw_grid():
     for x in range(30):
         pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
@@ -67,6 +70,8 @@ frame = mc.get_frame()
 dialogue_index = -1 #need this
 showing_dialogue = False # need this
 speaker = None # need this
+dialogue_start: 0 #will be used if mc speaks
+
 # create group of all npc sprites
 npc_list = pygame.sprite.Group()
 #initiate mentor sprite -- will later be moved to wherever we store room data
@@ -83,6 +88,11 @@ npc_list.add(mentor)
 # Variable to track if inventory is open or closed
 inventory_open = False
 selected = None
+player_inventory = Inventory()
+showing_notification = False #to check if screen needs to display notif from inventory
+notification = None
+notification_length = 2000
+notification_start = 0
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
 font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
@@ -101,6 +111,7 @@ while run:
 
     world.draw(screen)
     #draw_grid()
+    fg.draw(screen) #draw bottom layer of foreground
 
     for npc in npc_list:
         npc.draw(screen)
@@ -118,6 +129,7 @@ while run:
 
     #draw player
     mc.draw(screen)
+    fg.draw_top(screen) #draw top layer of foreground
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
@@ -208,6 +220,11 @@ while run:
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if inventory_open:
         player_inventory.draw()
+    #inventory notification
+    if showing_notification:
+        player_inventory.notify(notification, screen)
+        if pygame.time.get_ticks() - notification_start > notification_length:
+            showing_notification = False
 
 # Draw tutorial if not finished
     if show_movement_tutorial:
@@ -216,9 +233,18 @@ while run:
     if showing_dialogue:
         DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img, speaker.name)
         mc.stand_still()
+
+    collision_list = [] #list of objects that the player is colliding with - not currently implemented
+    # for name in fg.groups:
+    #     if name != "trunks": #trunks will be/is handled with obstacle tiles
+    #         for sprite in fg.groups[name]:
+    #             if mc.rect.colliderect(sprite.rect):
+    #                 collision_list.append(sprite)
+
 # update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles, npc_list)
+    screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
     world.update(screen_scroll)
+    fg.update(screen_scroll)
     for npc in npc_list:
         
         npc.update(screen_scroll)
