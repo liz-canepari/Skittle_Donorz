@@ -227,3 +227,5 @@ while run:
  
 pygame.quit()
  
+import shutil
+shutil.rmtree("__pycache__")
