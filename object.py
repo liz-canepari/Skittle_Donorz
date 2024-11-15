@@ -2,7 +2,7 @@ import pygame
 import constants
 class Object(pygame.sprite.Sprite):
 
-    def __init__(self,file_path, name, width, height, position = [0,0],file_paths_i = None, holding_item = False, item = None):
+    def __init__(self,file_paths, name, width, height, position = [0,0],file_paths_i = None, holding_item = False, item = None):
         self.name = name
         if file_paths_i: #will be a list of the different interaction images
             self.interact_imgs = file_paths_i
@@ -16,14 +16,16 @@ class Object(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(file_path).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (width, height))
+        self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
+        self.gray_image = pygame.image.load(file_paths[0]).convert_alpha()
+        self.image = pygame.transform.scale(self.gray_image, (width, height))
         self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
         self.mask = pygame.mask.from_surface(self.image)
         self.position = position
         self.used = False
 
-
+    def colorize(self):
+        self.image = pygame.transform.scale(self.color_image, (self.width, self.height))
     def get_image(self):
         return self.image
     
@@ -75,6 +77,8 @@ class ObjectCopy(Object):
         self.width = object.width
         self.height = object.height
         pygame.sprite.Sprite.__init__(self)
+        self.color_image = object.color_image
+        self.gray_image = object.gray_image
         self.image = object.image
         position = object.position
         self.rect = pygame.rect.Rect(object.rect.x, object.rect.y, object.width, object.height)

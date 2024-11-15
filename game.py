@@ -28,9 +28,10 @@ clock = pygame.time.Clock()
 #load tilemap images
 tile_list = []
 for x in range(constants.TILE_TYPES):
-    tile_image = pygame.image.load(f"images/tiles/forest/background-tiles/{x}.png").convert_alpha()
-    tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
-    tile_list.append(tile_image)
+    gray_image = pygame.image.load(f"images/tiles/forest/gray-background/{x}.png").convert_alpha()
+    color_image = pygame.image.load(f"images/tiles/forest/background-tiles/{x}.png").convert_alpha()
+    tile_image = pygame.transform.scale(gray_image, (constants.TILESIZE, constants.TILESIZE))
+    tile_list.append([tile_image, color_image])
 
 #create empty tile list
 world_data = []
@@ -48,16 +49,40 @@ with open("levels/forest/new-forest-floor.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
-trunk = object.Object("images/tiles/forest/trunk.png", "trunk", 80, 80)
-treetop = object.Object("images/tiles/forest/treetop.png", "treetop", 160, 160, [0, 0])
-treetop2 = object.Object("images/tiles/forest/treetop2.png", "treetop2", 160, 160, [0, 0])
+def create_world():
+    tile_list = []
+    for x in range(constants.TILE_TYPES):
+        tile_image = pygame.image.load(f"images/tiles/forest/background-tiles/{x}.png").convert_alpha()
+        tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
+        tile_list.append(tile_image)
+
+    #create empty tile list
+    world_data = []
+    for row in range(constants.ROWS):
+        r = [-1] * constants.COLS
+        world_data.append(r)
+    #load in level data and create world
+    with open("levels/forest/new-forest-floor.csv", newline="") as csvfile:
+        reader = csv.reader(csvfile, delimiter = ",")
+        for x, row in enumerate(reader):
+            for y, tile in enumerate(row):
+                world_data[x][y] = int(tile)
+
+    world = World()
+    world.process_data(world_data, tile_list)
+
+    return world
+
+trunk = object.Object(["images/tiles/forest/trunk-gray.png","images/tiles/forest/trunk.png"], "trunk", 80, 80)
+treetop = object.Object(["images/tiles/forest/treetop-gray.png","images/tiles/forest/treetop.png"], "treetop", 160, 160, [0, 0])
+#treetop2 = object.Object("images/tiles/forest/treetop2.png", "treetop2", 160, 160, [0, 0])
 # tree = object.Object("images/tiles/forest/tree.png", 160, 160)
 fg = Foreground()
 fg.add_copy_group(trunk, "trees", "levels/forest/new-forest-trees.csv")
 fg.add_copy_group(treetop, "tops", "levels/forest/new-forest-trees.csv",True)
 # fg.add_copy_group(tree, "trees", "levels/forest/new-forest-trees.csv")
-skittle_g = object.Object("images/sprites/green-skittle.png", "Green Skittle", 32, 32)
-chest = object.Object("images/sprites/chest-closed.png", "chest", 48, 82, [175, 5], ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png", "images/sprites/chest-opened.png"], True, skittle_g)
+skittle_g = object.Object(["images/sprites/green-skittle.png","images/sprites/green-skittle.png"], "Green Skittle", 32, 32)
+chest = object.Object(["images/sprites/chest-closed.png","images/sprites/chest-closed.png"], "chest", 48, 82, [175, 5], ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png", "images/sprites/chest-opened.png"], True, skittle_g)
 fg. add_group(chest, "skittle-chest")
 
 def draw_grid():
@@ -79,6 +104,7 @@ frame = mc.get_frame()
 dialogue_index = -1 #need this
 showing_dialogue = False # need this
 speaker = None # need this
+dialogue_start: 0
 # create group of all npc sprites
 npc_list = pygame.sprite.Group()
 #initiate mentor sprite -- will later be moved to wherever we store room data
@@ -187,10 +213,13 @@ while run:
                                     showing_notification = True
                                     notification_start = pygame.time.get_ticks()
                                     item.holding_item = False
-                                    if "skittle" in item.item.get_name():
+                                    if "Skittle" in item.item.get_name():
                                         #special skittle interaction
                                         showing_dialogue = True
                                         speaker = mc
+                                        dialogue_start = pygame.time.get_ticks()
+                                        world.colorize()
+                                        fg.colorize()
 
                                     item.item = None
                                 else: 
@@ -267,8 +296,13 @@ while run:
 
     if showing_dialogue:
         if speaker == mc:
-            DialogueManager.display_bubble(DialogueManager, "")
-        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index])
+            DialogueManager.display_bubble(DialogueManager, "Woah", pygame.image.load("images/sprites/chameleon-dialogue-img.png", ))
+            current_time = pygame.time.get_ticks()
+            if current_time - dialogue_start >= 2000:
+                showing_dialogue = False
+                speaker = None
+        else:
+            DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.image, speaker.name)
     
     collision_list = []
     # for name in fg.groups:

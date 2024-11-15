@@ -9,15 +9,28 @@ class Foreground():
         self.groups = {}
         self.top = {}
 
+    '''GET GROUP
+    Retrieve a sprite group from the foreground
+    *Name: Name of the group
+    '''
     def get_group(self, name):
         return self.groups[name]
     
+    '''GET GROUPS
+    Retrieve all sprite groups in the foreground
+    '''
     def get_groups(self):
         return self.groups
     
+    '''GET TOP GROUPS
+    Retrieve all sprite groups in the top level of the foreground
+    '''
+    def get_top_groups(self):
+        return self.top
     '''
     ADD SINGLE OBJECT
     Add a single object to the map, in its own sprite group
+    (if you want to add a single object to an already existing sprite group, use add_to_group)
     *Object: The object to add
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     '''
@@ -34,7 +47,8 @@ class Foreground():
     Function takes one object and makes a group of copies of it
     *Object: The object that will be copied
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
-    *Data: CSV file with multiple placements. Anywhere with a 1 will have a copy of the object placed there'''
+    *Data: CSV file with multiple placements. Anywhere with a 1 will have a copy of the object placed there
+    '''
     def add_copy_group(self, object, name, data, top=False):
 
         placement_data = []
@@ -68,6 +82,12 @@ class Foreground():
             else:
                 self.top[name] = group
 
+    '''
+    ADD TO GROUP
+    Add a single object to an already existing sprite group
+    *Object: The object to add
+    *Group name: The name of the group to add the object to
+    '''
     def add_to_group(self, object, group_name, top=False):
         if not top:
             self.groups[group_name].add(object)
@@ -75,37 +95,53 @@ class Foreground():
 
     '''
     ADD GROUP
-    add new sprite group with one object
-    *Object: The object to add
+    add new sprite group with already existing objects
+    *Objects: The list of objects to add
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     '''
-    def add_group(self, object, name, top=False):
+    def add_group(self, objects, name, top=False):
         group = pygame.sprite.Group()
-        group.add(object)
+        for object in objects:
+            group.add(object)
         if not top:
             self.groups[name] = group
         else: self.top[name] = group
 
     '''
     ADD EXISTING GROUP
-    Add an already existing sprite group to the foreground dict for easy management'''
-    def add__existing_group(self, group, name, top=False):
+    Add an already existing sprite group to the foreground dict for easy management
+    '''
+    def add_existing_group(self, group, name, top=False):
         if not top:
             self.groups[name] = group
         else: self.top[name] = group
 
                     
-
+    '''
+    DRAW
+    put all ground level objects on the screen 
+    (Should be called after world.draw, before player.draw)
+    '''
     def draw(self, surface):
         for group in self.groups.values():
             for object in group:
                 object.draw(surface)
 
+    '''
+    DRAW TOP
+    put all top level objects on the screen
+    (should be called after player.draw)
+    '''
     def draw_top(self, surface):
         for group in self.top.values():
             for object in group:
                 object.draw(surface)
 
+    '''
+    UPDATE
+    Update position of all foreground objects
+    *Screen_scroll: The position of the camera
+    '''
     def update(self, screen_scroll):
         for group in self.groups.values():
             for object in group:
@@ -142,3 +178,16 @@ class Foreground():
     def check_collide(self, sprite, group_name, kill=False):
         collisions = pygame.sprite.spritecollide(sprite, self.groups[group_name], kill)
         return collisions
+    
+
+    '''
+    COLORIZE
+    Switch all objects to colored images
+    '''
+    def colorize(self):
+        for group in self.groups.values():
+            for object in group:
+                object.colorize()
+        for group in self.top.values():
+            for object in group:
+                object.colorize()
