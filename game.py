@@ -5,7 +5,7 @@ import player
 import background
 import npc
 import tutorial
-from inventory import player_inventory
+from inventory import Inventory
 from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
@@ -32,7 +32,7 @@ tile_list = []
 for x in range(constants.TILE_TYPES):
     gray_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha() #currently don't have different gray vs colored images for mentors hut so they are the same
     color_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
-    tile_image = pygame.transform.scale(tile_image, (constants.TILESIZE, constants.TILESIZE))
+    tile_image = pygame.transform.scale(gray_image, (constants.TILESIZE, constants.TILESIZE))
     tile_list.append([tile_image, color_image])
 
 #create empty tile list
@@ -51,7 +51,7 @@ with open("levels/mentors_hut_data.csv", newline="") as csvfile:
 world = World()
 world.process_data(world_data, tile_list)
 
-fg = Forground()
+fg = Foreground()
 def draw_grid():
     for x in range(30):
         pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
