@@ -3,16 +3,20 @@ import csv
 import constants
 import player
 import background
-import inanimateObj
-from tutorial import Tutorial
+import npc
+import tutorial
+from inventory import Inventory
 from world import World
-from dialouge import setup_npc_data 
-import object
+from dialogue import DialogueManager
+from foreground import Foreground
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
 pygame.init()
+
+pygame_icon = pygame.image.load('images/sprites/mentor.png')
+pygame.display.set_icon(pygame_icon)
 
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 pygame.display.set_caption("Skittle Game")
@@ -27,6 +31,11 @@ world = World()
 #load tilemap images
 tile_list = []
 world.load_tilemap_images(tile_list)
+for x in range(constants.TILE_TYPES):
+    gray_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha() #currently don't have different gray vs colored images for mentors hut so they are the same
+    color_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
+    tile_image = pygame.transform.scale(gray_image, (constants.TILESIZE, constants.TILESIZE))
+    tile_list.append([tile_image, color_image])
 
 #create empty tile list
 world_data = []
@@ -36,8 +45,14 @@ world.world_fill_defaults(world_data)
 world.load_csv_level(world_data)
 world.process_data(world_data, tile_list)
 
+fg = Foreground()
+def draw_grid():
+    for x in range(30):
+        pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
+        pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
+
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(250, 250, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
@@ -46,24 +61,37 @@ frame = mc.get_frame()
 
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
-npc_data = setup_npc_data()
-dialogue_font = pygame.font.Font("fonts\Silkscreen-Regular.ttf", 24)
-screen_font = pygame.font.Font("fonts\PressStart2P-Regular.ttf", 18)
+dialogue_index = -1 #need this
+showing_dialogue = False # need this
+speaker = None # need this
+dialogue_start: 0 #will be used if mc speaks
 
-# create npc sprite group for collision testing
-npc_group = pygame.sprite.GroupSingle()
-npc_group.add(npc_data[0]['npc'])
+# create group of all npc sprites
+npc_list = pygame.sprite.Group()
+#initiate mentor sprite -- will later be moved to wherever we store room data
+mentor = npc.Npc(name="Mentor", x=305, y=180, size=(64, 64), skin="images/sprites/mentor.png", can_interact=True,
+                dialogue=[
+                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
+                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
+                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
+                    "But Never Come Back Home."
+            ], dialogue_img="images/sprites/mentor-dialogue-img.png")
+npc_list.add(mentor)
 
-# Track dialogue state
-current_dialogue = ""
-current_dialogue_img = None
-current_dialogue_manager = None
-showing_dialogue = False
-
+# ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
+# Variable to track if inventory is open or closed
+inventory_open = False
+selected = None
+player_inventory = Inventory()
+showing_notification = False #to check if screen needs to display notif from inventory
+notification = None
+notification_length = 2000
+notification_start = 0
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
-tutorial = Tutorial(screen_font, screen)
-tutorial.add_step("movement", "Move with WASD", (120, 10))
-tutorial.add_step("interaction", "Interact with NPCs with E", (100, 10))
+font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
+tutorial_manager = tutorial.Tutorial(font, screen)
+tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
+tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
 show_movement_tutorial = True
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
@@ -76,9 +104,13 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
+    #draw_grid()
+    fg.draw(screen) #draw bottom layer of foreground
     #world.draw_grid(screen)
 
- 
+    for npc in npc_list:
+        npc.draw(screen)
+
     #update animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= FPS:
@@ -90,20 +122,15 @@ while run:
             frame = mc.get_frame()
  
 
-    #show frame image
-    # box.draw(screen)
-    for npc_entry in npc_data:
-        npc_entry['npc'].draw(screen)
-
     #draw player
     mc.draw(screen)
+    fg.draw_top(screen) #draw top layer of foreground
 
 # threshold is number of pixels the user has to be in order to interact with the object.
-    for npc_entry in npc_data:
-        npc = npc_entry['npc']
-        if mc.player_is_near(npc.position, threshold=40):
+    for npc in npc_list:
+        if mc.player_is_near((npc.rect.center), threshold=80):
             npc.interact = True
-            tutorial.show_step("interaction")
+            tutorial_manager.show_step("interaction")
         else:
             npc.interact = False
 
@@ -136,18 +163,17 @@ while run:
                 action = mc.get_action()
                 frame = mc.get_frame()
 
-# NPC dialogue manager logic 
+        # NPC dialogue manager logic 
             if event.key == pygame.K_e:
-                tutorial.complete_step("interaction")
-                for npc_entry in npc_data:
-                    if npc_entry['npc'].interact:
-                        dialogue_manager = npc_entry['dialogue_manager']
-                        if dialogue_manager.has_more_dialogues():
-                            current_dialogue = dialogue_manager.next_line()
-                            current_dialogue_manager = dialogue_manager
-                            showing_dialogue = True
-                        else:
+                for npc in npc_list:
+                    if mc.player_is_near(npc.rect.center):
+                        speaker = npc
+                        showing_dialogue = True
+                        dialogue_index += 1
+                        if dialogue_index > len(npc.dialogue)-1:
                             showing_dialogue = False
+                            dialogue_index = -1
+
         #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
@@ -183,32 +209,41 @@ while run:
                     mc.move_right()
                 elif pressed[pygame.K_w]:
                     mc.move_up()
+            if event.key == pygame.K_i:
+                inventory_open = not inventory_open
 
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
-    if showing_dialogue:
-        current_dialogue_img = pygame.image.load("images\sprites\mentor-dialogue-img.png").convert_alpha()
-        dialogue_frame = pygame.image.load("images/dialogue-frame.png").convert_alpha()
-        dialogue_frame.set_colorkey((0, 0, 0))
-        bubble_width = constants.SCREEN_WIDTH - 100
-        bubble_height = 100
-        bubble_x = 100
-        bubble_y = constants.SCREEN_HEIGHT - bubble_height
-        screen.blit(current_dialogue_img, (0, bubble_y))
-        pygame.draw.rect(screen, (214, 210, 185), (bubble_x, bubble_y, bubble_width, bubble_height), border_radius=10)
-        screen.blit(dialogue_frame, (bubble_x, bubble_y))
-        #pygame.draw.rect(screen, (0, 0, 0), (bubble_x, bubble_y, bubble_width, bubble_height), 3, border_radius=10)
-        text_surface = dialogue_font.render(current_dialogue, True, (41, 25, 21))
-        screen.blit(text_surface, (bubble_x + 20, bubble_y + 30))
+    if inventory_open:
+        player_inventory.draw()
+    #inventory notification
+    if showing_notification:
+        player_inventory.notify(notification, screen)
+        if pygame.time.get_ticks() - notification_start > notification_length:
+            showing_notification = False
 
 # Draw tutorial if not finished
     if show_movement_tutorial:
-        tutorial.show_step("movement")
-# update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles)
-    world.update(screen_scroll)
-    for npc in npc_data:
-        npc['npc'].update(screen_scroll)
+        tutorial_manager.show_step("movement")
 
+    if showing_dialogue:
+        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img, speaker.name)
+        mc.stand_still()
+
+    collision_list = [] #list of objects that the player is colliding with - not currently implemented
+    # for name in fg.groups:
+    #     if name != "trunks": #trunks will be/is handled with obstacle tiles
+    #         for sprite in fg.groups[name]:
+    #             if mc.rect.colliderect(sprite.rect):
+    #                 collision_list.append(sprite)
+
+# update objects currently being used in the loops
+    screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
+    world.update(screen_scroll)
+    fg.update(screen_scroll)
+    for npc in npc_list:
+        
+        npc.update(screen_scroll)
+    
     pygame.display.update()
  
 pygame.quit()
