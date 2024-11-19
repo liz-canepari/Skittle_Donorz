@@ -9,6 +9,7 @@ from inventory import Inventory
 from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
+import button
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -101,7 +102,35 @@ tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
 show_movement_tutorial = True
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
-run = True
+#create buttons
+start_img = pygame.image.load('images/start_btn.png').convert_alpha()
+exit_img = pygame.image.load('images/exit_btn.png').convert_alpha()
+
+start_button = button.Button(constants.SCREEN_WIDTH // 2 - 130, constants.SCREEN_HEIGHT // 2 - 150, start_img, 1)
+exit_button = button.Button(constants.SCREEN_WIDTH // 2 - 110, constants.SCREEN_HEIGHT // 2 + 50, exit_img, 1)
+
+menu = True
+while menu == True:
+    #draw menu
+    screen.fill((144, 201, 120))
+    #add buttons
+    if start_button.draw(screen):
+        menu = False
+        run = True
+    if exit_button.draw(screen):
+        run = False
+        menu = False
+
+    #event handler
+    for event in pygame.event.get():
+        # close the game
+        if event.type == pygame.QUIT:
+            run = False
+            menu = False
+
+    pygame.display.update()
+
+
 while run:
     #control FPS
     clock.tick(constants.FPS)
