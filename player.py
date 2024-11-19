@@ -42,6 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, 60, 60)
         self.mask = pygame.mask.from_surface(self.image)
         self.velocity = [velocity_x, velocity_y]
+        self.facing_right = False
 #-----------------------------------------------getters---------------------------------------
     def get_frame(self):
         return self.current_frame
@@ -168,9 +169,11 @@ class Player(pygame.sprite.Sprite):
         # rect_img.fill((0, 0, 255))
         # surface.blit(rect_img, (self.rect.x, self.rect.y))
 
-        
+        if self.facing_right:
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.image.set_colorkey((0, 0, 0))
         #draw character
-        surface.blit(self.get_animation_frame(), (self.rect.x, self.rect.y))
+        surface.blit(self.image, (self.rect.x, self.rect.y))
 
 #---------------------------------------------------------movement functions----------------------------------
     def move_left(self):
