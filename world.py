@@ -13,6 +13,7 @@ class World():
         world_data.clear()
         self.map_tiles.clear()
         self.obstacle_tiles.clear()
+        
 
         with open(f"rooms/{room_number}.csv", newline="") as roomfile:
             reader = csv.DictReader(roomfile)

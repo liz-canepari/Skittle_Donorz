@@ -67,7 +67,6 @@ class Player(pygame.sprite.Sprite):
     def set_action(self, action):
         self.current_action=action
 
-    
     def set_velocity_x(self, x, y):
         self.velocity = [x, y]
 
@@ -105,7 +104,7 @@ class Player(pygame.sprite.Sprite):
                 if exit_dist < 20: 
                     exit_bool = True
 
-        # ------------------- NPC COLLISION -----------------------------------------
+        # ------------------- NPC COLLISION --------------
         # self.rect.centerx += self.velocity[0]
         #check for collision with map in x direction
         for npc in npc_list:

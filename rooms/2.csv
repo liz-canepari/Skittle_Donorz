@@ -7,3 +7,10 @@ tile_types,3
 obstacles_start,2
 obstacles_end,2
 exit_tiles,1
+
+
+def Door(Room A, PlayerPosA, Room B, PlayerPosB):
+    
+    def enter()
+
+    def exit()

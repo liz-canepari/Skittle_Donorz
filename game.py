@@ -113,7 +113,7 @@ while run:
     mc.draw(screen)
     fg.draw_top(screen) #draw top layer of foreground
 
-# threshold is number of pixels the user has to be in order to interact with the object.
+    # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
         if mc.player_is_near((npc.rect.center), threshold=80):
             npc.interact = True
@@ -121,7 +121,7 @@ while run:
         else:
             npc.interact = False
 
-    #check if exit collision
+    #check if there is an exit collision
     if exit_bool:
         world.load_room(tile_list, world_data, room_number + 1)
 
