@@ -44,9 +44,10 @@ mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
+last_update_npc = pygame.time.get_ticks()
 FPS = 110
 frame = mc.get_frame()
-
+npc_frame = frame
 #---------------------------------------------------------------------------NPC Code-------------------------------------------------------------------------------------------
 # NPCs and their dialogue managers from the dialouge.py file
 dialogue_index = -1 #need this
@@ -57,13 +58,13 @@ dialogue_start: 0 #will be used if mc speaks
 # create group of all npc sprites
 npc_list = pygame.sprite.Group()
 #initiate mentor sprite -- will later be moved to wherever we store room data
-mentor = npc.Npc(name="Mentor", x=305, y=180, size=(64, 64), skin="images/sprites/mentor.png", can_interact=True,
+mentor = npc.Npc(name="Mentor", x=305, y=180, size=(32, 32), image_path="images/sprites/mentor-sprite.png", can_interact=True,
                 dialogue=[
                     "Success...", "And Failure...", "Are Both Signs Of Progress.",
                     "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
                     "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
                     "But Never Come Back Home."
-            ], dialogue_img="images/sprites/mentor-dialogue-img.png")
+            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[42])
 npc_list.add(mentor)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
@@ -124,10 +125,7 @@ while run:
     fg.draw(screen) #draw bottom layer of foreground
     #world.draw_grid(screen)
 
-    for npc in npc_list:
-        npc.draw(screen)
-
-    #update animations (currently only chameleon, but can add other animated sprites here)
+    #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= FPS:
         mc.set_frame(frame + 1)
@@ -136,7 +134,19 @@ while run:
         if frame >= len(mc.get_animation()):
             mc.set_frame(0)
             frame = mc.get_frame()
- 
+     #npc animations
+    for n in npc_list:
+        current_time = pygame.time.get_ticks()
+        if current_time - last_update_npc >= FPS:
+            n.set_frame(n.get_frame() + 1)
+            last_update_npc = current_time
+            if n.get_frame() >= len(n.get_animation()):
+                n.set_frame(0)
+                npc_frame = n.get_frame()
+    
+    #draw NPCs
+    for n in npc_list:
+        n.draw(screen)
 
     #draw player
     mc.draw(screen)
