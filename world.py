@@ -6,11 +6,13 @@ class World():
     def __init__(self):
         self.map_tiles = []
         self.obstacle_tiles = []
-
+        self.exit_tiles = []
 
     def load_room(self, tile_list, world_data, room_number):
         tile_list.clear()
         world_data.clear()
+        self.map_tiles.clear()
+        self.obstacle_tiles.clear()
 
         with open(f"rooms/{room_number}.csv", newline="") as roomfile:
             reader = csv.DictReader(roomfile)
@@ -20,10 +22,10 @@ class World():
             tile_list = self.load_tilemap_images(tile_list, int(data["tile_types"]), data["tileset_address"])
             world_data = self.world_fill_defaults(world_data, int(data["rows"]), int(data["columns"]))
             world_data = self.load_csv_level(world_data, data["level_address"])
-            self.process_data(world_data, tile_list)
+            self.process_data(world_data, tile_list, int(data["obstacles_start"]), int(data["obstacles_end"]), int(data["exit_tiles"]))
 
 
-    def process_data(self, data, tile_list):
+    def process_data(self, data, tile_list, obstacle_start, obstacle_end, exit_tile):
         self.level_length = len(data)
         #iterate through each value in level data file
         for y, row in enumerate(data):
@@ -41,8 +43,10 @@ class World():
                 #add image data to main tiles list
                 if tile >= 0:
                     self.map_tiles.append(tile_data)
-                if 0 <= tile <= 11:
+                if obstacle_start <= tile <= obstacle_end:
                     self.obstacle_tiles.append(tile_data)
+                if exit_tile == tile:
+                    self.exit_tiles.append(tile_data)
 
     def update(self, screen_scroll):
         for tile in self.map_tiles:

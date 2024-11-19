@@ -1,6 +1,7 @@
 import pygame
 import spritesheet
 import constants
+import math
 
 class Player(pygame.sprite.Sprite):
     #Animation code from Coding with Russ tutorial
@@ -74,9 +75,12 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, npc_list):
-        self.rect.centerx += self.velocity[0]
+    def update(self, obstacle_tiles, exit_tiles, npc_list):
+
+        exit_bool = False
+
         #check for collision with map in x direction
+        self.rect.centerx += self.velocity[0]
         for obstacle in obstacle_tiles:
             if obstacle[1].colliderect(self.rect):
                 if self.velocity[0] > 0:
@@ -92,8 +96,16 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = obstacle[1].top
                 if self.velocity[1] < 0:
                     self.rect.top = obstacle[1].bottom
-        
-# ------------------- NPC COLLISION -----------------------------------------
+
+        #check for collision with exit tile
+        for exit in exit_tiles:
+            if exit[1].colliderect(self.rect):
+                #ensure player is close to the center of the exit tile
+                exit_dist = math.sqrt(((self.rect.centerx - exit[1].centerx) ** 2) + ((self.rect.centery - exit[1].centery) ** 2))
+                if exit_dist < 20: 
+                    exit_bool = True
+
+        # ------------------- NPC COLLISION -----------------------------------------
         # self.rect.centerx += self.velocity[0]
         #check for collision with map in x direction
         for npc in npc_list:
@@ -111,9 +123,6 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = npc.rect.top
                 if self.velocity[1] < 0:
                     self.rect.top = npc.rect.bottom
-        
-
-
 
         self.image = self.get_animation_frame()
         self.mask = pygame.mask.from_surface(self.image)
@@ -144,7 +153,7 @@ class Player(pygame.sprite.Sprite):
             screen_scroll[1] = constants.SCROLL_THRESH - self.rect.bottom
             self.rect.bottom = constants.SCROLL_THRESH
         
-        return screen_scroll
+        return screen_scroll, exit_bool
 
         
     #put character on screen

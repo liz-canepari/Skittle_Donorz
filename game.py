@@ -22,7 +22,8 @@ screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGH
 pygame.display.set_caption("Skittle Game")
  
 #define game variables
-level = 1
+room_number = 1
+exit_bool = False
 screen_scroll = [0, 0]
 clock = pygame.time.Clock()
 
@@ -34,7 +35,7 @@ tile_list = []
 world_data = []
 
 #load in level data and create world
-world.load_room(tile_list, world_data, 1)
+world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
@@ -119,6 +120,10 @@ while run:
             tutorial_manager.show_step("interaction")
         else:
             npc.interact = False
+
+    #check if exit collision
+    if exit_bool:
+        world.load_room(tile_list, world_data, room_number + 1)
 
     #event handler
     for event in pygame.event.get():
@@ -223,7 +228,7 @@ while run:
     #                 collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
