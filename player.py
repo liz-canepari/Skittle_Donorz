@@ -61,6 +61,11 @@ class Player(pygame.sprite.Sprite):
     def get_y(self):
         return self.rect.centery
 #-----------------------------------------------setters---------------------------------------
+    def set_position(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
+        self.position = [x, y]
+    
     def set_frame(self, frame):
         self.current_frame=frame
 
