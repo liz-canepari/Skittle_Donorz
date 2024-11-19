@@ -64,7 +64,7 @@ mentor = npc.Npc(name="Mentor", x=305, y=180, size=(32, 32), image_path="images/
                     "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
                     "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
                     "But Never Come Back Home."
-            ], dialogue_img="images/sprites/mentor-dialogue-img.png")
+            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[42])
 npc_list.add(mentor)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
@@ -135,14 +135,14 @@ while run:
             mc.set_frame(0)
             frame = mc.get_frame()
      #npc animations
-    current_time = pygame.time.get_ticks()
-    if current_time - last_update_npc >= FPS*2:
-        mentor.set_frame(npc_frame + 1)
-        npc_frame = mentor.get_frame()
-        last_update_npc = current_time
-        if npc_frame >= len(mentor.get_animation()):
-            mentor.set_frame(0)
-            npc_frame = mentor.get_frame()
+    for n in npc_list:
+        current_time = pygame.time.get_ticks()
+        if current_time - last_update_npc >= FPS:
+            n.set_frame(n.get_frame() + 1)
+            last_update_npc = current_time
+            if n.get_frame() >= len(n.get_animation()):
+                n.set_frame(0)
+                npc_frame = n.get_frame()
     
     #draw NPCs
     for n in npc_list:

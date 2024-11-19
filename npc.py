@@ -7,7 +7,7 @@ class Npc(pygame.sprite.Sprite):
     animation_steps = [] #used to set up animation frames for each action--number coordinates with number of frames in each animation
     current_frame = 0 #current animation frame for character display
     current_action = 0 
-    def __init__(self, name, x, y, size, image_path, can_interact, dialogue, dialogue_img): 
+    def __init__(self, name, x, y, size, image_path, can_interact, dialogue, dialogue_img, animation_steps=[]): 
         pygame.sprite.Sprite.__init__(self)
         sprite_sheet_image = pygame.image.load(image_path).convert_alpha()
         #create spritesheet object
@@ -15,8 +15,8 @@ class Npc(pygame.sprite.Sprite):
 
                 #load animation frames
         frame_0 = sprite_sheet.get_image(0, 0, size[0])
-        animation_list = []
-        animation_steps = [26]
+        animation_list = [] #will hold all animation frames
+        self.animation_steps = animation_steps  #used to set up animation frames for each action--number coordinates with number of frames in each animation
         step_counter = 0
 
         for animation in animation_steps:
