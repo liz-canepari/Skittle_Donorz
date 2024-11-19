@@ -22,41 +22,22 @@ screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGH
 pygame.display.set_caption("Skittle Game")
  
 #define game variables
-level = 1
+room_number = 1
+exit_bool = False
 screen_scroll = [0, 0]
 clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
+world = World()
 #load tilemap images
 tile_list = []
-for x in range(constants.TILE_TYPES):
-    gray_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha() #currently don't have different gray vs colored images for mentors hut so they are the same
-    color_image = pygame.image.load(f"images/tiles/mentor_hut_tiles/{x}.png").convert_alpha()
-    tile_image = pygame.transform.scale(gray_image, (constants.TILESIZE, constants.TILESIZE))
-    tile_list.append([tile_image, color_image])
-
 #create empty tile list
 world_data = []
-for row in range(constants.ROWS):
-    r = [-1] * constants.COLS
-    world_data.append(r)
+
 #load in level data and create world
-with open("levels/mentors_hut_data.csv", newline="") as csvfile:
-    reader = csv.reader(csvfile, delimiter = ",")
-    for x, row in enumerate(reader):
-        for y, tile in enumerate(row):
-            world_data[x][y] = int(tile)
-
-
-world = World()
-world.process_data(world_data, tile_list)
+world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
-def draw_grid():
-    for x in range(30):
-        pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
-        pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
-
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
@@ -110,8 +91,9 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
-    #draw_grid()
+    #world.draw_grid()
     fg.draw(screen) #draw bottom layer of foreground
+    #world.draw_grid(screen)
 
     for npc in npc_list:
         npc.draw(screen)
@@ -138,6 +120,10 @@ while run:
             tutorial_manager.show_step("interaction")
         else:
             npc.interact = False
+
+    #check if exit collision
+    if exit_bool:
+        world.load_room(tile_list, world_data, room_number + 1)
 
     #event handler
     for event in pygame.event.get():
@@ -242,7 +228,7 @@ while run:
     #                 collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
