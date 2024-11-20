@@ -87,13 +87,15 @@ show_movement_tutorial = True
 start_img = pygame.image.load('images/start_btn.png').convert_alpha()
 exit_img = pygame.image.load('images/exit_btn.png').convert_alpha()
 
-start_button = button.Button(constants.SCREEN_WIDTH // 2 - 130, constants.SCREEN_HEIGHT // 2 - 150, start_img, 1)
-exit_button = button.Button(constants.SCREEN_WIDTH // 2 - 110, constants.SCREEN_HEIGHT // 2 + 50, exit_img, 1)
+start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN_HEIGHT // 2 - 150, start_img, 1)
+exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_HEIGHT // 2 -150, exit_img, 1)
+start_menu = background.Background('images/Chroma_Quest_Poster_Draft.jpg', 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
 menu = True
 while menu == True:
     #draw menu
     screen.fill((144, 201, 120))
+    start_menu.draw(screen)
     #add buttons
     if start_button.draw(screen):
         menu = False
