@@ -1,31 +1,49 @@
 import pygame
 import constants
+from door import Door
 import csv
+import json
 
 class World():
+
     def __init__(self):
         self.map_tiles = []
         self.obstacle_tiles = []
-        self.exit_tiles = []
 
-    def load_room(self, tile_list, world_data, room_number):
+
+    def load_room(self, tile_list, world_data, door_list, room_number):
         tile_list.clear()
         world_data.clear()
+        door_list.clear()
         self.map_tiles.clear()
         self.obstacle_tiles.clear()
 
-        with open(f"rooms/{room_number}.csv", newline="") as roomfile:
-            reader = csv.DictReader(roomfile)
-            data = {row['key']: row['value'] for row in reader} # creates a key-value dictionary
-
+        with open(f"rooms/{room_number}.json", "r") as roomfile:
+            data = json.load(roomfile)
             # load the tiles from the given file address
-            tile_list = self.load_tilemap_images(tile_list, int(data["tile_types"]), data["tileset_address"])
-            world_data = self.world_fill_defaults(world_data, int(data["rows"]), int(data["columns"]))
+            tile_list = self.load_tilemap_images(tile_list, data["tile_types"], data["tileset_address"])
+            world_data = self.world_fill_defaults(world_data, data["rows"], data["columns"])
             world_data = self.load_csv_level(world_data, data["level_address"])
-            self.process_data(world_data, tile_list, int(data["obstacles_start"]), int(data["obstacles_end"]), int(data["exit_tiles"]))
+            self.process_tile_data(world_data, tile_list, data["obstacles_start"], data["obstacles_end"])
+
+            # read the list of door data and make a list of doors
+            door_list = self.process_door_data(data["doors_data"])
 
 
-    def process_data(self, data, tile_list, obstacle_start, obstacle_end, exit_tile):
+        # with open(f"rooms/{room_number}.csv", newline="") as roomfile:
+        #     reader = csv.DictReader(roomfile)
+        #     data = {row['key']: row['value'] for row in reader} # creates a key-value dictionary
+
+        #     # load the tiles from the given file address
+        #     tile_list = self.load_tilemap_images(tile_list, int(data["tile_types"]), data["tileset_address"])
+        #     world_data = self.world_fill_defaults(world_data, int(data["rows"]), int(data["columns"]))
+        #     world_data = self.load_csv_level(world_data, data["level_address"])
+        #     self.process_tile_data(world_data, tile_list, int(data["obstacles_start"]), int(data["obstacles_end"]))
+
+        #     # read the list of door data and make a list of doors
+        #     door_list = self.process_door_data(data["doors_data"])
+
+    def process_tile_data(self, data, tile_list, obstacle_start, obstacle_end):
         self.level_length = len(data)
         #iterate through each value in level data file
         for y, row in enumerate(data):
@@ -45,8 +63,25 @@ class World():
                     self.map_tiles.append(tile_data)
                 if obstacle_start <= tile <= obstacle_end:
                     self.obstacle_tiles.append(tile_data)
-                if exit_tile == tile:
-                    self.exit_tiles.append(tile_data)
+
+
+    def process_door_data(self, data_list):
+        door_list = []
+
+        for door in data_list:
+            """
+            door[0] is x position
+            door[1] is y position
+            door[2] is x reposition (for the next room)
+            door[3] is y reposition (for the next room)
+            door[4] is the room number for the next room
+            """
+            new_door = Door(door[0], door[1], door[2], door[3], door[4])
+
+            door_list.append(new_door)
+
+        return door_list
+        
 
     def update(self, screen_scroll):
         for tile in self.map_tiles:
@@ -54,14 +89,17 @@ class World():
             tile[3] += screen_scroll[1]
             tile[1].center = (tile[2], tile[3])
 
+
     def draw(self, surface):
         for tile in self.map_tiles:
             surface.blit(tile[0], tile[1])
+
 
     def draw_grid(self, screen):
         for x in range(30):
             pygame.draw.line(screen, constants.WHITE, (x * constants.TILESIZE, 0), (x * constants.TILESIZE, constants.SCREEN_HEIGHT))
             pygame.draw.line(screen, constants.WHITE, (0, x * constants.TILESIZE), (constants.SCREEN_WIDTH, x * constants.TILESIZE))
+
 
     def load_tilemap_images(self, tile_list, tile_types, tileset_address):
         for x in range(tile_types):
@@ -71,12 +109,14 @@ class World():
             tile_list.append([tile_image, color_image])
         return tile_list
 
+
     def world_fill_defaults(self, world_data, rows, cols):
         for row in range(rows):
             r = [-1] * cols
             world_data.append(r)
         return world_data
     
+
     def load_csv_level(self, world_data, level_address):
         with open(f"{level_address}", newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter = ",")
@@ -85,6 +125,7 @@ class World():
                     world_data[x][y] = int(tile)
         return world_data
     
+
     '''
     COLORIZE
     Switch all tile images to the colorized version

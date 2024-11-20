@@ -1,0 +1,12 @@
+{
+    "tileset_address": "images/tiles/mentor_hut_tiles",
+    "level_address": "levels/mentors_hut_data.csv",
+    "rows": 14,
+    "columns": 14,
+    "tile_types": 18,
+    "obstacles_start": 1,
+    "obstacles_end": 11,
+    "doors_data": [
+        [0, 0, 20, 0, 2]
+    ]
+  }

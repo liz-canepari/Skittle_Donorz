@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list):
+    def update(self, obstacle_tiles, npc_list):
 
         exit_bool = False
 
@@ -102,13 +102,6 @@ class Player(pygame.sprite.Sprite):
                 if self.velocity[1] < 0:
                     self.rect.top = obstacle[1].bottom
 
-        #check for collision with exit tile
-        for exit in exit_tiles:
-            if exit[1].colliderect(self.rect):
-                #ensure player is close to the center of the exit tile
-                exit_dist = math.sqrt(((self.rect.centerx - exit[1].centerx) ** 2) + ((self.rect.centery - exit[1].centery) ** 2))
-                if exit_dist < 20: 
-                    exit_bool = True
 
         # ------------------- NPC COLLISION -----------------------------------------
         # self.rect.centerx += self.velocity[0]
@@ -158,7 +151,7 @@ class Player(pygame.sprite.Sprite):
             screen_scroll[1] = constants.SCROLL_THRESH - self.rect.bottom
             self.rect.bottom = constants.SCROLL_THRESH
         
-        return screen_scroll, exit_bool
+        return screen_scroll
 
         
     #put character on screen

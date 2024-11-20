@@ -24,19 +24,17 @@ pygame.display.set_caption("Skittle Game")
  
 #define game variables
 room_number = 1
-exit_bool = False
 screen_scroll = [0, 0]
 clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
-#load tilemap images
-tile_list = []
-#create empty tile list
-world_data = []
+tile_list = [] #list for loaded tilemap images
+world_data = [] #create empty tile list
+door_list = [] #create a list with all of the door objects in a room
 
 #load in level data and create world
-world.load_room(tile_list, world_data, room_number)
+world.load_room(tile_list, world_data, door_list, room_number)
 
 fg = Foreground()
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
@@ -121,6 +119,8 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
+    for door in door_list:
+        door.draw()
     #world.draw_grid()
     fg.draw(screen) #draw bottom layer of foreground
     #world.draw_grid(screen)
@@ -160,9 +160,6 @@ while run:
         else:
             npc.interact = False
 
-    #check if exit collision
-    if exit_bool:
-        world.load_room(tile_list, world_data, room_number + 1)
 
     #event handler
     for event in pygame.event.get():
@@ -266,8 +263,8 @@ while run:
     #             if mc.rect.colliderect(sprite.rect):
     #                 collision_list.append(sprite)
 
-# update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list) #add collision_list eventually
+    # update objects currently being used in the loop
+    screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:

@@ -6,4 +6,6 @@ columns,14
 tile_types,18
 obstacles_start,1
 obstacles_end,11
-exit_tiles,17
+doors_data,[]
+
+{
