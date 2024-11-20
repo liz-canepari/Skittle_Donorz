@@ -7,6 +7,7 @@ import npc
 import tutorial
 from inventory import Inventory
 from world import World
+from door import Door
 from dialogue import DialogueManager
 from foreground import Foreground
 import button
@@ -35,6 +36,8 @@ door_list = [] #create a list with all of the door objects in a room
 
 #load in level data and create world
 world.load_room(tile_list, world_data, door_list, room_number)
+
+door = Door(0, 0, 0, 0, 0)
 
 fg = Foreground()
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
@@ -110,6 +113,7 @@ while menu == True:
 
     pygame.display.update()
 
+print(door_list)
 
 while run:
     #control FPS
@@ -119,11 +123,12 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
+
     for door in door_list:
-        door.draw()
-    #world.draw_grid()
+        door.draw(screen)
+    
     fg.draw(screen) #draw bottom layer of foreground
-    #world.draw_grid(screen)
+    
 
     #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -266,6 +271,8 @@ while run:
     # update objects currently being used in the loop
     screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
     world.update(screen_scroll)
+    for door in door_list:
+        door.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
         

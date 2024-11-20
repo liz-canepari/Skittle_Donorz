@@ -27,21 +27,9 @@ class World():
             self.process_tile_data(world_data, tile_list, data["obstacles_start"], data["obstacles_end"])
 
             # read the list of door data and make a list of doors
-            door_list = self.process_door_data(data["doors_data"])
+            print(data["doors_data"])
+            door_list = self.process_door_data(door_list, data["doors_data"])
 
-
-        # with open(f"rooms/{room_number}.csv", newline="") as roomfile:
-        #     reader = csv.DictReader(roomfile)
-        #     data = {row['key']: row['value'] for row in reader} # creates a key-value dictionary
-
-        #     # load the tiles from the given file address
-        #     tile_list = self.load_tilemap_images(tile_list, int(data["tile_types"]), data["tileset_address"])
-        #     world_data = self.world_fill_defaults(world_data, int(data["rows"]), int(data["columns"]))
-        #     world_data = self.load_csv_level(world_data, data["level_address"])
-        #     self.process_tile_data(world_data, tile_list, int(data["obstacles_start"]), int(data["obstacles_end"]))
-
-        #     # read the list of door data and make a list of doors
-        #     door_list = self.process_door_data(data["doors_data"])
 
     def process_tile_data(self, data, tile_list, obstacle_start, obstacle_end):
         self.level_length = len(data)
@@ -65,10 +53,11 @@ class World():
                     self.obstacle_tiles.append(tile_data)
 
 
-    def process_door_data(self, data_list):
-        door_list = []
+    def process_door_data(self, door_list, data_list):
 
+        print(data_list)
         for door in data_list:
+            
             """
             door[0] is x position
             door[1] is y position
@@ -77,10 +66,8 @@ class World():
             door[4] is the room number for the next room
             """
             new_door = Door(door[0], door[1], door[2], door[3], door[4])
-
             door_list.append(new_door)
 
-        return door_list
         
 
     def update(self, screen_scroll):

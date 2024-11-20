@@ -22,7 +22,7 @@ class Door():
     Function to draw the doors onto the screen
     """
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 255, 0), self.rect, 0)
+        pygame.draw.rect(screen, (0, 255, 0), self.rect, 1)
 
     
 
