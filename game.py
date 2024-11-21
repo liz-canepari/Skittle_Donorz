@@ -177,11 +177,13 @@ while run:
                 action = mc.get_action()
                 frame = mc.get_frame()
                 show_movement_tutorial = False
+                mc.facing_right = False
             if event.key == pygame.K_d:
                 mc.move_right()
                 show_movement_tutorial = False
                 action = mc.get_action()
                 frame = mc.get_frame()
+                mc.facing_right = False
             if event.key == pygame.K_w:
                 mc.move_up()
                 show_movement_tutorial = False
@@ -217,12 +219,14 @@ while run:
                     mc.move_right()
             if event.key == pygame.K_d:
                 mc.stand_still()
+                mc.facing_right = True
                 if pressed[pygame.K_w]:
                     mc.move_up()
                 elif pressed[pygame.K_s]:
                     mc.move_down()
                 elif pressed[pygame.K_a]:
                     mc.move_left()
+                    mc.facing_right = False
             if event.key == pygame.K_w:
                 mc.stand_still()
                 if pressed[pygame.K_a]:
