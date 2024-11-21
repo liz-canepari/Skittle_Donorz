@@ -2,14 +2,14 @@ import pygame
 import spritesheet
 #button class
 class Button():
-	def __init__(self,x, y, image, scale):
-		sprite_sheet = image
-		width = image.get_width()/2
-		height = image.get_height()
+	def __init__(self,x, y, image_path, scale):
+		sprite_sheet = pygame.image.load(image_path).convert_alpha()
+		width = sprite_sheet.get_width()/2
+		height = sprite_sheet.get_height()
 		self.unpressed = spritesheet.SpriteSheet(sprite_sheet).get_image(0, width, height)
 		self.pressed = spritesheet.SpriteSheet(sprite_sheet).get_image(1, width, height)
 		self.image = self.unpressed
-		self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+		self.image = pygame.transform.scale(self.image, (int(width * scale), int(height * scale)))
 		self.rect = self.image.get_rect()
 		self.rect.topleft = (x, y)
 		self.clicked = False
