@@ -81,7 +81,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list):
+    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = True):
 
         exit_bool = False
 
@@ -159,6 +159,14 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom < constants.SCROLL_THRESH:
             screen_scroll[1] = constants.SCROLL_THRESH - self.rect.bottom
             self.rect.bottom = constants.SCROLL_THRESH
+
+        if debug:
+            for obstacle in obstacle_tiles:
+                pygame.draw.rect(screen, (255, 0, 0), obstacle[1], 2)
+            for npc in npc_list:
+                pygame.draw.rect(screen, (255, 0, 0), npc.rect, 2)
+
+            pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
         
         return screen_scroll, exit_bool
 
