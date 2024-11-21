@@ -85,8 +85,8 @@ show_movement_tutorial = True
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 #create buttons
-start_img = pygame.image.load('images/start_btn.png').convert_alpha()
-exit_img = pygame.image.load('images/exit_btn.png').convert_alpha()
+start_img = pygame.image.load('images/start-btn-sheet.png').convert_alpha()
+exit_img = pygame.image.load('images/start-btn-sheet.png').convert_alpha()
 
 start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN_HEIGHT // 2 - 150, start_img, 1)
 exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_HEIGHT // 2 -150, exit_img, 1)
