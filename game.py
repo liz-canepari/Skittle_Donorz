@@ -273,7 +273,7 @@ while run:
     #                 collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
