@@ -39,7 +39,7 @@ The game is coded in Python using Pygame and involves animations, event handling
 
 -   To exit, click the close button
 
-[Software Demo Video](https://www.youtube.com/watch?v=8EbO3wuaYpg&t=16s){:target="\_blank"}
+[Software Demo Video](https://www.youtube.com/watch?v=8EbO3wuaYpg&t=16s 'target=_blank')
 
 # Development Environment
 
@@ -73,10 +73,11 @@ Libraries:
 
 # Useful Websites
 
--   [Youtube](https://www.youtube.com/){:target="\_blank"}
--   [W3Schools](https://www.w3schools.com/python){:target="\_blank"}
--   [PixilArt](https://www.pixilart.com/){:target="\_blank"}
--   [Pygame](https://www.pygame.org/docs/){:target="\_blank"}
+-   [Youtube](https://www.youtube.com/ 'target=_blank')
+-   [Google](https://www.google.com/ 'target=_blank')
+-   [W3Schools](https://www.w3schools.com/python 'target=_blank')
+-   [PixilArt](https://www.pixilart.com/ 'target=_blank')
+-   [Pygame](https://www.pygame.org/docs/ 'target=_blank')
 
 # Future Work
 
