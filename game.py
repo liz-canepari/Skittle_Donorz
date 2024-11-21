@@ -16,11 +16,11 @@ import button
  
 pygame.init()
 
-pygame_icon = pygame.image.load('images/sprites/mentor.png')
+pygame_icon = pygame.image.load('images/cq_chamaleon.png')
 pygame.display.set_icon(pygame_icon)
 
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-pygame.display.set_caption("Skittle Game")
+pygame.display.set_caption("Chroma Quest")
  
 #define game variables
 room_number = 1
