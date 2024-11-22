@@ -81,27 +81,53 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list):
+    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = True):
 
         exit_bool = False
 
         #check for collision with map in x direction
-        self.rect.centerx += self.velocity[0]
-        for obstacle in obstacle_tiles:
-            if obstacle[1].colliderect(self.rect):
-                if self.velocity[0] > 0:
-                    self.rect.right = obstacle[1].left
-                if self.velocity[0] < 0:
-                    self.rect.left = obstacle[1].right
+        if self.velocity[0] > 0:
+            for obstacle in obstacle_tiles:
+                if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+            for npc in npc_list:
+                if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+        elif self.velocity[0] < 0:
+            for obstacle in obstacle_tiles:
+                if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+            for npc in npc_list:
+                if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
 
         #check for collision with map in y direction
-        self.rect.centery += self.velocity[1]
-        for obstacle in obstacle_tiles:
-            if obstacle[1].colliderect(self.rect):
-                if self.velocity[1] > 0:
-                    self.rect.bottom = obstacle[1].top
-                if self.velocity[1] < 0:
-                    self.rect.top = obstacle[1].bottom
+        if self.velocity[1] > 0:
+            for obstacle in obstacle_tiles:
+                if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    self.velocity[1] = 0
+                    break
+            for npc in npc_list:
+                if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    self.velocity[1] = 0
+                    break
+        elif self.velocity[1] < 0:
+            for obstacle in obstacle_tiles:
+                if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    self.velocity[1] = 0
+                    break
+            for npc in npc_list:
+                if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    self.velocity[1] = 0
+                    break
+
+        #update player position
+        self.rect.x += self.velocity[0]
+        self.rect.y += self.velocity[1]
 
         #check for collision with exit tile
         for exit in exit_tiles:
@@ -111,34 +137,9 @@ class Player(pygame.sprite.Sprite):
                 if exit_dist < 20: 
                     exit_bool = True
 
-        # ------------------- NPC COLLISION -----------------------------------------
-        # self.rect.centerx += self.velocity[0]
-        #check for collision with map in x direction
-        for npc in npc_list:
-            if npc.rect.colliderect(self.rect):
-                if self.velocity[0] > 0:
-                    self.rect.right = npc.rect.left
-                if self.velocity[0] < 0:
-                    self.rect.left = npc.rect.right
-
-        #check for collision with map in y direction
-        # self.rect.centery += self.velocity[1]
-        for npc in npc_list:
-            if npc.rect.colliderect(self.rect):
-                if self.velocity[1] > 0:
-                    self.rect.bottom = npc.rect.top
-                if self.velocity[1] < 0:
-                    self.rect.top = npc.rect.bottom
-
+        #update animation
         self.image = self.get_animation_frame()
         self.mask = pygame.mask.from_surface(self.image)
-        
-        for obstacle in obstacle_tiles:
-            if obstacle[1].colliderect(self.rect):
-                if self.velocity[0] > 0:
-                    self.rect.right = obstacle[1].left
-                if self.velocity[0] < 0:
-                    self.rect.left = obstacle[1].right
 
                          
         screen_scroll = [0, 0]
@@ -158,6 +159,14 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom < constants.SCROLL_THRESH:
             screen_scroll[1] = constants.SCROLL_THRESH - self.rect.bottom
             self.rect.bottom = constants.SCROLL_THRESH
+
+        if debug:
+            for obstacle in obstacle_tiles:
+                pygame.draw.rect(screen, (255, 0, 0), obstacle[1], 2)
+            for npc in npc_list:
+                pygame.draw.rect(screen, (255, 0, 0), npc.rect, 2)
+
+            pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
         
         return screen_scroll, exit_bool
 
