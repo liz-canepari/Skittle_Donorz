@@ -191,3 +191,11 @@ class Foreground():
         for group in self.top.values():
             for object in group:
                 object.colorize()
+    
+    def decolorize(self):
+        for group in self.groups.values():
+            for object in group:
+                object.decolorize()
+        for group in self.top.values():
+            for object in group:
+                object.decolorize()

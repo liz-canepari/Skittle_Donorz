@@ -10,6 +10,7 @@ from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
 import button
+import object
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -30,6 +31,7 @@ clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
+colors = []
 #load tilemap images
 tile_list = []
 #create empty tile list
@@ -39,6 +41,8 @@ world_data = []
 world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
+bonzai = object.Object(["images/sprites/bonzai-full-color.png"],"bonzai",64,64,[200,160])
+fg.add_group([bonzai], "furniture")
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
@@ -205,6 +209,15 @@ while run:
                             showing_dialogue = False
                             dialogue_index = -1
 
+            if event.key == pygame.K_LSHIFT:
+                if "green" in colors:
+                    colors.remove("green")
+                    fg.decolorize()
+                    world.decolorize()
+                else:
+                    world.colorize()
+                    fg.colorize()
+                    colors.append("green")
         #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
@@ -263,14 +276,14 @@ while run:
         mc.stand_still()
 
     collision_list = [] #list of objects that the player is colliding with - not currently implemented
-    # for name in fg.groups:
-    #     if name != "trunks": #trunks will be/is handled with obstacle tiles
-    #         for sprite in fg.groups[name]:
-    #             if mc.rect.colliderect(sprite.rect):
-    #                 collision_list.append(sprite)
+    for name in fg.groups:
+        if name != "trunks": #trunks will be/is handled with obstacle tiles
+            for sprite in fg.groups[name]:
+                if mc.rect.colliderect(sprite.rect):
+                    collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, screen) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list,screen) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:

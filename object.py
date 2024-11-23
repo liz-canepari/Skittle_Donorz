@@ -22,9 +22,14 @@ class Object(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         #gray image is initial image, colorize methode changes image to color image
-        self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
-        self.gray_image = pygame.image.load(file_paths[0]).convert_alpha()
-        self.image = pygame.transform.scale(self.gray_image, (width, height))
+        if len(file_paths) == 1:
+            self.color_image = pygame.image.load(file_paths[0]).convert_alpha()
+            self.gray_image = pygame.transform.grayscale(self.color_image)
+            self.image = pygame.transform.scale(self.gray_image, (width, height))
+        else:
+            self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
+            self.gray_image = pygame.image.load(file_paths[0]).convert_alpha()
+            self.image = pygame.transform.scale(self.gray_image, (width, height))
         self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
         self.mask = pygame.mask.from_surface(self.image)
         self.position = position #idk just incase we still want it later??
@@ -36,6 +41,8 @@ class Object(pygame.sprite.Sprite):
     def colorize(self):
         self.image = pygame.transform.scale(self.color_image, (self.width, self.height))
 
+    def decolorize(self):
+        self.image = pygame.transform.scale(self.gray_image, (self.width, self.height))
     def get_image(self):
         return self.image
     
