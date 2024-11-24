@@ -1,5 +1,6 @@
 import pygame
 import constants
+import spritesheet
 class Object(pygame.sprite.Sprite):
 
     def __init__(self,file_paths, name, width, height, position = [0,0],file_paths_i = None, holding_item = False, item = None):
@@ -26,9 +27,14 @@ class Object(pygame.sprite.Sprite):
             self.color_image = pygame.image.load(file_paths[0]).convert_alpha()
             self.gray_image = pygame.transform.grayscale(self.color_image)
             self.image = pygame.transform.scale(self.gray_image, (width, height))
+            self.green_image = None
         else:
-            self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
-            self.gray_image = pygame.image.load(file_paths[0]).convert_alpha()
+            for path in file_paths:
+                if "color" in path:    
+                    self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
+                if "green" in path:
+                    self.green_image = pygame.image.load(file_paths[1]).convert_alpha()
+            self.gray_image = pygame.transform.grayscale(pygame.image.load(file_paths[0]).convert_alpha())
             self.image = pygame.transform.scale(self.gray_image, (width, height))
         self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
         self.mask = pygame.mask.from_surface(self.image)
@@ -38,8 +44,13 @@ class Object(pygame.sprite.Sprite):
     '''COLORIZE
     changes the current image to color_image
     '''
-    def colorize(self):
-        self.image = pygame.transform.scale(self.color_image, (self.width, self.height))
+    def colorize(self, color = None):
+        if color:
+            if color == "green":
+                if self.green_image:
+                    self.image = pygame.transform.scale(self.green_image, (self.width, self.height))
+        else:
+            self.image = pygame.transform.scale(self.color_image, (self.width, self.height))
 
     def decolorize(self):
         self.image = pygame.transform.scale(self.gray_image, (self.width, self.height))
@@ -109,3 +120,4 @@ class ObjectCopy(Object):
         self.position = object.position
         self.rect = pygame.rect.Rect(object.rect.x, object.rect.y, object.width, object.height)
         self.mask = object.mask
+

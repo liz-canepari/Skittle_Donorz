@@ -183,14 +183,15 @@ class Foreground():
     '''
     COLORIZE
     Switch all objects to colored images
+    *Color: The color to add. None = all colors
     '''
-    def colorize(self):
+    def colorize(self, color = None):
         for group in self.groups.values():
             for object in group:
-                object.colorize()
+                object.colorize(color)
         for group in self.top.values():
             for object in group:
-                object.colorize()
+                object.colorize(color)
     
     def decolorize(self):
         for group in self.groups.values():
