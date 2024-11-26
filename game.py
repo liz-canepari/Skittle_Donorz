@@ -10,6 +10,7 @@ from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
 import button
+import object
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
@@ -23,7 +24,7 @@ screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGH
 pygame.display.set_caption("Chroma Quest")
  
 #define game variables
-room_number = 1
+room_number = 3
 exit_bool = False
 screen_scroll = [0, 0]
 clock = pygame.time.Clock()
@@ -39,6 +40,15 @@ world_data = []
 world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
+rock_up = object.PushObject(["images/sprites/rock-up.png"], "rock-up", 48, 48, [100, 500],[254, 240])
+rock_right = object.PushObject(["images/sprites/rock-right.png"], "rock-right", 48, 48, [200, 500], [412, 288])
+rock_down = object.PushObject(["images/sprites/rock-down.png"], "rock-down", 48, 48, [300, 500], [254, 384])
+rock_left = object.PushObject(["images/sprites/rock-left.png"], "rock-left", 48, 48, [400, 500], [124, 288])
+fg.add_group([rock_up, rock_right, rock_left, rock_down], "rocks")
+tree_top = object.Object(["images/sprites/colored-treetop.png"], "tree-top", 120, 120, [0, -28])
+trunk = object.Object(["images/sprites/colored-trunk.png"], "trunk", 80, 80, [0, 0])
+fg.add_copy_group(tree_top, "treetops", "levels/tree-data.csv", 3, True)
+fg.add_copy_group(trunk, "trunks", "levels/tree-data.csv", 3, False)
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
@@ -263,14 +273,14 @@ while run:
         mc.stand_still()
 
     collision_list = [] #list of objects that the player is colliding with - not currently implemented
-    # for name in fg.groups:
-    #     if name != "trunks": #trunks will be/is handled with obstacle tiles
-    #         for sprite in fg.groups[name]:
-    #             if mc.rect.colliderect(sprite.rect):
-    #                 collision_list.append(sprite)
+    for name in fg.groups:
+        if name != "trunks": #trunks will be/is handled with obstacle tiles
+            for sprite in fg.groups[name]:
+                if mc.rect.colliderect(sprite.rect):
+                    collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, screen) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:

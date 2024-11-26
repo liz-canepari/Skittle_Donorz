@@ -49,13 +49,18 @@ class Foreground():
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     *Data: CSV file with multiple placements. Anywhere with a 1 will have a copy of the object placed there
     '''
-    def add_copy_group(self, object, name, data, top=False):
+    def add_copy_group(self, object, name, data, room, top=False):
 
         placement_data = []
         group = pygame.sprite.Group()
+        tile_data = {}
         #create empty tile list
-        for row in range(constants.ROWS):
-            r = [-1] * constants.COLS
+        with open(f"rooms/{room}.csv", newline="") as roomfile:
+            reader = csv.DictReader(roomfile)
+            tile_data = {row['key']: row['value'] for row in reader} 
+
+        for row in range(int(tile_data["rows"])):
+            r = [-1] * int(tile_data["columns"])
             placement_data.append(r)
         #load in level data
         with open(data, newline="") as csvfile:
@@ -64,7 +69,7 @@ class Foreground():
                 for y, tile in enumerate(row):
                     print(f"{x}, {y}")
                     placement_data[x][y] = int(tile)
-                    if placement_data[x][y] == 0:
+                    if placement_data[x][y] >= 0:
                         new_object = ObjectCopy(object)
                         if top:
                             new_object.set_position(y * constants.TILESIZE - (object.width/2) + object.position[0], x * constants.TILESIZE - object.height + object.position[1])

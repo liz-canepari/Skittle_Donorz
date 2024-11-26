@@ -81,7 +81,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = True):
+    def update(self, obstacle_tiles, exit_tiles, npc_list, collision_list, screen, debug = True):
 
         exit_bool = False
 
@@ -95,6 +95,15 @@ class Player(pygame.sprite.Sprite):
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
                     break
+            for collision in collision_list:
+                if collision.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    if "rock" in collision.name and collision.inplace == False:
+                        collision.push("right", self.SPEED)
+                        collision.check_place()
+                        break
+                    else:
+                        self.velocity[0] = 0
+                        break
         elif self.velocity[0] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
@@ -104,6 +113,15 @@ class Player(pygame.sprite.Sprite):
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
                     break
+            for collision in collision_list:
+                if collision.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    if "rock" in collision.name and collision.inplace == False:
+                        collision.push("left", self.SPEED)
+                        collision.check_place()
+                        break
+                    else:
+                        self.velocity[0] = 0
+                        break
 
         #check for collision with map in y direction
         if self.velocity[1] > 0:
@@ -115,6 +133,15 @@ class Player(pygame.sprite.Sprite):
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
+            for collision in collision_list:
+                if collision.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    if "rock" in collision.name and collision.inplace == False:
+                        collision.push("down", self.SPEED)
+                        collision.check_place()
+                        break
+                    else:
+                        self.velocity[1] = 0
+                        break
         elif self.velocity[1] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
@@ -124,6 +151,15 @@ class Player(pygame.sprite.Sprite):
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
+            for collision in collision_list:
+                if collision.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    if "rock" in collision.name and collision.inplace == False:
+                        collision.push("up", self.SPEED)
+                        collision.check_place()
+                        break
+                    else:
+                        self.velocity[1] = 0
+                        break
 
         #update player position
         self.rect.x += self.velocity[0]

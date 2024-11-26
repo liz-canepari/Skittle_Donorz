@@ -65,8 +65,8 @@ class World():
 
     def load_tilemap_images(self, tile_list, tile_types, tileset_address):
         for x in range(tile_types):
-            gray_image = pygame.image.load(f"{tileset_address}/{x}.png").convert_alpha() #currently don't have different gray vs colored images for mentors hut so they are the same
             color_image = pygame.image.load(f"{tileset_address}/{x}.png").convert_alpha()
+            gray_image = pygame.transform.grayscale(color_image)
             tile_image = pygame.transform.scale(gray_image, (constants.TILESIZE, constants.TILESIZE))
             tile_list.append([tile_image, color_image])
         return tile_list

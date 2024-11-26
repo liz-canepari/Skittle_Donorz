@@ -1,0 +1,9 @@
+key,value
+tileset_address,images/tiles/forest/colored-background-tiles
+level_address,levels/outside-data.csv
+rows,15
+columns,15
+tile_types,25
+obstacles_start,1
+obstacles_end,1
+exit_tiles,1
