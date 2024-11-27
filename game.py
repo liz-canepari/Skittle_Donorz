@@ -215,6 +215,10 @@ while run:
                             showing_dialogue = False
                             dialogue_index = -1
 
+            if event.key == pygame.K_SPACE:
+                world.colorize()
+                fg.colorize()
+
         #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
