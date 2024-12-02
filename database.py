@@ -36,12 +36,12 @@ def load_game():
     connection.close()
     if row:
         # change this to row[4] or whatever number is needed when adding things to save
-        # player position, inventory, room, room_logic, tile sets(maybe for color, green, blue)
+        # player position, inventory, room,  (doors w player), tile sets(maybe for color, green, blue), npc rect
         inventory = row[3].split(',')
         return {
             'player_position': row[1],
-            'room': row[2],
-            'room': row[3]
+            # 'room': row[2],
+            # 'room_logic': row[3]
             # 'inventory': inventory
         }
     else:
