@@ -5,16 +5,18 @@ import player
 import background
 import npc
 import tutorial
+import button
 from inventory import Inventory
 from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
-import button
+from database import setup_database, save_game, load_game
 
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
 pygame.init()
+setup_database()
 
 pygame_icon = pygame.image.load('images/sprites/mentor.png')
 pygame.display.set_icon(pygame_icon)
@@ -90,6 +92,19 @@ exit_img = pygame.image.load('images/exit_btn.png').convert_alpha()
 
 start_button = button.Button(constants.SCREEN_WIDTH // 2 - 130, constants.SCREEN_HEIGHT // 2 - 150, start_img, 1)
 exit_button = button.Button(constants.SCREEN_WIDTH // 2 - 110, constants.SCREEN_HEIGHT // 2 + 50, exit_img, 1)
+
+#This is the logic for the load game state, need to figure out what type of data we would need to save
+game_state = load_game()
+if game_state:
+    player_name = game_state['player_name']
+    room_number = game_state['level']
+    score = game_state['score']
+    player_inventory.set_items(game_state['inventory'])
+else:
+    # Start a new game if no saved data
+    player_name = "Player1"
+    score = 0
+    # player_inventory.set_items([]) 
 
 menu = True
 while menu == True:
@@ -168,7 +183,14 @@ while run:
     for event in pygame.event.get():
         # close the game
         if event.type == pygame.QUIT:
+            #change everything except the last one, the values need to be dynamic
+            player_name = "Player1" 
+            level = room_number  
+            score = 1000  
+            # inventory = player_inventory.get_items()  
+            save_game(player_name, level, score) ###, inventory###)
             run = False
+
         # take keyboard presses
         if event.type == pygame.KEYDOWN:
             
@@ -205,6 +227,23 @@ while run:
                         if dialogue_index > len(npc.dialogue)-1:
                             showing_dialogue = False
                             dialogue_index = -1
+
+            if event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                # Save the game when 'S' is pressed
+                save_game(player_name, room_number, score) ###player_inventory.get_items()
+                print("Game saved!")
+
+            if event.key == pygame.K_l:
+                # Load game when 'L' is pressed (for testing purposes)
+                game_state = load_game()
+                if game_state:
+                    player_name = game_state['player_name']
+                    room_number = game_state['level']
+                    score = game_state['score']
+                    player_inventory.set_items(game_state['inventory'])
+                    print("Game loaded!")
+                else:
+                    print("No saved game data found.")
 
         #Logic for if key is released
         if event.type == pygame.KEYUP:
