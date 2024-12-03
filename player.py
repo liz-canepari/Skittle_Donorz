@@ -81,7 +81,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = True):
+    def update(self, obstacle_tiles, npc_list, screen, debug = True):
 
         exit_bool = False
 

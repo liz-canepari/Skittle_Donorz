@@ -37,7 +37,7 @@ door_list = [] #create a list with all of the door objects in a room
 #load in level data and create world
 world.load_room(tile_list, world_data, door_list, room_number)
 
-door = Door(0, 0, 0, 0, 0)
+door = Door(285, 350, 0, 0, 2)
 
 fg = Foreground()
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
@@ -272,7 +272,7 @@ while run:
     #                 collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, screen) #add collision_list eventually
+    screen_scroll = mc.update(world.obstacle_tiles, npc_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
