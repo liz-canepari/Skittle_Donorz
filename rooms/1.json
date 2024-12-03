@@ -6,5 +6,5 @@
   "tile_types": 17,
   "obstacles_start": 1,
   "obstacles_end": 11,
-  "doors_data": [[275, 350, 20, 0, 2]]
+  "doors_data": [[275, 525, 20, 0, 2]]
 }

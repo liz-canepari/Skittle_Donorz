@@ -14,15 +14,15 @@ class Door():
     Function to move the doors along with the player's movement, need to connect to screen scroll function
     """
     def update(self, screen_scroll):
-        self.rect[2] += screen_scroll[0]
-        self.rect[3] += screen_scroll[1]
+        self.rect[0] += screen_scroll[0]
+        self.rect[1] += screen_scroll[1]
 
 
     """
     Function to draw the doors onto the screen
     """
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 255, 0), self.rect, 1)
+        pygame.draw.rect(screen, (0, 255, 0), self.rect, 0)
 
     
 
@@ -32,5 +32,8 @@ class Door():
     def enter():
         pass
 
+        #issue: is there a way to do things with the tiles and not just straight coordinates? 
+        #I'd like to be able to just take the coordinates from the tile where the door is supposed to be
+        #Something I can do in the world file...?
 
     
