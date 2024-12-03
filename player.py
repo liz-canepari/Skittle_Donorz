@@ -38,11 +38,13 @@ class Player(pygame.sprite.Sprite):
         
         self.animation_list = animation_list
         self.animation_steps = animation_steps
-        self.image = self.animation_list[0][0]
+        self.original_image = self.animation_list[0][0]
+        self.image = self.original_image
         self.rect = pygame.Rect(x, y, 60, 60)
         self.mask = pygame.mask.from_surface(self.image)
         self.velocity = [velocity_x, velocity_y]
         self.facing_right = False
+
 #-----------------------------------------------getters---------------------------------------
     def get_frame(self):
         return self.current_frame
@@ -54,9 +56,13 @@ class Player(pygame.sprite.Sprite):
         return self.animation_list[self.current_action]
     
     def get_animation_frame(self):
-        return self.animation_list[self.current_action][self.current_frame]
+        frame = self.animation_list[self.current_action][self.current_frame]  
+        if self.facing_right:  
+            return pygame.transform.flip(frame, True, False)  
+        return frame
+        
     
-    def get_x(self):
+    def get_x(self):        
         return self.rect.centerx
     
     def get_y(self):
@@ -81,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = True):
+    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = False):
 
         exit_bool = False
 
@@ -177,12 +183,11 @@ class Player(pygame.sprite.Sprite):
         # rect_img = pygame.surface.Surface(self.rect.size)
         # rect_img.fill((0, 0, 255))
         # surface.blit(rect_img, (self.rect.x, self.rect.y))
-
-        if self.facing_right:
-            self.image = pygame.transform.flip(self.image, True, False)
-            self.image.set_colorkey((0, 0, 0))
-        #draw character
-        surface.blit(self.image, (self.rect.x, self.rect.y))
+        current_frame = self.get_animation_frame()
+        current_frame.set_colorkey((0, 0, 0))
+       
+        surface.blit(current_frame, (self.rect.x, self.rect.y))
+            
 
 #---------------------------------------------------------movement functions----------------------------------
     def move_left(self):
