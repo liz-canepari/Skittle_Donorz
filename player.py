@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, 60, 60)
         self.mask = pygame.mask.from_surface(self.image)
         self.velocity = [velocity_x, velocity_y]
-        self.facing_right = True
+        self.facing_right = False
 
 #-----------------------------------------------getters---------------------------------------
     def get_frame(self):
@@ -57,7 +57,7 @@ class Player(pygame.sprite.Sprite):
     
     def get_animation_frame(self):
         frame = self.animation_list[self.current_action][self.current_frame]  
-        if not self.facing_right:  
+        if self.facing_right:  
             return pygame.transform.flip(frame, True, False)  
         return frame
         
@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = True):
+    def update(self, obstacle_tiles, exit_tiles, npc_list, screen, debug = False):
 
         exit_bool = False
 
@@ -196,7 +196,6 @@ class Player(pygame.sprite.Sprite):
         #set animation to left facing walking animation
         self.set_action(1)
         self.set_frame(0)
-        self.facing_right = False
     
     def move_right(self):
         #change velocity x value
@@ -204,7 +203,6 @@ class Player(pygame.sprite.Sprite):
         #set animation to right facing walking animation
         self.set_action(2)
         self.set_frame(0)
-        self.facing_right = True
     
     def move_up(self):
         #change velocity y value
