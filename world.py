@@ -38,8 +38,9 @@ class World():
                 image_rect.y = image_y
                 color_image = tile_list[tile][1]
                 gray_image = image
+                green_image = color_image
                 #image_rect.center = (image_x, image_y)
-                tile_data = [image, image_rect, image_x, image_y, color_image, gray_image]
+                tile_data = [image, image_rect, image_x, image_y, color_image, gray_image, green_image]
 
                 #add image data to main tiles list
                 if tile >= 0:
@@ -90,16 +91,22 @@ class World():
     COLORIZE
     Switch all tile images to the colorized version
     '''
-    def colorize(self, color = None):
-        if color:
-            pass
-        else:
-            for tile in self.map_tiles:
-                tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
-            for tile in self.obstacle_tiles:
-                tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
-            for tile in self.exit_tiles:
-                tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
+    def colorize(self, colors = None):
+        if colors:
+            if "green" in colors:
+                for tile in self.map_tiles:
+                    tile[0] = pygame.transform.scale(tile[6], (constants.TILESIZE, constants.TILESIZE))
+                for tile in self.obstacle_tiles:
+                    tile[0] = pygame.transform.scale(tile[6], (constants.TILESIZE, constants.TILESIZE))
+                for tile in self.exit_tiles:
+                    tile[0] = pygame.transform.scale(tile[6], (constants.TILESIZE, constants.TILESIZE))
+            elif "yellow" in colors and "red" in colors:
+                for tile in self.map_tiles:
+                    tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
+                for tile in self.obstacle_tiles:
+                    tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
+                for tile in self.exit_tiles:
+                    tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
 
     def decolorize(self):
         for tile in self.map_tiles:

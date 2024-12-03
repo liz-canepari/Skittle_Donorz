@@ -218,8 +218,9 @@ while run:
                     world.decolorize()
                 else:
                     world.colorize()
-                    fg.colorize()
                     colors.append("green")
+                    fg.colorize(colors)
+
         #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()

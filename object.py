@@ -27,14 +27,18 @@ class Object(pygame.sprite.Sprite):
             self.color_image = pygame.image.load(file_paths[0]).convert_alpha()
             self.gray_image = pygame.transform.grayscale(self.color_image)
             self.image = pygame.transform.scale(self.gray_image, (width, height))
-            self.green_image = None
-        else:
+            self.green_image = self.gray_image
+            self.yellow_image = self.gray_image
+            self.red_image = self.gray_image
+        elif len(file_paths) == 2:
             for path in file_paths:
                 if "color" in path:    
                     self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
                 if "green" in path:
                     self.green_image = pygame.image.load(file_paths[1]).convert_alpha()
             self.gray_image = pygame.transform.grayscale(pygame.image.load(file_paths[0]).convert_alpha())
+            self.yellow_image = self.gray_image
+            self.red_image = self.gray_image
             self.image = pygame.transform.scale(self.gray_image, (width, height))
         self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
         self.mask = pygame.mask.from_surface(self.image)
@@ -44,11 +48,12 @@ class Object(pygame.sprite.Sprite):
     '''COLORIZE
     changes the current image to color_image
     '''
-    def colorize(self, color = None):
-        if color:
-            if color == "green":
-                if self.green_image:
-                    self.image = pygame.transform.scale(self.green_image, (self.width, self.height))
+    def colorize(self, colors = None):
+        if colors:
+            if "green" in colors:
+                self.image = pygame.transform.scale(self.green_image, (self.width, self.height))
+            elif "yellow" in colors and "red" in colors:
+                self.image = pygame.transform.scale(self.color_image, (self.width, self.height))
         else:
             self.image = pygame.transform.scale(self.color_image, (self.width, self.height))
 
