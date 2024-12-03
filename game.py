@@ -13,7 +13,7 @@ from dialogue import DialogueManager
 from foreground import Foreground
 import button
 from inputHandler import InputHandler
-
+import object
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
