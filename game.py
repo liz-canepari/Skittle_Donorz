@@ -5,6 +5,8 @@ import player
 import background
 import npc
 import tutorial
+import button
+import database
 from inventory import Inventory
 from world import World
 from dialogue import DialogueManager
@@ -16,6 +18,8 @@ from inputHandler import InputHandler
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
 pygame.init()
+database.create_connection()
+database.create_tables()
 
 pygame_icon = pygame.image.load('images/cq_chamaleon.png')
 pygame.display.set_icon(pygame_icon)
