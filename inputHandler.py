@@ -11,27 +11,32 @@ class InputHandler:
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN:  
-            
-            if event.key in (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s):  
-                self.handle_movement(event.key)  
-                self.tutorial_manager.complete_step("movement")  
+            if event.key == pygame.K_a:  
+                self.player.move_left()  
+            elif event.key == pygame.K_d:  
+                self.player.move_right()  
+            elif event.key == pygame.K_w:  
+                self.player.move_up()  
+            elif event.key == pygame.K_s:  
+                self.player.move_down()  
             elif event.key == pygame.K_e:  
                 self.handle_npc_interaction()  
             elif event.key == pygame.K_i:  
-            # Handle inventory toggle  
+            # Handle inventory toggle
                 pass  
     
-        elif event.type == pygame.KEYUP:  
-            pressed = pygame.key.get_pressed()
-            if event.key in (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s):  
-                self.player.stand_still()  
-                if pressed[pygame.K_a]:  
-                    self.player.move_left()  
-                elif pressed[pygame.K_d]:  
-                    self.player.move_right()  
-                elif pressed[pygame.K_w]:  
-                    self.player.move_up()  
-                elif pressed[pygame.K_s]:  
+        elif event.type == pygame.KEYUP:   
+            pressed = pygame.key.get_pressed()  
+            if event.key in (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s):   
+                if not any((pressed[pygame.K_a], pressed[pygame.K_d], pressed[pygame.K_w], pressed[pygame.K_s])):  
+                    self.player.stand_still()   
+                elif pressed[pygame.K_a]:   
+                    self.player.move_left()   
+                elif pressed[pygame.K_d]:   
+                    self.player.move_right()   
+                elif pressed[pygame.K_w]:   
+                    self.player.move_up()
+                elif pressed[pygame.K_s]:   
                     self.player.move_down()
 
     def handle_movement(self, key):

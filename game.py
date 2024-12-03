@@ -82,7 +82,6 @@ font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
-show_movement_tutorial = True
 # --------------------------------------------------------------------------Input Handler---------------------------------------------------------------------------
 input_handler = InputHandler(mc, npc_list, tutorial_manager)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
@@ -96,6 +95,7 @@ menu = True
 while menu == True:
     #draw menu
     screen.fill((144, 201, 120))
+
     start_menu.draw(screen)
     #add buttons
     if start_button.draw(screen):
@@ -189,10 +189,6 @@ while run:
         player_inventory.notify(notification, screen)
         if pygame.time.get_ticks() - notification_start > notification_length:
             showing_notification = False
-
-# Draw tutorial if not finished
-    if show_movement_tutorial:
-        tutorial_manager.show_step("movement")
     
     current_dialogue = input_handler.get_current_dialogue()
 
@@ -214,6 +210,8 @@ while run:
     for npc in npc_list:
         
         npc.update(screen_scroll)
+    
+    mc.draw(screen)
     
     pygame.display.update()
  
