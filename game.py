@@ -11,7 +11,7 @@ from inventory import Inventory
 from world import World
 from dialogue import DialogueManager
 from foreground import Foreground
-
+import button
 from inputHandler import InputHandler
 
 #animation code from coding with russ tutorial
