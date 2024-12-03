@@ -41,7 +41,7 @@ world_data = []
 world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
-bonzai = object.Object(["images/sprites/bonzai-full-color.png","images/sprites/bonzai-with-green.png"],"bonzai",80,80,[400,160])
+bonzai = object.Object(["images/sprites/bonzai-fullcolor.png","images/sprites/bonzai-green.png"],"bonzai",59,85,[400,160])
 teatable = object.Object(["images/sprites/tea-table.png"],"teatable",138,124,[80,180])
 fg.add_group([bonzai, teatable], "furniture")
 
