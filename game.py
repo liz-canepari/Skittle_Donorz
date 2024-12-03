@@ -211,16 +211,6 @@ while run:
                             showing_dialogue = False
                             dialogue_index = -1
 
-            if event.key == pygame.K_LSHIFT:
-                if "green" in colors:
-                    colors.remove("green")
-                    fg.decolorize()
-                    world.decolorize()
-                else:
-                    world.colorize()
-                    colors.append("green")
-                    fg.colorize(colors)
-
         #Logic for if key is released
         if event.type == pygame.KEYUP:
             pressed = pygame.key.get_pressed()
