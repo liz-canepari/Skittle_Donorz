@@ -28,6 +28,7 @@ class Inventory:
         self.x = 50
         self.y = 400  # Place the inventory bar lower on the screen
         self.border = 5
+        self.open = False
  
     # Draw everything
     def draw(self):

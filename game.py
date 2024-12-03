@@ -83,7 +83,7 @@ tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
 # --------------------------------------------------------------------------Input Handler---------------------------------------------------------------------------
-input_handler = InputHandler(mc, npc_list, tutorial_manager)
+input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 #create buttons

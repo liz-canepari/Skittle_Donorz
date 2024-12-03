@@ -1,13 +1,14 @@
 import pygame
 
 class InputHandler:
-    def __init__(self, player, npc_list, tutorial_manager):
+    def __init__(self, player, npc_list, tutorial_manager, player_inventory):
         self.mc = player
         self.npc_list = npc_list
         self.tutorial_manager = tutorial_manager
         self.showing_dialogue = False
         self.dialogue_index = -1
         self.current_speaker = None
+        self.inventory = player_inventory
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -23,8 +24,6 @@ class InputHandler:
                 self.mc.move_down()
             elif event.key == pygame.K_e:  
                 self.handle_npc_interaction()  
-            elif event.key == pygame.K_i:
-                pass
             
         
         
@@ -66,7 +65,7 @@ class InputHandler:
                 elif pressed[pygame.K_w]:
                     self.mc.move_up()
             if event.key == pygame.K_i:
-                inventory_open = not inventory_open
+                self.inventory.open = not self.inventory.open
 
     def handle_movement(self, key):
         if key == pygame.K_a:
