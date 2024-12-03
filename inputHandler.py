@@ -15,12 +15,17 @@ class InputHandler:
             self.tutorial_manager.complete_step("movement")
             if event.key == pygame.K_a:
                 self.mc.move_left()
-            if event.key == pygame.K_d:
+            elif event.key == pygame.K_d:
                 self.mc.move_right()
-            if event.key == pygame.K_w:
+            elif event.key == pygame.K_w:
                 self.mc.move_up()
-            if event.key == pygame.K_s:
+            elif event.key == pygame.K_s:
                 self.mc.move_down()
+            elif event.key == pygame.K_e:  
+                self.handle_npc_interaction()  
+            elif event.key == pygame.K_i:
+                pass
+            
         
         
         elif event.type == pygame.KEYUP:  
