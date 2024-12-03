@@ -16,11 +16,11 @@ import button
  
 pygame.init()
 
-pygame_icon = pygame.image.load('images/sprites/mentor.png')
+pygame_icon = pygame.image.load('images/cq_chamaleon.png')
 pygame.display.set_icon(pygame_icon)
 
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
-pygame.display.set_caption("Skittle Game")
+pygame.display.set_caption("Chroma Quest")
  
 #define game variables
 room_number = 1
@@ -83,16 +83,15 @@ show_movement_tutorial = True
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 #create buttons
-start_img = pygame.image.load('images/start_btn.png').convert_alpha()
-exit_img = pygame.image.load('images/exit_btn.png').convert_alpha()
-
-start_button = button.Button(constants.SCREEN_WIDTH // 2 - 130, constants.SCREEN_HEIGHT // 2 - 150, start_img, 1)
-exit_button = button.Button(constants.SCREEN_WIDTH // 2 - 110, constants.SCREEN_HEIGHT // 2 + 50, exit_img, 1)
+start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN_HEIGHT // 2 - 150, 'images/startbtn-sheet.png', 1)
+exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_HEIGHT // 2 -150,'images/exitbtn-sheet.png', 1)
+start_menu = background.Background('images/Chroma_Quest_Poster_Draft.jpg', 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
 menu = True
 while menu == True:
     #draw menu
     screen.fill((144, 201, 120))
+    start_menu.draw(screen)
     #add buttons
     if start_button.draw(screen):
         menu = False
@@ -174,11 +173,13 @@ while run:
                 action = mc.get_action()
                 frame = mc.get_frame()
                 show_movement_tutorial = False
+                mc.facing_right = False
             if event.key == pygame.K_d:
                 mc.move_right()
                 show_movement_tutorial = False
                 action = mc.get_action()
                 frame = mc.get_frame()
+                mc.facing_right = False
             if event.key == pygame.K_w:
                 mc.move_up()
                 show_movement_tutorial = False
@@ -214,12 +215,14 @@ while run:
                     mc.move_right()
             if event.key == pygame.K_d:
                 mc.stand_still()
+                mc.facing_right = True
                 if pressed[pygame.K_w]:
                     mc.move_up()
                 elif pressed[pygame.K_s]:
                     mc.move_down()
                 elif pressed[pygame.K_a]:
                     mc.move_left()
+                    mc.facing_right = False
             if event.key == pygame.K_w:
                 mc.stand_still()
                 if pressed[pygame.K_a]:
@@ -263,8 +266,8 @@ while run:
     #             if mc.rect.colliderect(sprite.rect):
     #                 collision_list.append(sprite)
 
-    # update objects currently being used in the loop
-    screen_scroll = mc.update(world.obstacle_tiles, npc_list) #add collision_list eventually
+# update objects currently being used in the loops
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
