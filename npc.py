@@ -22,7 +22,7 @@ class Npc(pygame.sprite.Sprite):
         for animation in animation_steps:
             temp_img_list = []
             for _ in range(animation):
-                temp_img_list.append(sprite_sheet.get_image(step_counter, 32, 32, 2))
+                temp_img_list.append(sprite_sheet.get_image(step_counter, size[0], size[1], 2))
                 step_counter += 1
             animation_list.append(temp_img_list)
         
@@ -34,7 +34,7 @@ class Npc(pygame.sprite.Sprite):
         self.dialogue_img = pygame.image.load(dialogue_img).convert_alpha() if dialogue_img else None
         self.can_interact = can_interact
         self.dialogue = dialogue
-        self.rect = pygame.Rect(x, y, 64, 64)
+        self.rect = pygame.Rect(x, y, (size[0]*2)-16, (size[1]*2)-16)
  
     def get_frame(self):
         return self.current_frame

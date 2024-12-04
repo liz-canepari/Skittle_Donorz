@@ -68,13 +68,13 @@ dialogue_start: 0 #will be used if mc speaks
 # create group of all npc sprites
 npc_list = pygame.sprite.Group()
 #initiate mentor sprite -- will later be moved to wherever we store room data
-mentor = npc.Npc(name="Mentor", x=305, y=180, size=(32, 32), image_path="images/sprites/mentor-sprite.png", can_interact=True,
+mentor = npc.Npc(name="Mentor", x=311, y=180, size=(24, 31), image_path="images/sprites/mentor-sprite.png", can_interact=True,
                 dialogue=[
                     "Success...", "And Failure...", "Are Both Signs Of Progress.",
                     "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
                     "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
                     "But Never Come Back Home."
-            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[42])
+            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[52])
 npc_list.add(mentor)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
