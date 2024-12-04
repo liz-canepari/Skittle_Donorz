@@ -1,5 +1,6 @@
 import pygame
 import spritesheet
+import json
  
 class Npc(pygame.sprite.Sprite):
 
@@ -35,7 +36,7 @@ class Npc(pygame.sprite.Sprite):
         self.can_interact = can_interact
         self.dialogue = dialogue
         self.rect = pygame.Rect(x, y, 64, 64)
- 
+    
     def get_frame(self):
         return self.current_frame
     
@@ -72,3 +73,16 @@ class Npc(pygame.sprite.Sprite):
         self.rect.y += screen_scroll[1]
         self.skin = self.get_animation_frame()
  
+def load_list(room_number):
+    with open(f"rooms/{room_number}.json") as roomfile:
+        contents = json.load(roomfile) 
+        npcs = contents["npcs"]
+        list = pygame.sprite.Group()
+        for npc in npcs:
+            interact = npcs[npc]["can_interact"]
+            if interact == "True":
+                interact = True
+            else:
+                interact = False
+            list.add(Npc(npcs[npc]["name"], npcs[npc]["x"], npcs[npc]["y"], npcs[npc]["size"], npcs[npc]["image_path"], interact, npcs[npc]["dialogue"], npcs[npc]["dialogue_img"], npcs[npc]["animation_steps"]))
+    return list
