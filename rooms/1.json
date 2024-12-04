@@ -2,9 +2,9 @@
     "npcs" : 
     {
         "mentor" : {"name" : "Mentor",
-                    "x" : 305,
+                    "x" : 311,
                     "y" : 180,
-                    "size" : [32, 32],
+                    "size" : [24, 31],
                     "image_path" : "images/sprites/mentor-sprite.png",
                     "can_interact" : "True",
                     "dialogue" : [
@@ -14,7 +14,7 @@
                         "But Never Come Back Home."
                     ],
                     "dialogue_img" : "images/sprites/mentor-dialogue-img.png",
-                    "animation_steps" : [42]}
+                    "animation_steps" : [52]}
     },
     "items" : 
     {   
