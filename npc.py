@@ -35,7 +35,7 @@ class Npc(pygame.sprite.Sprite):
         self.dialogue_img = pygame.image.load(dialogue_img).convert_alpha() if dialogue_img else None
         self.can_interact = can_interact
         self.dialogue = dialogue
-        self.rect = pygame.Rect(x, y, 64, 64)
+        self.rect = pygame.Rect(x, y, (size[0]*2)-16, (size[1]*2)-16)
     
     def get_frame(self):
         return self.current_frame
