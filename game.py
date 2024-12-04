@@ -13,7 +13,6 @@ from dialogue import DialogueManager
 from foreground import Foreground
 import button
 from inputHandler import InputHandler
-import object
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
@@ -45,9 +44,7 @@ world_data = []
 world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
-bonzai = object.Object(["images/sprites/bonzai-fullcolor.png","images/sprites/bonzai-green.png"],"bonzai",59,85,[400,160])
-teatable = object.Object(["images/sprites/tea-table.png"],"teatable",138,124,[80,180])
-fg.add_group([bonzai, teatable], "furniture")
+fg.load(room_number)
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
@@ -66,16 +63,7 @@ speaker = None # need this
 dialogue_start: 0 #will be used if mc speaks
 
 # create group of all npc sprites
-npc_list = pygame.sprite.Group()
-#initiate mentor sprite -- will later be moved to wherever we store room data
-mentor = npc.Npc(name="Mentor", x=311, y=180, size=(24, 31), image_path="images/sprites/mentor-sprite.png", can_interact=True,
-                dialogue=[
-                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
-                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
-                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
-                    "But Never Come Back Home."
-            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[52])
-npc_list.add(mentor)
+npc_list = npc.load_list(room_number)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
