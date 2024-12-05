@@ -14,6 +14,7 @@ class InputHandler:
         self.notification = None
         self.notification_length = 2000
         self.notification_start = 0
+        self.show_inventory_tutorial = False
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -123,16 +124,25 @@ class InputHandler:
     
     def toggle_inventory(self):
         self.inventory_open = not self.inventory_open
+        if self.inventory_open:
+            self.tutorial_manager.complete_step("inventory")
+        
 
     def show_notification(self, message):
         self.showing_notification = True
         self.notification = message
         self.notification_start = pygame.time.get_ticks()
+        self.show_inventory_tutorial = True
 
     def update_inventory(self, screen):  
-      if self.inventory_open:  
-        self.inventory.draw()  
-      if self.showing_notification:  
-        self.inventory.notify(self.notification, screen)  
-        if pygame.time.get_ticks() - self.notification_start > self.notification_length:  
-           self.showing_notification = False 
+        if self.inventory_open:  
+            self.inventory.draw()  
+        if self.showing_notification:  
+            self.inventory.notify(self.notification, screen)  
+            if pygame.time.get_ticks() - self.notification_start > self.notification_length:  
+                self.showing_notification = False 
+        if self.show_inventory_tutorial and not self.inventory_open:
+            self.tutorial_manager.show_step("inventory")
+
+    def should_show_inventory_tutorial(self):
+        return self.show_inventory_tutorial and not self.inventory_open
