@@ -1,5 +1,6 @@
 import pygame
 import constants
+import world
 
 class Door():
     
@@ -25,15 +26,17 @@ class Door():
         pygame.draw.rect(screen, (0, 255, 0), self.rect, 0)
 
     
-
     """
-    Function that will take player from room A to room B
+    Getter function for the new coordinates and room number
     """
-    def enter():
-        pass
+    def get_new_room_number(self):
+        return self.new_room_number
+    
+    def get_new_x(self):
+        return self.reposition_x
 
-        #issue: is there a way to do things with the tiles and not just straight coordinates? 
-        #I'd like to be able to just take the coordinates from the tile where the door is supposed to be
-        #Something I can do in the world file...?
+    def get_new_y(self):
+        return self.reposition_y
+
 
     

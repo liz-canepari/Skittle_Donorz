@@ -87,9 +87,9 @@ class Player(pygame.sprite.Sprite):
         self.SPEED = num
 
     #Updates position of the player using velocity
-    def update(self, obstacle_tiles, exit_tiles, npc_list, collision_list, screen, debug = False):
+    def update(self, obstacle_tiles, npc_list, collision_list, door_list, screen, debug = False):
 
-        exit_bool = False
+        current_door = None
 
         #check for collision with map in x direction
         if self.velocity[0] > 0:
@@ -104,6 +104,10 @@ class Player(pygame.sprite.Sprite):
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
                     break
+            for door in door_list:
+                if door.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    current_door = door
+
         elif self.velocity[0] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
@@ -112,6 +116,10 @@ class Player(pygame.sprite.Sprite):
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
+                    break
+            for door in door_list:
+                if door.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    current_door = door
                     break
 
         #check for collision with map in y direction
@@ -124,6 +132,10 @@ class Player(pygame.sprite.Sprite):
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
+            for door in door_list:
+                if door.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    current_door = door
+                    break
         elif self.velocity[1] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
@@ -132,6 +144,10 @@ class Player(pygame.sprite.Sprite):
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
+                    break
+            for door in door_list:
+                if door.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    current_door = door
                     break
 
         #update player position
@@ -170,7 +186,7 @@ class Player(pygame.sprite.Sprite):
 
             pygame.draw.rect(screen, (0, 255, 0), self.rect, 2)
         
-        return screen_scroll
+        return screen_scroll, current_door
 
         
     #put character on screen

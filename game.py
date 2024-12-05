@@ -16,6 +16,13 @@ import button
 from inputHandler import InputHandler
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
+
+
+#TODO
+# room transitions work, but the player spawns in slightly different places each time they change rooms. Why?
+# the npc and inanimate objects base their position on the player, so need to figure out how to position them initially before the player enters
+#
+
  
 pygame.init()
 database.create_connection()
@@ -39,6 +46,10 @@ colors = []
 tile_list = []
 #create empty tile list
 world_data = []
+#create a list for doors
+door_list = []
+#variable to hold if a door has been walked through, and if so which door
+current_door = None
 
 #load in level data and create world
 world.load_room(tile_list, world_data, door_list, room_number)
@@ -128,7 +139,7 @@ while run:
         door.draw(screen)
     
     fg.draw(screen) #draw bottom layer of foreground
-    #world.draw_grid(screen)
+    world.draw_grid(screen)
 
     if input_handler.should_show_movement_tutorial():
         tutorial_manager.show_step("movement")
@@ -204,7 +215,7 @@ while run:
                     collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list,screen) #add collision_list eventually
+    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
@@ -214,7 +225,16 @@ while run:
         npc.update(screen_scroll)
     
     mc.draw(screen)
-    
+
+    if current_door != None:
+        print(current_door.get_new_room_number())
+        mc.set_position(current_door.get_new_x(), current_door.get_new_y())
+        world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
+        fg.load(current_door.get_new_room_number())
+        current_door = None
+        
+    print(f"{mc.get_x()}, {mc.get_y()}")
+
     pygame.display.update()
  
 pygame.quit()
