@@ -126,6 +126,9 @@ while run:
 
     if input_handler.should_show_interaction_tutorial():
         tutorial_manager.show_step("interaction")
+    
+    if input_handler.should_show_inventory_tutorial():
+        tutorial_manager.show_step("inventory")
 
     #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
