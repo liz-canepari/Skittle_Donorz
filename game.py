@@ -5,17 +5,21 @@ import player
 import background
 import npc
 import tutorial
+import button
+import database
 from inventory import Inventory
 from world import World
 from door import Door
 from dialogue import DialogueManager
 from foreground import Foreground
 import button
-
+from inputHandler import InputHandler
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
 pygame.init()
+database.create_connection()
+database.create_tables()
 
 pygame_icon = pygame.image.load('images/cq_chamaleon.png')
 pygame.display.set_icon(pygame_icon)
@@ -30,9 +34,11 @@ clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
-tile_list = [] #list for loaded tilemap images
-world_data = [] #create empty tile list
-door_list = [] #create a list with all of the door objects in a room
+colors = []
+#load tilemap images
+tile_list = []
+#create empty tile list
+world_data = []
 
 #load in level data and create world
 world.load_room(tile_list, world_data, door_list, room_number)
@@ -40,6 +46,8 @@ world.load_room(tile_list, world_data, door_list, room_number)
 door = Door(285, 350, 0, 0, 2)
 
 fg = Foreground()
+fg.load(room_number)
+
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
@@ -57,16 +65,7 @@ speaker = None # need this
 dialogue_start: 0 #will be used if mc speaks
 
 # create group of all npc sprites
-npc_list = pygame.sprite.Group()
-#initiate mentor sprite -- will later be moved to wherever we store room data
-mentor = npc.Npc(name="Mentor", x=305, y=180, size=(32, 32), image_path="images/sprites/mentor-sprite.png", can_interact=True,
-                dialogue=[
-                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
-                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
-                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
-                    "But Never Come Back Home."
-            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[42])
-npc_list.add(mentor)
+npc_list = npc.load_list(room_number)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
@@ -82,7 +81,8 @@ font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
-show_movement_tutorial = True
+# --------------------------------------------------------------------------Input Handler---------------------------------------------------------------------------
+input_handler = InputHandler(mc, npc_list, tutorial_manager)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 #create buttons
@@ -94,6 +94,7 @@ menu = True
 while menu == True:
     #draw menu
     screen.fill((144, 201, 120))
+
     start_menu.draw(screen)
     #add buttons
     if start_button.draw(screen):
@@ -127,7 +128,13 @@ while run:
         door.draw(screen)
     
     fg.draw(screen) #draw bottom layer of foreground
-    
+    #world.draw_grid(screen)
+
+    if input_handler.should_show_movement_tutorial():
+        tutorial_manager.show_step("movement")
+
+    if input_handler.should_show_interaction_tutorial():
+        tutorial_manager.show_step("interaction")
 
     #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -160,92 +167,19 @@ while run:
     for npc in npc_list:
         if mc.player_is_near((npc.rect.center), threshold=80):
             npc.interact = True
-            tutorial_manager.show_step("interaction")
         else:
             npc.interact = False
 
 
     #event handler
     for event in pygame.event.get():
+
         # close the game
         if event.type == pygame.QUIT:
-            run = False
-        # take keyboard presses
-        if event.type == pygame.KEYDOWN:
-            
-            if event.key == pygame.K_a:
-                mc.move_left()
-                action = mc.get_action()
-                frame = mc.get_frame()
-                show_movement_tutorial = False
-                mc.facing_right = False
-            if event.key == pygame.K_d:
-                mc.move_right()
-                show_movement_tutorial = False
-                action = mc.get_action()
-                frame = mc.get_frame()
-                mc.facing_right = False
-            if event.key == pygame.K_w:
-                mc.move_up()
-                show_movement_tutorial = False
-                action = mc.get_action()
-                frame = mc.get_frame()
-            if event.key == pygame.K_s:
-                mc.move_down()
-                show_movement_tutorial = False
-                action = mc.get_action()
-                frame = mc.get_frame()
+             run = False
 
-        # NPC dialogue manager logic 
-            if event.key == pygame.K_e:
-                for npc in npc_list:
-                    if mc.player_is_near(npc.rect.center):
-                        speaker = npc
-                        showing_dialogue = True
-                        dialogue_index += 1
-                        if dialogue_index > len(npc.dialogue)-1:
-                            showing_dialogue = False
-                            dialogue_index = -1
-
-        #Logic for if key is released
-        if event.type == pygame.KEYUP:
-            pressed = pygame.key.get_pressed()
-            if event.key == pygame.K_a:
-                mc.stand_still()
-                if pressed[pygame.K_w]:
-                    mc.move_up()
-                elif pressed[pygame.K_s]:
-                    mc.move_down()
-                elif pressed[pygame.K_d]:
-                    mc.move_right()
-            if event.key == pygame.K_d:
-                mc.stand_still()
-                mc.facing_right = True
-                if pressed[pygame.K_w]:
-                    mc.move_up()
-                elif pressed[pygame.K_s]:
-                    mc.move_down()
-                elif pressed[pygame.K_a]:
-                    mc.move_left()
-                    mc.facing_right = False
-            if event.key == pygame.K_w:
-                mc.stand_still()
-                if pressed[pygame.K_a]:
-                    mc.move_left()
-                elif pressed[pygame.K_d]:
-                    mc.move_right()
-                elif pressed[pygame.K_s]:
-                    mc.move_down()
-            if event.key == pygame.K_s:
-                mc.stand_still()
-                if pressed[pygame.K_a]:
-                    mc.move_left()
-                elif pressed[pygame.K_d]:
-                    mc.move_right()
-                elif pressed[pygame.K_w]:
-                    mc.move_up()
-            if event.key == pygame.K_i:
-                inventory_open = not inventory_open
+        input_handler.handle_input(event)
+        
 
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
     if inventory_open:
@@ -255,24 +189,22 @@ while run:
         player_inventory.notify(notification, screen)
         if pygame.time.get_ticks() - notification_start > notification_length:
             showing_notification = False
+    
+    current_dialogue = input_handler.get_current_dialogue()
 
-# Draw tutorial if not finished
-    if show_movement_tutorial:
-        tutorial_manager.show_step("movement")
-
-    if showing_dialogue:
-        DialogueManager.display_bubble(DialogueManager, speaker.dialogue[dialogue_index], speaker.dialogue_img, speaker.name)
+    if current_dialogue:
+        DialogueManager.display_bubble(DialogueManager, current_dialogue, input_handler.current_speaker.dialogue_img, input_handler.current_speaker.name)
         mc.stand_still()
 
     collision_list = [] #list of objects that the player is colliding with - not currently implemented
-    # for name in fg.groups:
-    #     if name != "trunks": #trunks will be/is handled with obstacle tiles
-    #         for sprite in fg.groups[name]:
-    #             if mc.rect.colliderect(sprite.rect):
-    #                 collision_list.append(sprite)
+    for name in fg.groups:
+        if name != "trunks": #trunks will be/is handled with obstacle tiles
+            for sprite in fg.groups[name]:
+                if mc.rect.colliderect(sprite.rect):
+                    collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll = mc.update(world.obstacle_tiles, npc_list, screen) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list,screen) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
@@ -280,6 +212,8 @@ while run:
     for npc in npc_list:
         
         npc.update(screen_scroll)
+    
+    mc.draw(screen)
     
     pygame.display.update()
  

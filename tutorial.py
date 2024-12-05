@@ -22,6 +22,8 @@ class Tutorial:
         """Mark a tutorial step as completed."""
         self.completed_steps.add(key)
 
+    def is_completed(self, key):
+        return key in self.completed_steps
     def displayMessage(self, message, position):
         """Display the tutorial message on the screen."""
         text_surface = self.font.render(message, True, (255, 255, 255))

@@ -6,5 +6,48 @@
   "tile_types": 17,
   "obstacles_start": 1,
   "obstacles_end": 11,
-  "doors_data": [[275, 525, 20, 0, 2]]
+  "doors_data": [[275, 525, 20, 0, 2]],
+    "npcs" : 
+    {
+        "mentor" : {"name" : "Mentor",
+                    "x" : 311,
+                    "y" : 180,
+                    "size" : [24, 31],
+                    "image_path" : "images/sprites/mentor-sprite.png",
+                    "can_interact" : "True",
+                    "dialogue" : [
+                        "Success...", "And Failure...", "Are Both Signs Of Progress.",
+                        "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
+                        "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
+                        "But Never Come Back Home."
+                    ],
+                    "dialogue_img" : "images/sprites/mentor-dialogue-img.png",
+                    "animation_steps" : [52]}
+    },
+    "items" : 
+    {   
+        "copy groups" : {},
+        "groups" : {
+            "furniture" : 
+            {
+            "type" : "normal",
+            "bonzai" : {"image_paths" : ["images/sprites/bonzai-fullcolor.png","images/sprites/bonzai-green.png"],
+                    "name" : "bonzai",
+                    "width" : 59,
+                    "height" : 85,
+                    "position" : [400,160],
+                    "file_paths_i" : "",
+                    "holding_item" : "",
+                    "item" : ""},
+            "teatable" : {"image_paths" : ["images/sprites/tea-table.png"],
+                    "name" : "teatable",
+                    "width" : 138,
+                    "height" : 124,
+                    "position" : [80, 180],
+                    "file_paths_i" : "",
+                    "holding_item" : "",
+                    "item" : ""}
+            }
+        }
+    }
 }
