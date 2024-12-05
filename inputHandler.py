@@ -34,7 +34,7 @@ class InputHandler:
                 self.handle_npc_interaction()  
             elif event.key == pygame.K_i:
                 self.toggle_inventory()
-            elif event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
+            elif event.key == pygame.K_x and pygame.key.get_mods() & pygame.KMOD_CTRL:
                 self.save_game()
             elif event.key == pygame.K_l and pygame.key.get_mods() & pygame.KMOD_CTRL:
                 self.load_game()

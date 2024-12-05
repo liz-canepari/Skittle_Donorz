@@ -45,20 +45,14 @@ def save_game():
 def load_game():
     global mc, room_number, world, tile_list, world_data, fg, npc_list, input_handler
     """Load game state from the database."""
-    game_data = database.load_game(player_id=1) 
-
-    if game_data["player_data"]:
-        player_data = game_data["player_data"]
-        # Restore player position
-        mc.set_position(player_data[4], player_data[5])
-        # Restore player level
-        global room_number
-        room_number = player_data[2]
-        # Reload room
-        world.load_room(tile_list, world_data, room_number)
+    game_data = database.load_game(player_id=1)  
+  
+    if game_data["player_data"]:  
+        player_data = game_data["player_data"]  
+        mc.set_position(player_data[4], player_data[5])    
+        room_number = player_data[2]  
+        world.load_room(tile_list, world_data, room_number)  
         fg.load(room_number)
-        npc_list = npc.load_list(room_number)
-        input_handler.npc_list =npc_list
  
 pygame.init()
 database.create_connection()
