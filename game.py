@@ -74,18 +74,15 @@ npc_list.add(mentor)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
-inventory_open = False
 selected = None
 player_inventory = Inventory()
-showing_notification = False #to check if screen needs to display notif from inventory
-notification = None
-notification_length = 2000
-notification_start = 0
+
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
 font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
 tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
+tutorial_manager.add_step("inventory", "Press I to open inventory", (100, 10))
 # --------------------------------------------------------------------------Input Handler---------------------------------------------------------------------------
 input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
@@ -186,13 +183,7 @@ while run:
         
 
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
-    if inventory_open:
-        player_inventory.draw()
-    #inventory notification
-    if showing_notification:
-        player_inventory.notify(notification, screen)
-        if pygame.time.get_ticks() - notification_start > notification_length:
-            showing_notification = False
+    input_handler.update_inventory(screen)
     
     current_dialogue = input_handler.get_current_dialogue()
 

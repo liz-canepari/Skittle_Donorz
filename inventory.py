@@ -74,5 +74,8 @@ class Inventory:
             font = pygame.font.Font("fonts/Silkscreen-Regular.ttf", 18)
             text_surface = font.render(text, True, (255, 196, 33))
             screen.blit(text_surface, (x, y + 40))
+    def toggle(self):
+        self.open = not self.open
 
-player_inventory = Inventory() #This should be moved to game file or player file.
+    def is_open(self):
+        return self.open

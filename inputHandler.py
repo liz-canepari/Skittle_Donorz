@@ -9,6 +9,11 @@ class InputHandler:
         self.dialogue_index = -1
         self.current_speaker = None
         self.inventory = player_inventory
+        self.inventory_open = False
+        self.showing_notification = False
+        self.notification = None
+        self.notification_length = 2000
+        self.notification_start = 0
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -24,6 +29,8 @@ class InputHandler:
                 self.mc.move_down()
             elif event.key == pygame.K_e:  
                 self.handle_npc_interaction()  
+            elif event.key == pygame.K_i:
+                self.toggle_inventory()
             
         
         
@@ -114,3 +121,18 @@ class InputHandler:
                     return True
         return False
     
+    def toggle_inventory(self):
+        self.inventory_open = not self.inventory_open
+
+    def show_notification(self, message):
+        self.showing_notification = True
+        self.notification = message
+        self.notification_start = pygame.time.get_ticks()
+
+    def update_inventory(self, screen):  
+      if self.inventory_open:  
+        self.inventory.draw()  
+      if self.showing_notification:  
+        self.inventory.notify(self.notification, screen)  
+        if pygame.time.get_ticks() - self.notification_start > self.notification_length:  
+           self.showing_notification = False 
