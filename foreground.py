@@ -1,13 +1,80 @@
 import pygame
 import constants
 import csv
+import object
 from object import ObjectCopy
+import json
 
 class Foreground():
 
     def __init__(self):
         self.groups = {}
         self.top = {}
+
+    '''LOAD
+    Load in all objects from a CSV file
+    *Room number: The number of the room to load in
+    '''
+    def load(self, room_number):
+        self.groups.clear()
+        self.top.clear()
+        with open(f"rooms/{room_number}.json") as roomfile:
+            contents = json.load(roomfile) #load json object
+            items = contents["items"]
+            for group in items["groups"]:
+                if items["groups"][group]["type"] == "top":
+                    self.add_group([], group, True)
+                else:
+                    self.add_group([], group, False)
+                for item in items["groups"][group]:
+                    if item != "type":
+                        file_paths = items["groups"][group][item]["image_paths"]
+                        name = items["groups"][group][item]["name"]
+                        width = items["groups"][group][item]["width"]
+                        height = items["groups"][group][item]["height"]
+                        position = items["groups"][group][item]["position"]
+                        file_paths_i = items["groups"][group][item]["file_paths_i"]
+                        if file_paths_i == "":
+                            file_paths_i = None
+                        holding_item = items["groups"][group][item]["holding_item"]
+                        if holding_item == "":
+                            holding_item = False
+                        else:
+                            holding_item = True
+                        item = items["groups"][group][item]["item"]
+                        if item == "":
+                            item = None
+                        x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
+                        self.add_to_group(x, group)
+            for group in items["copy groups"]:
+                file_paths = items["copy groups"][group]["item"]["image_paths"]
+                name = items["copy groups"][group]["item"]["name"]
+                width = items["copy groups"][group]["item"]["width"]
+                height = items["copy groups"][group]["item"]["height"]
+                position = items["copy groups"][group]["item"]["position"]
+                file_paths_i = items["copy groups"][group]["item"]["file_paths_i"]
+                if file_paths_i == "":
+                    file_paths_i = None
+                holding_item = items["copy groups"][group]["item"]["holding_item"]
+                if holding_item == "":
+                    holding_item = False
+                else:
+                    holding_item = True
+                item = items["copy groups"][group]["item"]["item"]
+                if item == "":
+                    item = None
+                x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
+                data = items["copy groups"][group]["data_file"]
+                if items["copy groups"][group]["type"] == "top":
+                    self.add_copy_group(x, group, data, True)
+                else:
+                    self.add_copy_group(x, group, data, False)
+            
+
+            
+
+
+            
 
     '''GET GROUP
     Retrieve a sprite group from the foreground
@@ -183,11 +250,20 @@ class Foreground():
     '''
     COLORIZE
     Switch all objects to colored images
+    *Color: The color to add. None = all colors
     '''
-    def colorize(self):
+    def colorize(self, color = None):
         for group in self.groups.values():
             for object in group:
-                object.colorize()
+                object.colorize(color)
         for group in self.top.values():
             for object in group:
-                object.colorize()
+                object.colorize(color)
+    
+    def decolorize(self):
+        for group in self.groups.values():
+            for object in group:
+                object.decolorize()
+        for group in self.top.values():
+            for object in group:
+                object.decolorize()

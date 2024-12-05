@@ -13,7 +13,6 @@ from dialogue import DialogueManager
 from foreground import Foreground
 import button
 from inputHandler import InputHandler
-
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
  
@@ -35,6 +34,7 @@ clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
+colors = []
 #load tilemap images
 tile_list = []
 #create empty tile list
@@ -44,6 +44,8 @@ world_data = []
 world.load_room(tile_list, world_data, room_number)
 
 fg = Foreground()
+fg.load(room_number)
+
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
 mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
@@ -61,16 +63,7 @@ speaker = None # need this
 dialogue_start: 0 #will be used if mc speaks
 
 # create group of all npc sprites
-npc_list = pygame.sprite.Group()
-#initiate mentor sprite -- will later be moved to wherever we store room data
-mentor = npc.Npc(name="Mentor", x=305, y=180, size=(32, 32), image_path="images/sprites/mentor-sprite.png", can_interact=True,
-                dialogue=[
-                    "Success...", "And Failure...", "Are Both Signs Of Progress.",
-                    "My Student...", "My Spikes Have Become Dull,", "My Breath Weak,",
-                    "And The Blood I Shed...", "Is No Longer Your Shield.", "I Love You...",
-                    "But Never Come Back Home."
-            ], dialogue_img="images/sprites/mentor-dialogue-img.png", animation_steps=[42])
-npc_list.add(mentor)
+npc_list = npc.load_list(room_number)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
@@ -192,14 +185,14 @@ while run:
         mc.stand_still()
 
     collision_list = [] #list of objects that the player is colliding with - not currently implemented
-    # for name in fg.groups:
-    #     if name != "trunks": #trunks will be/is handled with obstacle tiles
-    #         for sprite in fg.groups[name]:
-    #             if mc.rect.colliderect(sprite.rect):
-    #                 collision_list.append(sprite)
+    for name in fg.groups:
+        if name != "trunks": #trunks will be/is handled with obstacle tiles
+            for sprite in fg.groups[name]:
+                if mc.rect.colliderect(sprite.rect):
+                    collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, screen) #add collision_list eventually
+    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list,screen) #add collision_list eventually
     world.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
