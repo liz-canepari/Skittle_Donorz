@@ -284,6 +284,9 @@ class Foreground():
         for group in self.top.values():
             for object in group:
                 object.colorize(color)
+        for group in self.animated.values():
+            for object in group:
+                object.colorize(color)
     
     def decolorize(self):
         for group in self.groups.values():

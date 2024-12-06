@@ -212,3 +212,11 @@ class AnimatedObject(Object):
         self.rect.x += screen_scroll[0]
         self.rect.y += screen_scroll[1]
         self.image = self.get_animation_frame()
+    
+    def colorize(self, colors = None):
+        if "green" in colors:
+            self.animation_list = self.gray_animation_list
+        if "yellow" in colors and "red" in colors:
+            self.animation_list = self.color_animation_list
+        else:
+            self.animation_list = self.color_animation_list
