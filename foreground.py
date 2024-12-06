@@ -44,7 +44,10 @@ class Foreground():
                         item = items["groups"][group][item]["item"]
                         if item == "":
                             item = None
-                        x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
+                        if items["groups"][group][item]["type"] == "push":
+                            x = object.PushObject(file_paths, name, width, height, position, file_paths_i, holding_item, item)
+                        else:
+                            x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
                         self.add_to_group(x, group)
             for group in items["copy groups"]:
                 file_paths = items["copy groups"][group]["item"]["image_paths"]
