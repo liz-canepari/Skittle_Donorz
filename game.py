@@ -200,6 +200,10 @@ while run:
             for sprite in fg.groups[name]:
                 if mc.rect.colliderect(sprite.rect):
                     collision_list.append(sprite)
+    for name in fg.animated:
+        for sprite in fg.animated[name]:
+            if mc.rect.colliderect(sprite.rect):
+                collision_list.append(sprite)
 
 # update objects currently being used in the loops
     screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list,screen) #add collision_list eventually
