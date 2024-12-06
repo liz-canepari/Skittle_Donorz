@@ -1,7 +1,7 @@
 import pygame
 
 class InputHandler:
-    def __init__(self, player, npc_list, tutorial_manager, player_inventory):
+    def __init__(self, player, npc_list, tutorial_manager, player_inventory, save_function, load_function):
         self.mc = player
         self.npc_list = npc_list
         self.tutorial_manager = tutorial_manager
@@ -14,6 +14,9 @@ class InputHandler:
         self.notification = None
         self.notification_length = 2000
         self.notification_start = 0
+        self.show_inventory_tutorial = False
+        self.save_game = save_function
+        self.load_game = load_function
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -31,6 +34,10 @@ class InputHandler:
                 self.handle_npc_interaction()  
             elif event.key == pygame.K_i:
                 self.toggle_inventory()
+            elif event.key == pygame.K_x and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                self.save_game()
+            elif event.key == pygame.K_l and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                self.load_game()
             
         
         
@@ -123,16 +130,25 @@ class InputHandler:
     
     def toggle_inventory(self):
         self.inventory_open = not self.inventory_open
+        if self.inventory_open:
+            self.tutorial_manager.complete_step("inventory")
+        
 
     def show_notification(self, message):
         self.showing_notification = True
         self.notification = message
         self.notification_start = pygame.time.get_ticks()
+        self.show_inventory_tutorial = True
 
     def update_inventory(self, screen):  
-      if self.inventory_open:  
-        self.inventory.draw()  
-      if self.showing_notification:  
-        self.inventory.notify(self.notification, screen)  
-        if pygame.time.get_ticks() - self.notification_start > self.notification_length:  
-           self.showing_notification = False 
+        if self.inventory_open:  
+            self.inventory.draw()  
+        if self.showing_notification:  
+            self.inventory.notify(self.notification, screen)  
+            if pygame.time.get_ticks() - self.notification_start > self.notification_length:  
+                self.showing_notification = False 
+        if self.show_inventory_tutorial and not self.inventory_open:
+            self.tutorial_manager.show_step("inventory")
+
+    def should_show_inventory_tutorial(self):
+        return self.show_inventory_tutorial and not self.inventory_open

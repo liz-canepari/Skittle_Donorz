@@ -15,6 +15,44 @@ import button
 from inputHandler import InputHandler
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
+mc = None
+world = None
+fg = None
+npc_list = None
+input_handler = None
+tutorial_manager = None
+player_inventory = None
+screen = None
+room_number = 1
+tile_list = []
+world_data = []
+
+# --------------------------------------------------------------------------Save/Load---------------------------------------------------------------------------
+def save_game():
+    """Save current game state to the database."""
+    global mc, room_number
+    # Save player state
+    database.save_game(
+        player_id=1, #palceholder
+        name="Player1",
+        level=room_number,
+        score=0,
+        position_x=mc.rect.x,
+        position_y=mc.rect.y
+    )
+    print("Game saved.")
+
+def load_game():
+    global mc, room_number, world, tile_list, world_data, fg, npc_list, input_handler
+    """Load game state from the database."""
+    game_data = database.load_game(player_id=1)  
+  
+    if game_data["player_data"]:  
+        player_data = game_data["player_data"]  
+        mc.set_position(player_data[4], player_data[5])    
+        room_number = player_data[2]  
+        world.load_room(tile_list, world_data, room_number)  
+        fg.load(room_number)
  
 pygame.init()
 database.create_connection()
@@ -27,7 +65,6 @@ screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGH
 pygame.display.set_caption("Chroma Quest")
  
 #define game variables
-room_number = 1
 exit_bool = False
 screen_scroll = [0, 0]
 clock = pygame.time.Clock()
@@ -35,10 +72,7 @@ clock = pygame.time.Clock()
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
 colors = []
-#load tilemap images
-tile_list = []
-#create empty tile list
-world_data = []
+
 
 #load in level data and create world
 world.load_room(tile_list, world_data, room_number)
@@ -65,10 +99,6 @@ dialogue_start: 0 #will be used if mc speaks
 # create group of all npc sprites
 npc_list = npc.load_list(room_number)
 
-# ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
-# Variable to track if inventory is open or closed
-selected = None
-player_inventory = Inventory()
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
 font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
@@ -76,13 +106,18 @@ tutorial_manager = tutorial.Tutorial(font, screen)
 tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
 tutorial_manager.add_step("inventory", "Press I to open inventory", (100, 10))
+# ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
+# Variable to track if inventory is open or closed
+selected = None
+player_inventory = Inventory()
 # --------------------------------------------------------------------------Input Handler---------------------------------------------------------------------------
-input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory)
+input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory, save_game, load_game)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 #create buttons
 start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN_HEIGHT // 2 - 150, 'images/startbtn-sheet.png', 1)
 exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_HEIGHT // 2 -150,'images/exitbtn-sheet.png', 1)
+load_button = button.Button(constants.SCREEN_WIDTH // 2 -110, constants.SCREEN_HEIGHT // 2 + 100,'images/exitbtn-sheet.png', 1)
 start_menu = background.Background('images/Chroma_Quest_Poster_Draft.jpg', 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
 menu = True
@@ -98,6 +133,10 @@ while menu == True:
     if exit_button.draw(screen):
         run = False
         menu = False
+    if load_button.draw(screen):
+        load_game()
+        menu = False
+        run = True
 
     #event handler
     for event in pygame.event.get():
@@ -126,6 +165,9 @@ while run:
 
     if input_handler.should_show_interaction_tutorial():
         tutorial_manager.show_step("interaction")
+    
+    if input_handler.should_show_inventory_tutorial():
+        tutorial_manager.show_step("inventory")
 
     #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -170,6 +212,7 @@ while run:
 
         # close the game
         if event.type == pygame.QUIT:
+             save_game()
              run = False
 
         input_handler.handle_input(event)
