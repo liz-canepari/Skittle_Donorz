@@ -152,3 +152,63 @@ class PushObject(Object):
         self.rect.y += screen_scroll[1]
         self.place[0] += screen_scroll[0]
         self.place[1] += screen_scroll[1]
+
+class AnimatedObject(Object):
+    
+    animation_list = [] #will hold all animation frames
+    animation_steps = [] #used to set up animation frames for each action--number coordinates with number of frames in each animation
+    current_frame = 0 #current animation frame for character display
+    current_action = 0 
+    def __init__(self, file_path, name, width, height, position = [0,0], animation_steps = [], scale=constants.SCALE):
+        pygame.sprite.Sprite.__init__(self)
+        self.name = name
+        self.position = position
+        sprite_sheet_image = pygame.image.load(file_path).convert_alpha()
+        #create spritesheet object
+        sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
+
+                #load animation frames
+        animation_list = [] #will hold all animation frames
+        self.animation_steps = animation_steps  #used to set up animation frames for each action--number coordinates with number of frames in each animation
+
+        for i in range(0, animation_steps[0]):
+            animation_list.append(sprite_sheet.get_image(i, width, height, scale))
+        self.color_animation_list = animation_list
+        self.gray_animation_list = []
+        for frame in self.color_animation_list:
+            self.gray_animation_list.append(pygame.transform.grayscale(frame))
+        for frame in self.gray_animation_list:
+            frame.set_colorkey((0,0,0))
+
+        self.animation_list = self.gray_animation_list
+
+        if (len(self.animation_list) > 1):
+            self.image = self.animation_list[0]
+        else: self.image = sprite_sheet.get_image(0, width, height, 1)
+        self.rect = pygame.rect.Rect(position[0], position[1], width, height)
+
+    def get_frame(self):
+        return self.current_frame
+    
+    def get_action(self):
+        return self.current_action
+    
+    def get_animation(self):
+        return self.animation_list
+    
+    def get_animation_frame(self):
+        return self.animation_list[self.current_frame]
+    
+    def set_frame(self, frame):
+        self.current_frame=frame
+
+    def set_action(self, action):
+        self.current_action=action
+    
+    def draw(self, screen):
+        screen.blit(self.get_animation_frame(), (self.rect.x, self.rect.y))
+
+    def update(self, screen_scroll):
+        self.rect.x += screen_scroll[0]
+        self.rect.y += screen_scroll[1]
+        self.image = self.get_animation_frame()

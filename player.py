@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         for animation in animation_steps:
             temp_img_list = []
             for _ in range(animation):
-                temp_img_list.append(sprite_sheet.get_image(step_counter, image_width, image_height, 2))
+                temp_img_list.append(sprite_sheet.get_image(step_counter, image_width, image_height, constants.SCALE))
                 step_counter += 1
             animation_list.append(temp_img_list)
         

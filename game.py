@@ -52,6 +52,7 @@ mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
 last_update_npc = pygame.time.get_ticks()
+last_update_fg = pygame.time.get_ticks()
 FPS = 110
 frame = mc.get_frame()
 npc_frame = frame
@@ -145,7 +146,16 @@ while run:
             if n.get_frame() >= len(n.get_animation()):
                 n.set_frame(0)
                 npc_frame = n.get_frame()
-    
+    for group in fg.animated:
+        for item in fg.animated[group]:
+            current_time = pygame.time.get_ticks()
+            if current_time - last_update_fg >= FPS:
+                item.set_frame(item.get_frame() + 1)
+                last_update_fg = current_time
+                if item.get_frame() >= len(item.get_animation()):
+                    item.set_frame(0)
+
+
     #draw NPCs
     for n in npc_list:
         n.draw(screen)

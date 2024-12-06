@@ -30,16 +30,21 @@
                     "position" : [400,160],
                     "file_paths_i" : "",
                     "holding_item" : "",
-                    "item" : ""},
-            "teatable" : {"image_paths" : ["images/sprites/tea-table.png"],
-                    "name" : "teatable",
-                    "width" : 138,
-                    "height" : 124,
-                    "position" : [80, 180],
-                    "file_paths_i" : "",
-                    "holding_item" : "",
                     "item" : ""}
             }
-        }
+        },
+        "animated" : {
+            "furniture-animated" : 
+            {
+            "type" : "normal",
+            "teatable" : {"image_path" : "images/sprites/tea-table-sprite.png",
+                    "name" : "teatable",
+                    "width" : 96,
+                    "height" : 88,
+                    "position" : [80, 180],
+                    "animation_steps" : [10],
+                    "scale" : 1.5}
+            }
+                    }
     }
 }

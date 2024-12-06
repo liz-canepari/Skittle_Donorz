@@ -10,6 +10,7 @@ class Foreground():
     def __init__(self):
         self.groups = {}
         self.top = {}
+        self.animated = {}
 
     '''LOAD
     Load in all objects from a CSV file
@@ -72,7 +73,21 @@ class Foreground():
                     self.add_copy_group(x, group, data, True)
                 else:
                     self.add_copy_group(x, group, data, False)
-            
+            for group in items["animated"]:
+                for item in items["animated"][group]:
+                    if item != "type":
+                        file_path = items["animated"][group][item]["image_path"]
+                        name = items["animated"][group][item]["name"]
+                        width = items["animated"][group][item]["width"]
+                        height = items["animated"][group][item]["height"]
+                        position = items["animated"][group][item]["position"]
+                        animation_steps = items["animated"][group][item]["animation_steps"]
+                        scale = items["animated"][group][item]["scale"]
+                        x = object.AnimatedObject(file_path, name, width, height, position, animation_steps, scale)
+                        if items["animated"][group]["type"] == "top":
+                            self.add_group([x], group, True, True)
+                        else:
+                            self.add_group([x], group, False, True)
 
             
 
@@ -169,13 +184,14 @@ class Foreground():
     *Objects: The list of objects to add
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     '''
-    def add_group(self, objects, name, top=False):
+    def add_group(self, objects, name, top=False, animated=False):
         group = pygame.sprite.Group()
         for object in objects:
             group.add(object)
-        if not top:
+        if not top and not animated:
             self.groups[name] = group
-        else: self.top[name] = group
+        elif top: self.top[name] = group
+        elif animated: self.animated[name] = group
 
     '''
     ADD EXISTING GROUP
@@ -194,6 +210,9 @@ class Foreground():
     '''
     def draw(self, surface):
         for group in self.groups.values():
+            for object in group:
+                object.draw(surface)
+        for group in self.animated.values():
             for object in group:
                 object.draw(surface)
 
@@ -221,6 +240,9 @@ class Foreground():
             for object in group:
                 object.update(screen_scroll)
 
+        for group in self.animated.values():
+            for object in group:
+                object.update(screen_scroll)
     '''
     CHECK ALL COLLIDE
     Check if a sprite collides with any objects in all of the existing groups
