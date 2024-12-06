@@ -1,0 +1,82 @@
+{
+    "tileset_address": "images/tiles/test_tiles",
+    "level_address": "levels/test_level_1.csv",
+    "rows": 16,
+    "columns": 16,
+    "tile_types": 3,
+    "obstacles_start": 2,
+    "obstacles_end": 2,
+    "doors_data": [[275, 525, 250, 250, 1]],
+    "npcs": {},
+    "items": {
+      "copy groups": {"trunks" : {   
+                        "type" : "normal",
+                        "item" : {
+                            "image_paths" : ["sprites/trunk.png"],
+                            "name" : "trunk",
+                            "width" : 40,
+                            "height" : 96,
+                            "position" : [0,0],
+                            "file_paths_i" : "",
+                            "holding_item" : "",
+                            "item" : ""
+                        },
+                        "data_file" : "levels/forest_trees_data.csv"
+
+                            },
+                        "treetops" : {
+                            "type" : "top",
+                            "item" : {
+                                "image_paths" : ["sprites/colored-treetop.png"],
+                                "name" : "treetop",
+                                "width" : 80,
+                                "height" : 80,
+                                "position" : [0,0],
+                                "file_paths_i" : "",
+                                "holding_item" : "",
+                                "item" : ""},
+                            "data_file" : "levels/forest_trees_data.csv"
+                        }
+                        },
+      "groups": {"rocks" :
+                    {"type" : "push",
+                    "rock1" : {
+                        "image_paths" : ["sprites/rock-down.png"],
+                        "name" : "rock1",
+                        "width" : 48,
+                        "height" : 48,
+                        "position" : [0,0],
+                        "file_paths_i" : "",
+                        "holding_item" : "",
+                        "item" : ""},
+                    "rock2" : {
+                        "image_paths" : ["sprites/rock-left.png"],
+                        "name" : "rock2",
+                        "width" : 48,
+                        "height" : 48,
+                        "position" : [0,0],
+                        "file_paths_i" : "",
+                        "holding_item" : "",
+                        "item" : ""},
+                    "rock3" : {
+                        "image_paths" : ["sprites/rock-right.png"],
+                        "name" : "rock3",
+                        "width" : 48,
+                        "height" : 48,
+                        "position" : [0,0],
+                        "file_paths_i" : "",
+                        "holding_item" : "",
+                        "item" : ""},
+                    "rock4" : {
+                        "image_paths" : ["sprites/rock-up.png"],
+                        "name" : "rock4",
+                        "width" : 48,
+                        "height" : 48,
+                        "position" : [0,0],
+                        "file_paths_i" : "",
+                        "holding_item" : "",
+                        "item" : ""}
+                    }
+                }
+    }
+  }

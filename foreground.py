@@ -44,7 +44,7 @@ class Foreground():
                         item = items["groups"][group][item]["item"]
                         if item == "":
                             item = None
-                        if items["groups"][group][item]["type"] == "push":
+                        if items["groups"][group]["type"] == "push":
                             x = object.PushObject(file_paths, name, width, height, position, file_paths_i, holding_item, item)
                         else:
                             x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
