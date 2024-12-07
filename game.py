@@ -4,6 +4,7 @@ import constants
 import player
 import background
 import npc
+from npc import load_list
 import tutorial
 import button
 import database
@@ -20,6 +21,8 @@ from inputHandler import InputHandler
 
 #TODO
 # room transitions work, but the player spawns in slightly different places each time they change rooms. Why?
+# - can i make every room start from the origin? maybe have it as a set reference point would help. 
+# - figure out why the spawn point is always slightly off even though its a set number. What's changing it?
 # the npc and inanimate objects base their position on the player, so need to figure out how to position them initially before the player enters
 #
 
@@ -54,7 +57,7 @@ current_door = None
 #load in level data and create world
 world.load_room(tile_list, world_data, door_list, room_number)
 
-door = Door(285, 350, 0, 0, 2)
+#door = Door(285, 350, 0, 0, 2)
 
 fg = Foreground()
 fg.load(room_number)
@@ -76,7 +79,7 @@ speaker = None # need this
 dialogue_start: 0 #will be used if mc speaks
 
 # create group of all npc sprites
-npc_list = npc.load_list(room_number)
+npc_list = load_list(room_number)
 
 # ---------------------------------------------------------------------------Inventory-------------------------------------------------------------------------------
 # Variable to track if inventory is open or closed
@@ -134,12 +137,13 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
+    #world.draw_grid(screen)
 
     for door in door_list:
         door.draw(screen)
     
     fg.draw(screen) #draw bottom layer of foreground
-    world.draw_grid(screen)
+    
 
     if input_handler.should_show_movement_tutorial():
         tutorial_manager.show_step("movement")
@@ -231,6 +235,8 @@ while run:
         mc.set_position(current_door.get_new_x(), current_door.get_new_y())
         world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
         fg.load(current_door.get_new_room_number())
+
+        npc_list = load_list(current_door.get_new_room_number())
         current_door = None
         
     print(f"{mc.get_x()}, {mc.get_y()}")

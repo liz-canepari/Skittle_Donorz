@@ -6,7 +6,7 @@
   "tile_types": 3,
   "obstacles_start": 2,
   "obstacles_end": 2,
-  "doors_data": [[275, 525, 250, 250, 1]],
+  "doors_data": [[275, 525, 285, 400, 1]],
   "npcs": {},
   "items": {
     "copy groups": {},

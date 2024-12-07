@@ -33,6 +33,7 @@ class World():
 
     def process_tile_data(self, data, tile_list, obstacle_start, obstacle_end):
         self.level_length = len(data)
+        
         #iterate through each value in level data file
         for y, row in enumerate(data):
             for x, tile in enumerate(row):
