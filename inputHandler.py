@@ -1,19 +1,13 @@
 import pygame
 
 class InputHandler:
-    def __init__(self, player, npc_list, tutorial_manager, player_inventory):
+    def __init__(self, player, npc_list, tutorial_manager):
         self.mc = player
         self.npc_list = npc_list
         self.tutorial_manager = tutorial_manager
         self.showing_dialogue = False
         self.dialogue_index = -1
         self.current_speaker = None
-        self.inventory = player_inventory
-        self.inventory_open = False
-        self.showing_notification = False
-        self.notification = None
-        self.notification_length = 2000
-        self.notification_start = 0
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -30,7 +24,7 @@ class InputHandler:
             elif event.key == pygame.K_e:  
                 self.handle_npc_interaction()  
             elif event.key == pygame.K_i:
-                self.toggle_inventory()
+                pass
             
         
         
@@ -72,7 +66,7 @@ class InputHandler:
                 elif pressed[pygame.K_w]:
                     self.mc.move_up()
             if event.key == pygame.K_i:
-                self.inventory.open = not self.inventory.open
+                inventory_open = not inventory_open
 
     def handle_movement(self, key):
         if key == pygame.K_a:
@@ -121,18 +115,3 @@ class InputHandler:
                     return True
         return False
     
-    def toggle_inventory(self):
-        self.inventory_open = not self.inventory_open
-
-    def show_notification(self, message):
-        self.showing_notification = True
-        self.notification = message
-        self.notification_start = pygame.time.get_ticks()
-
-    def update_inventory(self, screen):  
-      if self.inventory_open:  
-        self.inventory.draw()  
-      if self.showing_notification:  
-        self.inventory.notify(self.notification, screen)  
-        if pygame.time.get_ticks() - self.notification_start > self.notification_length:  
-           self.showing_notification = False 
