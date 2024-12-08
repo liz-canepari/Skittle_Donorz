@@ -46,7 +46,7 @@ class Foreground():
                         if item == "":
                             item = None
                         if items["groups"][group]["type"] == "push":
-                            x = object.PushObject(file_paths, name, width, height, position, file_paths_i, holding_item, item)
+                            x = object.PushObject(file_paths, name, width, height, position)
                         else:
                             x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
                         self.add_to_group(x, group)

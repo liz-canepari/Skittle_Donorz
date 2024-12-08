@@ -1,9 +1,9 @@
 key,value
-tileset_address,images/tiles/test_tiles
-level_address,levels/test_level_1.csv
+tileset_address,images/tiles/forest/color
+level_address,levels/puzzle1.csv
 rows,16
 columns,16
-tile_types,3
-obstacles_start,2
-obstacles_end,2
+tile_types,30
+obstacles_start,0
+obstacles_end,0
 exit_tiles,1
