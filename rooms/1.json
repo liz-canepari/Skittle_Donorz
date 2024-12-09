@@ -3,9 +3,9 @@
   "rows": 14,
   "columns": 14,
   "tile_types": 17,
-  "obstacles_start": 1,
+  "obstacles_start": 0,
   "obstacles_end": 11,
-  "doors_data": [[275, 525, 192, 192, 2]],
+  "doors_data": [[275, 525, 380, 900, 2]],
     "npcs" : 
     {
         "mentor" : {"name" : "Mentor",

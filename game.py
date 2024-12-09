@@ -63,7 +63,7 @@ fg = Foreground()
 fg.load(room_number)
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(275, 350, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+mc = player.Player(300, 448, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
@@ -125,7 +125,7 @@ while menu == True:
 
     pygame.display.update()
 
-print(door_list)
+# print(door_list)
 
 while run:
     #control FPS
@@ -224,7 +224,7 @@ while run:
                 collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen) #add collision_list eventually
+    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen, True) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
@@ -233,10 +233,8 @@ while run:
         
         npc.update(screen_scroll)
     
-    mc.draw(screen)
-
     if current_door != None:
-        print(current_door.get_new_room_number())
+        # print(current_door.get_new_room_number())
         mc.set_position(current_door.get_new_x(), current_door.get_new_y())
         world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
         fg.load(current_door.get_new_room_number())
@@ -244,7 +242,7 @@ while run:
         npc_list = load_list(current_door.get_new_room_number())
         current_door = None
         
-    print(f"{mc.get_x()}, {mc.get_y()}")
+    # print(f"{mc.get_x()}, {mc.get_y()}")
 
     pygame.display.update()
  

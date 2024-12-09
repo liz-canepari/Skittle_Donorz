@@ -52,6 +52,8 @@ class Foreground():
                             x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
                         self.add_to_group(x, group)
             for group in items["copy groups"]:
+                rows = contents["rows"]
+                cols = contents["columns"]
                 file_paths = items["copy groups"][group]["item"]["image_paths"]
                 name = items["copy groups"][group]["item"]["name"]
                 width = items["copy groups"][group]["item"]["width"]
@@ -71,9 +73,9 @@ class Foreground():
                 x = object.Object(file_paths, name, width, height, position, file_paths_i, holding_item, item)
                 data = items["copy groups"][group]["data_file"]
                 if items["copy groups"][group]["type"] == "top":
-                    self.add_copy_group(x, group, data, True)
+                    self.add_copy_group(x, group, data, rows, cols, True)
                 else:
-                    self.add_copy_group(x, group, data, False)
+                    self.add_copy_group(x, group, data, rows, cols, False)
             for group in items["animated"]:
                 for item in items["animated"][group]:
                     if item != "type":
@@ -135,13 +137,13 @@ class Foreground():
     *Name: Name for the new object group, will be used as the key in the foreground dictionary of groups
     *Data: CSV file with multiple placements. Anywhere with a 1 will have a copy of the object placed there
     '''
-    def add_copy_group(self, object, name, data, top=False):
+    def add_copy_group(self, object, name, data, rows, cols, top=False):
 
         placement_data = []
         group = pygame.sprite.Group()
         #create empty tile list
-        for row in range(constants.ROWS):
-            r = [-1] * constants.COLS
+        for row in range(rows):
+            r = [-1] * cols
             placement_data.append(r)
         #load in level data
         with open(data, newline="") as csvfile:
