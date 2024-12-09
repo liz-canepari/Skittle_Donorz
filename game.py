@@ -4,11 +4,13 @@ import constants
 import player
 import background
 import npc
+from npc import load_list
 import tutorial
 import button
 import database
 from inventory import Inventory
 from world import World
+from door import Door
 from dialogue import DialogueManager
 from foreground import Foreground
 import button
@@ -53,6 +55,15 @@ def load_game():
         room_number = player_data[2]  
         world.load_room(tile_list, world_data, room_number)  
         fg.load(room_number)
+
+
+#TODO
+# room transitions work, but the player spawns in slightly different places each time they change rooms. Why?
+# - can i make every room start from the origin? maybe have it as a set reference point would help. 
+# - figure out why the spawn point is always slightly off even though its a set number. What's changing it?
+# the npc and inanimate objects base their position on the player, so need to figure out how to position them initially before the player enters
+#
+
  
 pygame.init()
 database.create_connection()
@@ -73,9 +84,15 @@ clock = pygame.time.Clock()
 world = World()
 colors = []
 
+#create a list for doors
+door_list = []
+#variable to hold if a door has been walked through, and if so which door
+current_door = None
 
 #load in level data and create world
-world.load_room(tile_list, world_data, room_number)
+world.load_room(tile_list, world_data, door_list, room_number)
+
+#door = Door(285, 350, 0, 0, 2)
 
 fg = Foreground()
 fg.load(room_number)
@@ -97,7 +114,7 @@ speaker = None # need this
 dialogue_start: 0 #will be used if mc speaks
 
 # create group of all npc sprites
-npc_list = npc.load_list(room_number)
+npc_list = load_list(room_number)
 
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
@@ -147,6 +164,7 @@ while menu == True:
 
     pygame.display.update()
 
+print(door_list)
 
 while run:
     #control FPS
@@ -156,9 +174,13 @@ while run:
     screen.fill((0, 0, 0))
 
     world.draw(screen)
-    #world.draw_grid()
-    fg.draw(screen) #draw bottom layer of foreground
     #world.draw_grid(screen)
+
+    for door in door_list:
+        door.draw(screen)
+    
+    fg.draw(screen) #draw bottom layer of foreground
+    
 
     if input_handler.should_show_movement_tutorial():
         tutorial_manager.show_step("movement")
@@ -203,9 +225,6 @@ while run:
         else:
             npc.interact = False
 
-    #check if exit collision
-    if exit_bool:
-        world.load_room(tile_list, world_data, room_number + 1)
 
     #event handler
     for event in pygame.event.get():
@@ -235,15 +254,28 @@ while run:
                     collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, exit_bool = mc.update(world.obstacle_tiles, world.exit_tiles, npc_list, collision_list,screen) #add collision_list eventually
+    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen) #add collision_list eventually
     world.update(screen_scroll)
+    for door in door_list:
+        door.update(screen_scroll)
     fg.update(screen_scroll)
     for npc in npc_list:
         
         npc.update(screen_scroll)
     
     mc.draw(screen)
-    
+
+    if current_door != None:
+        print(current_door.get_new_room_number())
+        mc.set_position(current_door.get_new_x(), current_door.get_new_y())
+        world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
+        fg.load(current_door.get_new_room_number())
+
+        npc_list = load_list(current_door.get_new_room_number())
+        current_door = None
+        
+    print(f"{mc.get_x()}, {mc.get_y()}")
+
     pygame.display.update()
  
 pygame.quit()
