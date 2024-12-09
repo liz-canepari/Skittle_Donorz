@@ -86,3 +86,6 @@ def load_list(room_number):
                 interact = False
             list.add(Npc(npcs[npc]["name"], npcs[npc]["x"], npcs[npc]["y"], npcs[npc]["size"], npcs[npc]["image_path"], interact, npcs[npc]["dialogue"], npcs[npc]["dialogue_img"], npcs[npc]["animation_steps"]))
     return list
+
+def kill(self):
+    self.kill()

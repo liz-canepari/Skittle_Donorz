@@ -5,11 +5,8 @@ SCALE = 2
 PLAYER_HITBOX = 60
 
 #Tileset Constants
-ROWS = 14
-COLS = 14
 TILESIZE = 48
-TILE_TYPES = 17
-
 SCROLL_THRESH = 200
 
+#Colors
 WHITE = (255, 255, 255)
