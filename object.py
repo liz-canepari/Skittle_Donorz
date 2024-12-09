@@ -134,6 +134,15 @@ class PushObject(Object):
         super().__init__(file_paths, name, width, height, position)
         self.inplace = False
         self.place = place
+        self.directions = []
+        if "left" in self.name:
+            self.directions.append("left")
+        if "right" in self.name:
+            self.directions.append("right")
+        if "up" in self.name:
+            self.directions.append("up")
+        if "down" in self.name:
+            self.directions.append("down")
 
     def push(self, direction, speed):
         if not self.inplace:

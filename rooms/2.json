@@ -51,7 +51,8 @@
                 "position" : [220, 360],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : []
             },
             "stump2" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -61,7 +62,8 @@
                 "position" : [220, 270],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : []
             },
             "stump3" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -71,7 +73,8 @@
                 "position" : [400, 600],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : []
             },
             "stump4" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -81,7 +84,8 @@
                 "position" : [680, 730],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : []
             },
             "stump5" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -91,70 +95,77 @@
                 "position" : [500, 260],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : []
             }
         },
         "rocks" : {
             "type" : "push",
             "rock1" : {
                 "image_paths" : ["images/sprites/rock-right.png"],
-                "name" : "rock1",
+                "name" : "rock-right1",
                 "width" : 80,
                 "height" : 80,
                 "position" : [450, 830],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : ["right"]
             },
             "rock2" : {
                 "image_paths" : ["images/sprites/rock-right.png"],
-                "name" : "rock2",
+                "name" : "rock-right2",
                 "width" : 80,
                 "height" : 80,
                 "position" : [680, 680],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : ["right"]
             },
             "rock3" : {
                 "image_paths" : ["images/sprites/rock-up.png"],
-                "name" : "rock3",
+                "name" : "rock-up1",
                 "width" : 80,
                 "height" : 80,
                 "position" : [550, 720],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : ["up"]
             },
             "rock4" :{
                 "image_paths" : ["images/sprites/rock-down.png"],
-                "name" : "rock4",
+                "name" : "rock-down1",
                 "width" : 80,
                 "height" : 80,
                 "position" : [550, 300],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : ["down"]
             },
             "rock5" :{
                 "image_paths" : ["images/sprites/rock-left.png"],
-                "name" : "rock5",
+                "name" : "rock-left1",
                 "width" : 80,
                 "height" : 80,
                 "position" : [160, 280],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : ["left"]
             },
             "rock6" :{
                 "image_paths" : ["images/sprites/rock-left.png"],
-                "name" : "rock6",
+                "name" : "rock-left2",
                 "width" : 80,
                 "height" : 80,
                 "position" : [200, 640],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : ""
+                "item" : "",
+                "directions" : ["left"]
             }
         }   
     },

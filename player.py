@@ -107,6 +107,10 @@ class Player(pygame.sprite.Sprite):
             for door in door_list:
                 if door.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     current_door = door
+            for collision in collision_list:
+                if "rock" in collision.name and "right" in collision.directions:
+                       collision.push("right", self.SPEED)
+
 
         elif self.velocity[0] < 0:
             for obstacle in obstacle_tiles:
@@ -121,7 +125,9 @@ class Player(pygame.sprite.Sprite):
                 if door.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     current_door = door
                     break
-
+            for collision in collision_list:
+                if "rock" in collision.name and "left" in collision.directions:
+                    collision.push("left", self.SPEED)
         #check for collision with map in y direction
         if self.velocity[1] > 0:
             for obstacle in obstacle_tiles:
@@ -136,6 +142,10 @@ class Player(pygame.sprite.Sprite):
                 if door.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     current_door = door
                     break
+            for collision in collision_list:
+                if "rock" in collision.name and "down" in collision.directions:
+                    collision.push("down", self.SPEED)
+
         elif self.velocity[1] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
@@ -149,6 +159,9 @@ class Player(pygame.sprite.Sprite):
                 if door.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     current_door = door
                     break
+            for collision in collision_list:
+                if "rock" in collision.name and "up" in collision.directions:
+                    collision.push("up", self.SPEED)
 
         #update player position
         self.rect.x += self.velocity[0]
