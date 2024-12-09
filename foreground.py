@@ -19,6 +19,7 @@ class Foreground():
     def load(self, room_number):
         self.groups.clear()
         self.top.clear()
+        self.animated.clear()
         with open(f"rooms/{room_number}.json") as roomfile:
             contents = json.load(roomfile) #load json object
             items = contents["items"]

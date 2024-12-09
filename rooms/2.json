@@ -10,6 +10,7 @@
   "npcs": {},
   "items": {
     "copy groups": {},
-    "groups": {}
+    "groups": {},
+    "animated": {}
   }
 }
