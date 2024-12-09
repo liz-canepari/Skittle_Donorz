@@ -121,6 +121,9 @@ class ObjectCopy(Object):
         pygame.sprite.Sprite.__init__(self)
         self.color_image = object.color_image
         self.gray_image = object.gray_image
+        self.green_image = object.green_image
+        self.red_image = object.red_image
+        self.yellow_image = object.yellow_image
         self.image = object.image
         self.position = object.position
         self.rect = pygame.rect.Rect(object.rect.x, object.rect.y, object.width, object.height)

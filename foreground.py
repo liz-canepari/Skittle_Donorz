@@ -215,6 +215,7 @@ class Foreground():
         for group in self.groups.values():
             for object in group:
                 object.draw(surface)
+
         for group in self.animated.values():
             for object in group:
                 object.draw(surface)

@@ -44,7 +44,7 @@ clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
-colors = []
+colors = ["green"]
 #load tilemap images
 tile_list = []
 #create empty tile list
@@ -224,7 +224,7 @@ while run:
                 collision_list.append(sprite)
 
 # update objects currently being used in the loops
-    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen, True) #add collision_list eventually
+    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
@@ -241,6 +241,8 @@ while run:
 
         npc_list = load_list(current_door.get_new_room_number())
         current_door = None
+        world.colorize(colors)
+        fg.colorize(colors)
         
     # print(f"{mc.get_x()}, {mc.get_y()}")
 
