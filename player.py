@@ -93,44 +93,71 @@ class Player(pygame.sprite.Sprite):
 
         #check for collision with map in x direction
         if self.velocity[0] > 0:
+
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
                     break
-            for npc in npc_list:
-                if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.velocity[0] = 0
-                    break
-                if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.velocity[0] = 0
-                    break
-        elif self.velocity[0] < 0:
-            for obstacle in obstacle_tiles:
-                if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.velocity[0] = 0
-                    break
+
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
                     break
 
+            for object in collision_list:
+                if object.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+
+        elif self.velocity[0] < 0:
+
+            for obstacle in obstacle_tiles:
+                if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+
+            for npc in npc_list:
+                if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+
+            for object in collision_list:
+                if object.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
+                    self.velocity[0] = 0
+                    break
+
         #check for collision with map in y direction
         if self.velocity[1] > 0:
+
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
+
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
+            
+            for object in collision_list:
+                if object.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    self.velocity[1] = 0
+                    break
+
         elif self.velocity[1] < 0:
+
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
+
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
+                    self.velocity[1] = 0
+                    break
+
+            for object in collision_list:
+                if object.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
                     self.velocity[1] = 0
                     break
 
@@ -155,17 +182,23 @@ class Player(pygame.sprite.Sprite):
 
         #Moves the camera left and right 
         if self.rect.right > (constants.SCREEN_WIDTH - constants.SCROLL_THRESH):
+
             screen_scroll[0] = (constants.SCREEN_WIDTH - constants.SCROLL_THRESH) - self.rect.right
             self.rect.right = constants.SCREEN_WIDTH - constants.SCROLL_THRESH
+
         if self.rect.left < constants.SCROLL_THRESH:
+
             screen_scroll[0] = constants.SCROLL_THRESH - self.rect.left
             self.rect.left = constants.SCROLL_THRESH
 
         #Moves the camera up and down
         if self.rect.top > (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH):
+
             screen_scroll[1] = (constants.SCREEN_HEIGHT - constants.SCROLL_THRESH) - self.rect.top
             self.rect.top = constants.SCREEN_HEIGHT - constants.SCROLL_THRESH
+
         if self.rect.bottom < constants.SCROLL_THRESH:
+
             screen_scroll[1] = constants.SCROLL_THRESH - self.rect.bottom
             self.rect.bottom = constants.SCROLL_THRESH
 
