@@ -92,14 +92,15 @@ class Object(pygame.sprite.Sprite):
     '''INTERACT
     changes the current image to the next interaction image'''
     def interact(self):
-        if self.interact_index == 1:
-            self.og_image = self.image
-        self.image = pygame.image.load(self.interact_imgs[self.interact_index]).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        self.interact_index += 1
-        if self.interact_index >= len(self.interact_imgs):
-            self.interact_index = 1
-            self.used = True
+        if self.interactable:
+            if self.interact_index == 1:
+                self.og_image = self.image
+            self.image = pygame.image.load(self.interact_imgs[self.interact_index]).convert_alpha()
+            self.image = pygame.transform.scale(self.image, (self.width, self.height))
+            self.interact_index += 1
+            if self.interact_index >= len(self.interact_imgs):
+                self.interact_index = 1
+                self.used = True
     
     '''IN INVENTORY
     changes current image to the first interaction image
