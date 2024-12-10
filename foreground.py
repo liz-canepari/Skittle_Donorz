@@ -214,10 +214,16 @@ class Foreground():
     def draw(self, surface):
         for group in self.groups.values():
             for object in group:
+                rect = pygame.surface.Surface((object.width, object.height))
+                rect.fill((0, 255, 0))
+                surface.blit(rect, object.position)
                 object.draw(surface)
 
         for group in self.animated.values():
             for object in group:
+                rect = pygame.surface.Surface((object.width, object.height))
+                rect.fill((0, 255, 0))
+                surface.blit(rect, object.position)
                 object.draw(surface)
 
     '''

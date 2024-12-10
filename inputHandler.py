@@ -87,6 +87,7 @@ class InputHandler:
                     
 
     def handle_npc_interaction(self):
+        self.tutorial_manager.complete_step("interaction")
         if self.showing_dialogue:
             self.process_dialogue()
         else:

@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         #load animation frames
         frame_0 = sprite_sheet.get_image(0, 0, image_width)
         animation_list = []
-        animation_steps = [3, 4, 4, 4, 4]
+        animation_steps = [3, 4, 4, 4, 4, 4, 4, 4, 4]
         step_counter = 0
 
         for animation in animation_steps:
@@ -78,6 +78,7 @@ class Player(pygame.sprite.Sprite):
 
     def set_action(self, action):
         self.current_action=action
+        self.current_frame = 0
 
     
     def set_velocity_x(self, x, y):
@@ -86,21 +87,32 @@ class Player(pygame.sprite.Sprite):
     def set_speed(self, num):
         self.SPEED = num
 
-    #Updates position of the player using velocity
-    def update(self, obstacle_tiles, npc_list, collision_list, door_list, screen, debug = False):
+    def reset_speed(self):
+        self.SPEED = 5
 
+    #Updates position of the player using velocity
+    def update(self, obstacle_tiles, npc_list, fg, door_list, screen, debug = False):
+        bounce_back = .5
         current_door = None
+
+        collision_list = [] #list of objects that the player is colliding with - not currently implemented
+        for name in fg.groups:
+            if name != "trunks": #trunks will be/is handled with obstacle tiles
+                for sprite in fg.groups[name]:
+                    if self.rect.colliderect(sprite.rect):
+                        collision_list.append(sprite)
+        for name in fg.animated:
+            for sprite in fg.animated[name]:
+                if self.rect.colliderect(sprite.rect):
+                    collision_list.append(sprite)
 
         #check for collision with map in x direction
         if self.velocity[0] > 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.velocity[0] = 0
+                    self.rect.x -= bounce_back + self.SPEED
                     break
             for npc in npc_list:
-                if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.velocity[0] = 0
-                    break
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     self.velocity[0] = 0
                     break
@@ -108,14 +120,15 @@ class Player(pygame.sprite.Sprite):
                 if door.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
                     current_door = door
             for collision in collision_list:
-                if "rock" in collision.name and "right" in collision.directions:
-                       collision.push("right", self.SPEED)
+                if "push" in collision.name and "right" in collision.directions:
+                       self.set_action(5)
+                       collision.push("right", self.SPEED, fg)
 
 
         elif self.velocity[0] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.velocity[0] = 0
+                    self.rect.x += bounce_back + self.SPEED
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
@@ -126,13 +139,14 @@ class Player(pygame.sprite.Sprite):
                     current_door = door
                     break
             for collision in collision_list:
-                if "rock" in collision.name and "left" in collision.directions:
-                    collision.push("left", self.SPEED)
+                if "push" in collision.name and "left" in collision.directions:
+                    self.set_action(6)
+                    collision.push("left", self.SPEED, fg)
         #check for collision with map in y direction
         if self.velocity[1] > 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
-                    self.velocity[1] = 0
+                    self.rect.y -= bounce_back + self.SPEED
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
@@ -143,13 +157,15 @@ class Player(pygame.sprite.Sprite):
                     current_door = door
                     break
             for collision in collision_list:
-                if "rock" in collision.name and "down" in collision.directions:
-                    collision.push("down", self.SPEED)
+                if "push" in collision.name and "down" in collision.directions:
+                    self.set_action(7)
+                    collision.push("down", self.SPEED, fg)
+
 
         elif self.velocity[1] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
-                    self.velocity[1] = 0
+                    self.rect.y += bounce_back + self.SPEED
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
@@ -160,8 +176,11 @@ class Player(pygame.sprite.Sprite):
                     current_door = door
                     break
             for collision in collision_list:
-                if "rock" in collision.name and "up" in collision.directions:
-                    collision.push("up", self.SPEED)
+                if "push" in collision.name and "up" in collision.directions:
+                    self.set_action(8)
+                    collision.push("up", self.SPEED, fg)
+
+                    
 
         #update player position
         self.rect.x += self.velocity[0]

@@ -40,7 +40,7 @@ class Object(pygame.sprite.Sprite):
             self.yellow_image = self.gray_image
             self.red_image = self.gray_image
             self.image = pygame.transform.scale(self.gray_image, (width, height))
-        self.rect = pygame.Rect(position[0], position[1], width-10, height - 10)
+        self.rect = pygame.Rect(position[0], position[1], width, height)
         self.mask = pygame.mask.from_surface(self.image)
         self.position = position #idk just incase we still want it later??
         self.used = False #initially set to False, will be set to True when object is "used"
@@ -87,6 +87,7 @@ class Object(pygame.sprite.Sprite):
     def update(self, screen_scroll):
         self.rect.x += screen_scroll[0]
         self.rect.y += screen_scroll[1]
+        self.position = [self.rect.x, self.rect.y]
 
     '''INTERACT
     changes the current image to the next interaction image'''
@@ -144,7 +145,7 @@ class PushObject(Object):
         if "down" in self.name:
             self.directions.append("down")
 
-    def push(self, direction, speed):
+    def push(self, direction, speed, fg):
         if not self.inplace:
             if direction == "up":
                 self.rect.y -= 1 * speed
@@ -154,6 +155,19 @@ class PushObject(Object):
                 self.rect.x -= 1 * speed
             elif direction == "right":
                 self.rect.x += 1 * speed
+        # collisions =fg.check_all_collide(self)
+        # if collisions:
+        #     for c in collisions:
+        #         coord = pygame.sprite.collide_mask(self, c)
+        #         if coord:
+        #             if coord[0] in range(0, self.width) and coord[1] in range(0, speed):
+        #                 self.rect.y += 1 * speed
+        #             if coord[0] in range(0, self.width) and coord[1] in range(self.height - speed, self.height):
+        #                 self.rect.y -= 1 * speed
+        #             if coord[0] in range(0, speed) and coord[1] in range(0, self.height):
+        #                 self.rect.x += 1 * speed
+        #             if coord[0] in range(self.width - speed, self.width) and coord[1] in range(0, self.height):
+        #                 self.rect.x -= 1 * speed
     
     def check_place(self):
         if self.rect.x in range(self.place[0] - 5, self.place[0] + 48) and self.rect.y in range(self.place[1] - 5, self.place[1] + 48):
@@ -164,6 +178,7 @@ class PushObject(Object):
         self.rect.y += screen_scroll[1]
         self.place[0] += screen_scroll[0]
         self.place[1] += screen_scroll[1]
+        self.position = [self.rect.x, self.rect.y]
 
 class AnimatedObject(Object):
     
@@ -175,6 +190,8 @@ class AnimatedObject(Object):
         pygame.sprite.Sprite.__init__(self)
         self.name = name
         self.position = position
+        self.width = width * scale
+        self.height = height * scale
         sprite_sheet_image = pygame.image.load(file_path).convert_alpha()
         #create spritesheet object
         sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
@@ -223,6 +240,7 @@ class AnimatedObject(Object):
     def update(self, screen_scroll):
         self.rect.x += screen_scroll[0]
         self.rect.y += screen_scroll[1]
+        self.position = [self.rect.x, self.rect.y]
         self.image = self.get_animation_frame()
     
     def colorize(self, colors = None):

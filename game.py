@@ -63,7 +63,7 @@ fg = Foreground()
 fg.load(room_number)
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(300, 448, 0, 0, "images/sprites/chameleon-sprite.png", 32, 32)
+mc = player.Player(300, 448, 0, 0, "images/sprites/chameleon-sprite.png", 28, 30)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
@@ -183,7 +183,7 @@ while run:
 
     #draw player
     mc.draw(screen)
-    fg.draw_top(screen) #draw top layer of foreground
+    #fg.draw_top(screen) #draw top layer of foreground
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
@@ -212,19 +212,10 @@ while run:
         DialogueManager.display_bubble(DialogueManager, current_dialogue, input_handler.current_speaker.dialogue_img, input_handler.current_speaker.name)
         mc.stand_still()
 
-    collision_list = [] #list of objects that the player is colliding with - not currently implemented
-    for name in fg.groups:
-        if name != "trunks": #trunks will be/is handled with obstacle tiles
-            for sprite in fg.groups[name]:
-                if mc.rect.colliderect(sprite.rect):
-                    collision_list.append(sprite)
-    for name in fg.animated:
-        for sprite in fg.animated[name]:
-            if mc.rect.colliderect(sprite.rect):
-                collision_list.append(sprite)
+
 
 # update objects currently being used in the loops
-    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, collision_list, door_list, screen) #add collision_list eventually
+    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, fg, door_list, screen, True) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
@@ -241,8 +232,7 @@ while run:
 
         npc_list = load_list(current_door.get_new_room_number())
         current_door = None
-        world.colorize(colors)
-        fg.colorize(colors)
+
         
     # print(f"{mc.get_x()}, {mc.get_y()}")
 

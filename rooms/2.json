@@ -1,12 +1,12 @@
 {
   "tileset_address": "images/tiles/forest",
   "level_address": "levels/2.csv",
-  "rows": 21,
+  "rows": 27,
   "columns": 20,
   "tile_types": 35,
   "obstacles_start": 1,
   "obstacles_end": 1,
-  "doors_data": [[360, 962, 300, 448, 1]],
+  "doors_data": [[360, 1250, 300, 448, 1]],
   "npcs": {},
   "items": {
     "copy groups": {
@@ -40,6 +40,7 @@
         }
     },
     "groups": {
+
         "obstacles" :
         {
             "type" : "normal",
@@ -48,7 +49,7 @@
                 "name" : "stump1",
                 "width" : 40,
                 "height" : 40,
-                "position" : [220, 360],
+                "position" : [220, 648],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -59,7 +60,7 @@
                 "name" : "stump2",
                 "width" : 40,
                 "height" : 40,
-                "position" : [220, 270],
+                "position" : [220, 558],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -70,7 +71,7 @@
                 "name" : "stump3",
                 "width" : 50,
                 "height" : 40,
-                "position" : [400, 600],
+                "position" : [400, 888],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -81,7 +82,7 @@
                 "name" : "stump4",
                 "width" : 50,
                 "height" : 60,
-                "position" : [680, 730],
+                "position" : [680, 1018],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -92,21 +93,21 @@
                 "name" : "stump5",
                 "width" : 50,
                 "height" : 50,
-                "position" : [500, 260],
+                "position" : [500, 548],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
                 "directions" : []
             }
         },
-        "rocks" : {
+        "push-rocks" : {
             "type" : "push",
             "rock1" : {
                 "image_paths" : ["images/sprites/rock-right.png"],
-                "name" : "rock-right1",
+                "name" : "push-rock-right1",
                 "width" : 80,
                 "height" : 80,
-                "position" : [450, 830],
+                "position" : [450, 1118],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -114,10 +115,10 @@
             },
             "rock2" : {
                 "image_paths" : ["images/sprites/rock-right.png"],
-                "name" : "rock-right2",
+                "name" : "push-rock-right2",
                 "width" : 80,
                 "height" : 80,
-                "position" : [680, 680],
+                "position" : [680, 968],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -125,10 +126,10 @@
             },
             "rock3" : {
                 "image_paths" : ["images/sprites/rock-up.png"],
-                "name" : "rock-up1",
+                "name" : "push-rock-up1",
                 "width" : 80,
                 "height" : 80,
-                "position" : [550, 720],
+                "position" : [550, 1008],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -136,10 +137,10 @@
             },
             "rock4" :{
                 "image_paths" : ["images/sprites/rock-down.png"],
-                "name" : "rock-down1",
+                "name" : "push-rock-down1",
                 "width" : 80,
                 "height" : 80,
-                "position" : [550, 300],
+                "position" : [550, 588],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -147,10 +148,10 @@
             },
             "rock5" :{
                 "image_paths" : ["images/sprites/rock-left.png"],
-                "name" : "rock-left1",
+                "name" : "push-rock-left1",
                 "width" : 80,
                 "height" : 80,
-                "position" : [160, 280],
+                "position" : [160, 568],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
@@ -158,10 +159,10 @@
             },
             "rock6" :{
                 "image_paths" : ["images/sprites/rock-left.png"],
-                "name" : "rock-left2",
+                "name" : "push-rock-left2",
                 "width" : 80,
                 "height" : 80,
-                "position" : [200, 640],
+                "position" : [200, 928],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : "",
