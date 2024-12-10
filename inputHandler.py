@@ -1,7 +1,9 @@
 import pygame
 
 class InputHandler:
-    def __init__(self, player, npc_list, tutorial_manager, player_inventory):
+    def __init__(self, player, npc_list, tutorial_manager, player_inventory, foreground, world):
+        self.world = world
+        self.fg = foreground
         self.mc = player
         self.npc_list = npc_list
         self.tutorial_manager = tutorial_manager
@@ -14,6 +16,7 @@ class InputHandler:
         self.notification = None
         self.notification_length = 2000
         self.notification_start = 0
+        self.colors = []
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -28,7 +31,14 @@ class InputHandler:
             elif event.key == pygame.K_s:
                 self.mc.move_down()
             elif event.key == pygame.K_e:  
-                self.handle_npc_interaction()  
+                for npc in self.npc_list:
+                    if self.mc.player_is_near(npc.rect.center):
+                        self.handle_npc_interaction()  
+                for group in self.fg.get_groups().values():
+                    for item in group:
+                        if self.mc.player_is_near(item.rect.center) and item.interactable:
+                            self.handle_item_interaction(item)
+
             elif event.key == pygame.K_i:
                 self.toggle_inventory()
             
@@ -84,8 +94,6 @@ class InputHandler:
         elif key == pygame.K_s:  
             self.mc.move_down() 
 
-                    
-
     def handle_npc_interaction(self):
         self.tutorial_manager.complete_step("interaction")
         if self.showing_dialogue:
@@ -98,6 +106,31 @@ class InputHandler:
                     self.dialogue_index = 0
                     self.tutorial_manager.complete_step("interaction")
                     break
+
+    def handle_item_interaction(self, item):
+        i = item.interact_index
+        if i == 1:
+            if item.holding_item and item.used:
+                item.interact_index = 2
+            item.interact()
+            if item.holding_item and not item.open:
+
+                item.open = True
+        if i == 2:
+            item.interact()
+            if item.holding_item and item.open and not item.used:
+                item.item.in_inventory()
+                if "skittle" in item.item.name:
+                    if "green" in item.item.name:
+                        self.colors.append("green")
+                    if "red" in item.item.name:
+                        self.colors.append("red")
+                    if "yellow" in item.item.name:
+                        self.colors.append("yellow")
+                self.inventory.add_item(item.item)
+            item.used = True
+        if i == 3:
+            item.interact()
 
     def process_dialogue(self):
         if self.current_speaker:

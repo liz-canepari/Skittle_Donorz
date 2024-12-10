@@ -40,7 +40,7 @@
         }
     },
     "groups": {
-        "chest-stuff" : {
+        "skittle-chest" : {
             "type": "normal",
             "chest" : {
                 "image_paths" : ["images/sprites/chest-closed.png"],
@@ -48,7 +48,7 @@
                 "width" : 48,
                 "height" : 82,
                 "position" : [400, 100],
-                "file_paths_i" : ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png","images/sprites/chest-open.png", "images/sprites/chest-closed.png"],
+                "file_paths_i" : ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png","images/sprites/chest-opened.png", "images/sprites/chest-closed.png"],
                 "holding_item" : "true",
                 "item" : {
                     "image_paths" : ["images/sprites/green-skittle.png"],
@@ -56,7 +56,7 @@
                     "width" : 64,
                     "height" : 64,
                     "position" : [0, 0],
-                    "file_paths_i" : "",
+                    "file_paths_i" : ["images/sprites/green-skittle.png"],
                     "holding_item" : "",
                     "item" : ""
                 }

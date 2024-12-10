@@ -45,7 +45,7 @@ class Foreground():
                         else:
                             holding_item = True
                             item_path = items["groups"][group][item]["item"]
-                            item = object.Object(item_path["image_paths"], item_path["name"], item_path["width"], item_path["height"], item_path["position"])
+                            item = object.Object(item_path["image_paths"], item_path["name"], item_path["width"], item_path["height"], item_path["position"], item_path["file_paths_i"])
                         if items["groups"][group]["type"] == "push":
                             x = object.PushObject(file_paths, name, width, height, position)
                         else:
@@ -214,16 +214,16 @@ class Foreground():
     def draw(self, surface):
         for group in self.groups.values():
             for object in group:
-                rect = pygame.surface.Surface((object.width, object.height))
-                rect.fill((0, 255, 0))
-                surface.blit(rect, object.position)
+                # rect = pygame.surface.Surface((object.width, object.height))
+                # rect.fill((0, 255, 0))
+                # surface.blit(rect, object.position)
                 object.draw(surface)
 
         for group in self.animated.values():
             for object in group:
-                rect = pygame.surface.Surface((object.width, object.height))
-                rect.fill((0, 255, 0))
-                surface.blit(rect, object.position)
+                # rect = pygame.surface.Surface((object.width, object.height))
+                # rect.fill((0, 255, 0))
+                # surface.blit(rect, object.position)
                 object.draw(surface)
 
     '''
@@ -287,16 +287,19 @@ class Foreground():
     Switch all objects to colored images
     *Color: The color to add. None = all colors
     '''
-    def colorize(self, color = None):
-        for group in self.groups.values():
-            for object in group:
-                object.colorize(color)
-        for group in self.top.values():
-            for object in group:
-                object.colorize(color)
-        for group in self.animated.values():
-            for object in group:
-                object.colorize(color)
+    def colorize(self, colors = None):
+        if colors == None or len(colors) == 0:
+            return
+        else:
+            for group in self.groups.values():
+                for object in group:
+                    object.colorize(colors)
+            for group in self.top.values():
+                for object in group:
+                    object.colorize(colors)
+            for group in self.animated.values():
+                for object in group:
+                    object.colorize(colors)
     
     def decolorize(self):
         for group in self.groups.values():

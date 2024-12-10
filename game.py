@@ -44,7 +44,7 @@ clock = pygame.time.Clock()
 
 # --------------------------------------------------------------------------Room/Tileset Code---------------------------------------------------------------------------
 world = World()
-colors = ["green"]
+colors = []
 #load tilemap images
 tile_list = []
 #create empty tile list
@@ -94,7 +94,7 @@ tutorial_manager.add_step("movement", "Move with WASD", (120, 10))
 tutorial_manager.add_step("interaction", "Interact with NPCs with E", (100, 10))
 tutorial_manager.add_step("inventory", "Press I to open inventory", (100, 10))
 # --------------------------------------------------------------------------Input Handler---------------------------------------------------------------------------
-input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory)
+input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory, fg, world)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
 #create buttons
@@ -183,7 +183,7 @@ while run:
 
     #draw player
     mc.draw(screen)
-    #fg.draw_top(screen) #draw top layer of foreground
+    fg.draw_top(screen) #draw top layer of foreground
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
@@ -215,7 +215,7 @@ while run:
 
 
 # update objects currently being used in the loops
-    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, fg, door_list, screen, True) #add collision_list eventually
+    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, fg, door_list, screen) #add collision_list eventually
     world.update(screen_scroll)
     for door in door_list:
         door.update(screen_scroll)
@@ -235,7 +235,9 @@ while run:
 
         
     # print(f"{mc.get_x()}, {mc.get_y()}")
-
+    colors = input_handler.colors
+    world.colorize(colors)
+    fg.colorize(colors)
     pygame.display.update()
  
 pygame.quit()

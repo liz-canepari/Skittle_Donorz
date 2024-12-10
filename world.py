@@ -133,7 +133,8 @@ class World():
                     tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
                 for tile in self.obstacle_tiles:
                     tile[0] = pygame.transform.scale(tile[4], (constants.TILESIZE, constants.TILESIZE))
-
+        else:
+            return
 
     def decolorize(self):
         for tile in self.map_tiles:
