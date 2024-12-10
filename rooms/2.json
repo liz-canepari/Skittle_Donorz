@@ -40,7 +40,28 @@
         }
     },
     "groups": {
-
+        "chest-stuff" : {
+            "type": "normal",
+            "chest" : {
+                "image_paths" : ["images/sprites/chest-closed.png"],
+                "name" : "chest",
+                "width" : 48,
+                "height" : 82,
+                "position" : [400, 100],
+                "file_paths_i" : ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png","images/sprites/chest-open.png", "images/sprites/chest-closed.png"],
+                "holding_item" : "true",
+                "item" : {
+                    "image_paths" : ["images/sprites/green-skittle.png"],
+                    "name" : "green-skittle",
+                    "width" : 64,
+                    "height" : 64,
+                    "position" : [0, 0],
+                    "file_paths_i" : "",
+                    "holding_item" : "",
+                    "item" : ""
+                }
+            } 
+        },
         "obstacles" :
         {
             "type" : "normal",
@@ -52,8 +73,7 @@
                 "position" : [220, 648],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : []
+                "item" : ""
             },
             "stump2" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -63,8 +83,7 @@
                 "position" : [220, 558],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : []
+                "item" : ""
             },
             "stump3" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -74,8 +93,7 @@
                 "position" : [400, 888],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : []
+                "item" : ""
             },
             "stump4" : {
                 "image_paths" : ["images/sprites/stump.png"],
@@ -85,9 +103,7 @@
                 "position" : [680, 1018],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : []
-            },
+                "item" : ""},
             "stump5" : {
                 "image_paths" : ["images/sprites/stump.png"],
                 "name" : "stump5",
@@ -96,8 +112,7 @@
                 "position" : [500, 548],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : []
+                "item" : ""
             }
         },
         "push-rocks" : {
@@ -110,8 +125,7 @@
                 "position" : [450, 1118],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : ["right"]
+                "item" : ""
             },
             "rock2" : {
                 "image_paths" : ["images/sprites/rock-right.png"],
@@ -121,8 +135,7 @@
                 "position" : [680, 968],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : ["right"]
+                "item" : ""
             },
             "rock3" : {
                 "image_paths" : ["images/sprites/rock-up.png"],
@@ -132,8 +145,7 @@
                 "position" : [550, 1008],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : ["up"]
+                "item" : ""
             },
             "rock4" :{
                 "image_paths" : ["images/sprites/rock-down.png"],
@@ -143,8 +155,7 @@
                 "position" : [550, 588],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : ["down"]
+                "item" : ""
             },
             "rock5" :{
                 "image_paths" : ["images/sprites/rock-left.png"],
@@ -154,8 +165,7 @@
                 "position" : [160, 568],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : ["left"]
+                "item" : ""
             },
             "rock6" :{
                 "image_paths" : ["images/sprites/rock-left.png"],
@@ -165,8 +175,7 @@
                 "position" : [200, 928],
                 "file_paths_i" : "",
                 "holding_item" : "",
-                "item" : "",
-                "directions" : ["left"]
+                "item" : ""
             }
         }   
     },
