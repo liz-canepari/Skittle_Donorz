@@ -103,10 +103,10 @@ exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_H
 start_menu = background.Background('images/Chroma_Quest_Poster_Draft.jpg', 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
 # menu sound
-mixer.music.load("cq-song-intro.mp3")
-mixer.music.play(-1)
-# mixer.music.load("cq-song.mp3")
-# mixer.music.play(-1)
+mixer.music.load("cq-song-intro.mp3") # Load and play the first song
+mixer.music.play()
+mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
+
 
 menu = True
 while menu == True:
@@ -132,8 +132,9 @@ while menu == True:
     pygame.display.update()
 
 # game sound
-mixer.music.load("cq-song1.mp3")
-mixer.music.play(-1)
+mixer.music.load("cq-song1-intro.mp3") # Load and play the first song
+mixer.music.play()
+mixer.music.queue("cq-song1.mp3") # Queue the second song to play after the first one finishes
 
 print(door_list)
 
