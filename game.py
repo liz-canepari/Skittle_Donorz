@@ -15,6 +15,7 @@ from dialogue import DialogueManager
 from foreground import Foreground
 import button
 from inputHandler import InputHandler
+from pygame import mixer
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
 
@@ -101,6 +102,12 @@ start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN
 exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_HEIGHT // 2 -150,'images/exitbtn-sheet.png', 1)
 start_menu = background.Background('images/Chroma_Quest_Poster_Draft.jpg', 0, 0, constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
 
+# menu sound
+mixer.music.load("cq-song-intro.mp3")
+mixer.music.play(-1)
+# mixer.music.load("cq-song.mp3")
+# mixer.music.play(-1)
+
 menu = True
 while menu == True:
     #draw menu
@@ -123,6 +130,10 @@ while menu == True:
             menu = False
 
     pygame.display.update()
+
+# game sound
+mixer.music.load("cq-song1.mp3")
+mixer.music.play(-1)
 
 print(door_list)
 
