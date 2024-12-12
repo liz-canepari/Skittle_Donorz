@@ -79,6 +79,9 @@ class Player(pygame.sprite.Sprite):
     def set_action(self, action):
         self.current_action=action
         self.current_frame = 0
+        # if action in [5,6,7,8]:
+        #     self.SPEED = 2
+        # else: self.SPEED = 5
 
     
     def set_velocity_x(self, x, y):
@@ -110,7 +113,7 @@ class Player(pygame.sprite.Sprite):
         if self.velocity[0] > 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.rect.x -= bounce_back + self.SPEED
+                    self.velocity[0] = 0
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
@@ -128,7 +131,7 @@ class Player(pygame.sprite.Sprite):
         elif self.velocity[0] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
-                    self.rect.x += bounce_back + self.SPEED
+                    self.velocity[0] = 0
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x + self.velocity[0], self.rect.y, self.rect.width, self.rect.height)):
@@ -146,7 +149,7 @@ class Player(pygame.sprite.Sprite):
         if self.velocity[1] > 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
-                    self.rect.y -= bounce_back + self.SPEED
+                    self.velocity[1] = 0
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
@@ -165,7 +168,7 @@ class Player(pygame.sprite.Sprite):
         elif self.velocity[1] < 0:
             for obstacle in obstacle_tiles:
                 if obstacle[1].colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):
-                    self.rect.y += bounce_back + self.SPEED
+                    self.velocity[1] = 0
                     break
             for npc in npc_list:
                 if npc.rect.colliderect(pygame.Rect(self.rect.x, self.rect.y + self.velocity[1], self.rect.width, self.rect.height)):

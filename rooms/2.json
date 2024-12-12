@@ -14,7 +14,7 @@
             "data_file" : "levels/2_trees.csv",
             "type": "normal",
             "item" : {
-                "image_paths": ["images/sprites/trunk.png"],
+                "image_paths": ["images/sprites/trunk.png", "images/sprites/trunk-green.png"],
                 "name": "trunk",
                 "width": 64,
                 "height": 72,
@@ -28,7 +28,7 @@
             "data_file" : "levels/2_trees.csv",
             "type": "top",
             "item" : {
-                "image_paths": ["images/sprites/treetop.png"],
+                "image_paths": ["images/sprites/treetop.png", "images/sprites/treetop-green.png"],
                 "name": "treetop",
                 "width": 100,
                 "height": 100,
@@ -90,7 +90,7 @@
                 "name" : "stump3",
                 "width" : 50,
                 "height" : 40,
-                "position" : [400, 888],
+                "position" : [210, 888],
                 "file_paths_i" : "",
                 "holding_item" : "",
                 "item" : ""

@@ -44,7 +44,7 @@ class Inventory:
                 pygame.draw.rect(screen, (195, 168, 137), rect)
                 if self.items[x][y]:
                     # Draw the item image in the slot
-                    screen.blit(screen, self.items[x][y][0], (rect[0], rect[1]))
+                    screen.blit(self.items[x][y][0].get_image(), (rect[0], rect[1]))
                     # Display the item count
                     obj = font.render(str(self.items[x][y][1]), True, (0, 0, 0))
                     screen.blit(obj, (rect[0] + self.box_size // 2, rect[1] + self.box_size // 2))

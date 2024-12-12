@@ -32,10 +32,8 @@ class Object(pygame.sprite.Sprite):
             self.red_image = self.gray_image
         elif len(file_paths) == 2:
             for path in file_paths:
-                if "color" in path:    
-                    self.color_image = pygame.image.load(file_paths[1]).convert_alpha()
-                if "green" in path:
-                    self.green_image = pygame.image.load(file_paths[1]).convert_alpha()
+                self.color_image = pygame.image.load(file_paths[0]).convert_alpha()
+                self.green_image = pygame.image.load(file_paths[1]).convert_alpha()
             self.gray_image = pygame.transform.grayscale(pygame.image.load(file_paths[0]).convert_alpha())
             self.yellow_image = self.green_image
             self.red_image = self.green_image

@@ -63,7 +63,7 @@ fg = Foreground()
 fg.load(room_number)
 
 # --------------------------------------------------------------------------Player Code---------------------------------------------------------------------------
-mc = player.Player(300, 448, 0, 0, "images/sprites/chameleon-sprite.png", 28, 30)
+mc = player.Player(300, 448, 0, 0, "images/sprites/chameleon-sprite-unsat.png", 28, 30)
 
 action = mc.get_action()
 last_update = pygame.time.get_ticks()
