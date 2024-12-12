@@ -48,7 +48,7 @@
                 "width" : 48,
                 "height" : 82,
                 "position" : [400, 100],
-                "file_paths_i" : ["images/sprites/chest-inv.png","images/sprites/chest-skittle.png","images/sprites/chest-opened.png", "images/sprites/chest-closed.png"],
+                "file_paths_i" : ["images/sprites/chest-inv.png","images/sprites/chest-skittle-green.png","images/sprites/chest-opened-green.png", "images/sprites/chest-closed.png"],
                 "holding_item" : "true",
                 "item" : {
                     "image_paths" : ["images/sprites/green-skittle.png"],
