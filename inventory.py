@@ -44,7 +44,7 @@ class Inventory:
                 pygame.draw.rect(screen, (195, 168, 137), rect)
                 if self.items[x][y]:
                     # Draw the item image in the slot
-                    screen.blit(self.items[x][y][0], (rect[0], rect[1]))
+                    screen.blit(self.items[x][y][0].get_image(), (rect[0], rect[1]))
                     # Display the item count
                     obj = font.render(str(self.items[x][y][1]), True, (0, 0, 0))
                     screen.blit(obj, (rect[0] + self.box_size // 2, rect[1] + self.box_size // 2))
@@ -57,23 +57,23 @@ class Inventory:
     #         else:
     #             self.items[slot] = item  # Place the item in the slot
  
-        def add_item(self, item):
-            for y in range(0, self.col):
-                if self.items[y][0]: #if the slot has something in it
-                    if self.items[y][0][0] == item:  # If the slot already has an item
-                        self.items[y][0][1] += 1   # Add the item count
-                elif not self.items[y][0]: #if the slot is empty
-                    self.items[y][0] = [item, 1]
-                    return(f"{item.get_name()} added to inventory")
-            return("Inventory is full") #returns if all slots are full and item cannot be added
+    def add_item(self, item):
+        for y in range(0, self.col):
+            if self.items[y][0]: #if the slot has something in it
+                if self.items[y][0][0] == item:  # If the slot already has an item
+                    self.items[y][0][1] += 1   # Add the item count
+            elif not self.items[y][0]: #if the slot is empty
+                self.items[y][0] = [item, 1]
+                return(f"{item.get_name()} added to inventory")
+        return("Inventory is full") #returns if all slots are full and item cannot be added
         
-        def notify(self, message, screen):
-            x = constants.SCREEN_WIDTH / 2 - 200
-            y = 20
-            text = message
-            font = pygame.font.Font("fonts/Silkscreen-Regular.ttf", 18)
-            text_surface = font.render(text, True, (255, 196, 33))
-            screen.blit(text_surface, (x, y + 40))
+    def notify(self, message, screen):
+        x = constants.SCREEN_WIDTH / 2 - 200
+        y = 20
+        text = message
+        font = pygame.font.Font("fonts/Silkscreen-Regular.ttf", 18)
+        text_surface = font.render(text, True, (255, 196, 33))
+        screen.blit(text_surface, (x, y + 40))
     def toggle(self):
         self.open = not self.open
 

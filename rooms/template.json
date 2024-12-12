@@ -1,0 +1,27 @@
+{
+    "tileset_address": "",
+    "level_address": "",
+    "rows": 0,
+    "columns": 0,
+    "tile_types": 0,
+    "obstacles_start": 0,
+    "obstacles_end": 0,
+    "doors_data": [[]],
+    "npcs": {},
+    "items": {
+      "copy groups": {},
+      "groups": {"group1" : 
+            {
+            "type" : "normal",
+            "item1" : {"image_paths" : ["",""],
+                    "name" : "",
+                    "width" : 0,
+                    "height" : 0,
+                    "position" : [0,0],
+                    "file_paths_i" : "",
+                    "holding_item" : "",
+                    "item" : ""}}
+    
+                  }
+              }
+    }

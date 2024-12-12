@@ -1,15 +1,184 @@
 {
-  "tileset_address": "images/tiles/test_tiles",
-  "level_address": "levels/test_level_1.csv",
-  "rows": 16,
-  "columns": 16,
-  "tile_types": 3,
-  "obstacles_start": 2,
-  "obstacles_end": 2,
-  "doors_data": [[275, 525, 285, 400, 1]],
+  "tileset_address": "images/tiles/forest",
+  "level_address": "levels/2.csv",
+  "rows": 27,
+  "columns": 20,
+  "tile_types": 35,
+  "obstacles_start": 1,
+  "obstacles_end": 1,
+  "doors_data": [[360, 1250, 300, 448, 1]],
   "npcs": {},
   "items": {
-    "copy groups": {},
-    "groups": {}
+    "copy groups": {
+        "trunks": {
+            "data_file" : "levels/2_trees.csv",
+            "type": "normal",
+            "item" : {
+                "image_paths": ["images/sprites/trunk.png", "images/sprites/trunk-green.png"],
+                "name": "trunk",
+                "width": 64,
+                "height": 72,
+                "position": [0, 0],
+                "file_paths_i": "",
+                "holding_item": "",
+                "item": ""
+            }
+        },
+        "treetops": {
+            "data_file" : "levels/2_trees.csv",
+            "type": "top",
+            "item" : {
+                "image_paths": ["images/sprites/treetop.png", "images/sprites/treetop-green.png"],
+                "name": "treetop",
+                "width": 100,
+                "height": 100,
+                "position": [0, -20],
+                "file_paths_i": "",
+                "holding_item": "",
+                "item": ""
+            }
+        }
+    },
+    "groups": {
+        "skittle-chest" : {
+            "type": "normal",
+            "chest" : {
+                "image_paths" : ["images/sprites/chest-closed.png"],
+                "name" : "chest",
+                "width" : 48,
+                "height" : 82,
+                "position" : [400, 100],
+                "file_paths_i" : ["images/sprites/chest-inv.png","images/sprites/chest-skittle-green.png","images/sprites/chest-opened-green.png", "images/sprites/chest-closed.png"],
+                "holding_item" : "true",
+                "item" : {
+                    "image_paths" : ["images/sprites/green-skittle.png"],
+                    "name" : "green-skittle",
+                    "width" : 64,
+                    "height" : 64,
+                    "position" : [0, 0],
+                    "file_paths_i" : ["images/sprites/green-skittle.png"],
+                    "holding_item" : "",
+                    "item" : ""
+                }
+            } 
+        },
+        "obstacles" :
+        {
+            "type" : "normal",
+            "stump1" : {
+                "image_paths" : ["images/sprites/stump.png"],
+                "name" : "stump1",
+                "width" : 40,
+                "height" : 40,
+                "position" : [220, 648],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "stump2" : {
+                "image_paths" : ["images/sprites/stump.png"],
+                "name" : "stump2",
+                "width" : 40,
+                "height" : 40,
+                "position" : [220, 558],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "stump3" : {
+                "image_paths" : ["images/sprites/stump.png"],
+                "name" : "stump3",
+                "width" : 50,
+                "height" : 40,
+                "position" : [210, 888],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "stump4" : {
+                "image_paths" : ["images/sprites/stump.png"],
+                "name" : "stump4",
+                "width" : 50,
+                "height" : 60,
+                "position" : [680, 1018],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""},
+            "stump5" : {
+                "image_paths" : ["images/sprites/stump.png"],
+                "name" : "stump5",
+                "width" : 50,
+                "height" : 50,
+                "position" : [500, 548],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            }
+        },
+        "push-rocks" : {
+            "type" : "push",
+            "rock1" : {
+                "image_paths" : ["images/sprites/rock-right.png"],
+                "name" : "push-rock-right1",
+                "width" : 80,
+                "height" : 80,
+                "position" : [450, 1118],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "rock2" : {
+                "image_paths" : ["images/sprites/rock-right.png"],
+                "name" : "push-rock-right2",
+                "width" : 80,
+                "height" : 80,
+                "position" : [680, 968],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "rock3" : {
+                "image_paths" : ["images/sprites/rock-up.png"],
+                "name" : "push-rock-up1",
+                "width" : 80,
+                "height" : 80,
+                "position" : [550, 1008],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "rock4" :{
+                "image_paths" : ["images/sprites/rock-down.png"],
+                "name" : "push-rock-down1",
+                "width" : 80,
+                "height" : 80,
+                "position" : [550, 588],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "rock5" :{
+                "image_paths" : ["images/sprites/rock-left.png"],
+                "name" : "push-rock-left1",
+                "width" : 80,
+                "height" : 80,
+                "position" : [160, 568],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            },
+            "rock6" :{
+                "image_paths" : ["images/sprites/rock-left.png"],
+                "name" : "push-rock-left2",
+                "width" : 80,
+                "height" : 80,
+                "position" : [200, 928],
+                "file_paths_i" : "",
+                "holding_item" : "",
+                "item" : ""
+            }
+        }   
+    },
+    "animated": {}
   }
 }
