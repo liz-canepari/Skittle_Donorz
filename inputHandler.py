@@ -1,7 +1,7 @@
 import pygame
 
 class InputHandler:
-    def __init__(self, player, npc_list, tutorial_manager, player_inventory, foreground, world):
+    def __init__(self, player, npc_list, tutorial_manager, player_inventory, foreground, world, save_func, load_func):
         self.world = world
         self.fg = foreground
         self.mc = player
@@ -17,6 +17,8 @@ class InputHandler:
         self.notification_length = 2000
         self.notification_start = 0
         self.colors = []
+        self.save_game = save_func
+        self.load_game = load_func
     
     def handle_input(self, event):
         if event.type == pygame.KEYDOWN: 
@@ -41,6 +43,11 @@ class InputHandler:
 
             elif event.key == pygame.K_i:
                 self.toggle_inventory()
+
+            elif event.key == pygame.K_x and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                self.save_game()
+            elif event.key == pygame.K_l and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                self.load_game()
             
         
         
