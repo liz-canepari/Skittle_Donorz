@@ -31,6 +31,7 @@ room_number = 1
 tile_list = []
 world_data = []
 
+
 # --------------------------------------------------------------------------Save/Load---------------------------------------------------------------------------
 def save_game():
     """Save current game state to the database."""
@@ -135,7 +136,7 @@ start_menu = background.Background('images/Chroma_Quest_Poster_Draft.jpg', 0, 0,
 menu = True
 while menu == True:
     #draw menu
-    screen.fill((144, 201, 120))
+    # screen.fill((144, 201, 120))
 
     start_menu.draw(screen)
     #add buttons
@@ -161,15 +162,37 @@ while menu == True:
 
 # print(door_list)
 
+surface = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
+
+def draw_pause(screen, font):
+    print('pause')
+    
+    # Draw a semi-transparent overlay
+    overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)  # Enable transparency
+    overlay.fill((128, 128, 128, 150))  # Semi-transparent gray
+    screen.blit(overlay, (0, 0))
+
+    # Render pause text
+    pause_text = font.render('Game Paused: Press "p" to resume', True, 'black')
+    text_rect = pause_text.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2))
+    screen.blit(pause_text, text_rect)
+
+    # Update the display
+    pygame.display.flip()
+
+
+pause = False 
+
 while run:
-    #control FPS
-    clock.tick(constants.FPS)
+    if not pause:
+        #control FPS
+        clock.tick(constants.FPS)
 
-    #update background
-    screen.fill((0, 0, 0))
+        #update background
+        screen.fill((0, 0, 0))
 
-    world.draw(screen)
-    #world.draw_grid(screen)
+        world.draw(screen)
+        #world.draw_grid(screen)
 
     for door in door_list:
         door.draw(screen)
@@ -233,6 +256,13 @@ while run:
         # close the game
         if event.type == pygame.QUIT:
              run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                if pause:
+                    pause = False
+                else:
+                    pause = True
+                    draw_pause(screen, font)
 
         input_handler.handle_input(event)
         
@@ -249,30 +279,31 @@ while run:
 
 
 # update objects currently being used in the loops
-    screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, fg, door_list, screen) #add collision_list eventually
-    world.update(screen_scroll)
-    for door in door_list:
-        door.update(screen_scroll)
-    fg.update(screen_scroll)
-    for npc in npc_list:
+    if not pause:
+        screen_scroll, current_door = mc.update(world.obstacle_tiles, npc_list, fg, door_list, screen) #add collision_list eventually
+        world.update(screen_scroll)
+        for door in door_list:
+            door.update(screen_scroll)
+        fg.update(screen_scroll)
+        for npc in npc_list:
+            
+            npc.update(screen_scroll)
         
-        npc.update(screen_scroll)
-    
-    if current_door != None:
-        # print(current_door.get_new_room_number())
-        mc.set_position(current_door.get_new_x(), current_door.get_new_y())
-        world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
-        fg.load(current_door.get_new_room_number())
+        if current_door != None:
+            # print(current_door.get_new_room_number())
+            mc.set_position(current_door.get_new_x(), current_door.get_new_y())
+            world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
+            fg.load(current_door.get_new_room_number())
 
-        npc_list = load_list(current_door.get_new_room_number())
-        current_door = None
+            npc_list = load_list(current_door.get_new_room_number())
+            current_door = None
 
-        
-    # print(f"{mc.get_x()}, {mc.get_y()}")
-    colors = input_handler.colors
-    world.colorize(colors)
-    fg.colorize(colors)
-    pygame.display.update()
+            
+        # print(f"{mc.get_x()}, {mc.get_y()}")
+        colors = input_handler.colors
+        world.colorize(colors)
+        fg.colorize(colors)
+        pygame.display.update()
  
 pygame.quit()
  
