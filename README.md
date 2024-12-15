@@ -39,7 +39,7 @@ The game is coded in Python using Pygame and involves animations, event handling
 
 -   To exit, click the close button
 
-[Software Demo Video](https://www.youtube.com/watch?v=8EbO3wuaYpg&t=16s 'target=_blank')
+[Software Demo Video](https://youtu.be/5gB5n07cL9g 'target=_blank')
 
 # Development Environment
 
