@@ -126,6 +126,11 @@ tutorial_manager.add_step("inventory", "Press I to open inventory", (100, 10))
 input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory, fg, world, save_game, load_game)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
+# menu sound
+pygame.mixer.music.load("cq-menu.mp3") # Load and play the first song
+pygame.mixer.music.play(-1)
+# pygame.mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
+
 #create buttons
 start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN_HEIGHT // 2 - 150, 'images/startbtn-sheet.png', 1)
 exit_button = button.Button(constants.SCREEN_WIDTH // 2 + 50, constants.SCREEN_HEIGHT // 2 -150,'images/exitbtn-sheet.png', 1)
@@ -162,6 +167,11 @@ while menu == True:
 
 # print(door_list)
 
+# game sound
+pygame.mixer.music.load("cq-game-intro.mp3") # Load and play the first song
+pygame.mixer.music.play()
+pygame.mixer.music.queue("cq-game.mp3") # Queue the second song to play after the first one finishes
+
 surface = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
 
 def draw_pause(screen, font):
@@ -179,7 +189,6 @@ def draw_pause(screen, font):
 
     # Update the display
     pygame.display.flip()
-
 
 pause = False 
 
