@@ -10,7 +10,6 @@ import button
 import database
 import settings
 from settings import volume_slider
-# from slider import Slider
 from npc import load_list
 from inventory import Inventory
 from world import World
@@ -247,6 +246,8 @@ while run:
 
             handle_settings_event(event)
             volume_slider.handle_event(event)
+
+        # text_x = volume_slider.x - volume_text.get_width() - 10
         
         pygame.mixer.music.set_volume(volume_slider.get_value())
         # Update the display while in settings

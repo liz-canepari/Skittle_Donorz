@@ -17,9 +17,10 @@ def draw_settings_menu(screen, font):
     screen.blit(title_text, title_rect)
 
     # Render volume label
-    volume_label = font.render('Volume:', True, 'black')
-    volume_label_rect = volume_label.get_rect(center=(constants.SCREEN_WIDTH // 2 - 200, 210))
-    screen.blit(volume_label, volume_label_rect)
+    volume_text = font.render('Volume:', True, 'black')
+    volume_label = volume_slider.x - volume_text.get_width() - 10
+    volume_label_rect = volume_text.get_rect(topleft=(volume_label, 200))
+    screen.blit(volume_text, volume_label_rect)
 
     # Draw the volume slider
     volume_slider.draw(screen)
