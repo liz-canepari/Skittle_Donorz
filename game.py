@@ -4,17 +4,22 @@ import constants
 import player
 import background
 import npc
-from npc import load_list
+import button
 import tutorial
 import button
 import database
+import settings
+from settings import volume_slider
+# from slider import Slider
+from npc import load_list
 from inventory import Inventory
 from world import World
 from door import Door
 from dialogue import DialogueManager
 from foreground import Foreground
-import button
 from inputHandler import InputHandler
+from settings import draw_settings_menu, handle_settings_event, get_volume
+
 #animation code from coding with russ tutorial
 #https://www.youtube.com/watch?v=nXOVcOBqFwM&t=33s
 
@@ -115,6 +120,15 @@ npc_list = load_list(room_number)
 # Variable to track if inventory is open or closed
 selected = None
 player_inventory = Inventory()
+# ---------------------------------------------------------------------------Settings-------------------------------------------------------------------------------
+settings_button = button.Button(constants.SCREEN_WIDTH - 150, 10, 'images/settingsbtn-sheet.png', 1)
+in_settings = False #if the buttton is clicked, that means the settings page is turned on the screen
+pygame.mixer.init() #sound init from python library 
+# menu sound
+pygame.mixer.music.load("cq-menu.mp3") # Load and play the first song
+pygame.mixer.music.play(-1)
+# pygame.mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
+
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
 font = pygame.font.Font("fonts/PressStart2P-Regular.ttf", 18)
@@ -126,10 +140,6 @@ tutorial_manager.add_step("inventory", "Press I to open inventory", (100, 10))
 input_handler = InputHandler(mc, npc_list, tutorial_manager, player_inventory, fg, world, save_game, load_game)
 # --------------------------------------------------------------------------Main Game Code---------------------------------------------------------------------------
 
-# menu sound
-pygame.mixer.music.load("cq-menu.mp3") # Load and play the first song
-pygame.mixer.music.play(-1)
-# pygame.mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
 
 #create buttons
 start_button = button.Button(constants.SCREEN_WIDTH // 2 - 300, constants.SCREEN_HEIGHT // 2 - 150, 'images/startbtn-sheet.png', 1)
@@ -155,6 +165,23 @@ while menu == True:
         load_game()
         menu = False
         run = True
+    
+    if in_settings:
+        settings.draw_settings_menu(screen, font)
+    else:
+        start_menu.draw(screen)
+        if start_button.draw(screen):
+            menu = False
+            run = True
+        if exit_button.draw(screen):
+            run = False
+            menu = False
+        if load_button.draw(screen):
+            load_game()
+            menu = False
+            run = True
+        if settings_button.draw(screen):
+            in_settings = True
 
     #event handler
     for event in pygame.event.get():
@@ -202,6 +229,29 @@ while run:
 
         world.draw(screen)
         #world.draw_grid(screen)
+        #settings button below
+        if settings_button.draw(screen):
+            in_settings = True
+
+    if in_settings:
+        # Draw the settings menu
+        draw_settings_menu(screen, font)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                menu = False
+                in_settings = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                in_settings = False
+
+            handle_settings_event(event)
+            volume_slider.handle_event(event)
+        
+        pygame.mixer.music.set_volume(volume_slider.get_value())
+        # Update the display while in settings
+        pygame.display.update()
+        continue
 
     for door in door_list:
         door.draw(screen)
@@ -259,7 +309,7 @@ while run:
             npc.interact = False
 
 
-    #event handler
+    #event handler for pause
     for event in pygame.event.get():
 
         # close the game
@@ -274,6 +324,15 @@ while run:
                     draw_pause(screen, font)
 
         input_handler.handle_input(event)
+
+    #event handler for the settings
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+            menu = False
+        if in_settings and event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+            in_settings = False
+
         
 
 # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
