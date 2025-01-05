@@ -9,6 +9,7 @@ import tutorial
 import button
 import database
 import settings
+from ui_hub import UIHub
 from settings import volume_slider
 from npc import load_list
 from inventory import Inventory
@@ -127,6 +128,7 @@ pygame.mixer.init() #sound init from python library
 pygame.mixer.music.load("cq-menu.mp3") # Load and play the first song
 pygame.mixer.music.play(-1)
 # pygame.mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
+ui_hub = UIHub() #for the UI screen
 
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
@@ -219,18 +221,6 @@ def draw_pause(screen, font):
 pause = False 
 
 while run:
-    if not pause:
-        #control FPS
-        clock.tick(constants.FPS)
-
-        #update background
-        screen.fill((0, 0, 0))
-
-        world.draw(screen)
-        #world.draw_grid(screen)
-        #settings button below
-        if settings_button.draw(screen):
-            in_settings = True
 
     if in_settings:
         # Draw the settings menu
@@ -254,10 +244,33 @@ while run:
         pygame.display.update()
         continue
 
+    if event.type == pygame.QUIT:
+        running = False
+
+    ui_hub.handle_events(event)
+
+    screen_scroll[0] += 1
+
+    screen.fill('black')
+
+    if not pause:
+        #control FPS
+        clock.tick(constants.FPS)
+
+        #update background
+        screen.fill((0, 0, 0))
+
+        world.draw(screen)
+        #world.draw_grid(screen)
+        #settings button below
+        if settings_button.draw(screen):
+            in_settings = True
+
     for door in door_list:
         door.draw(screen)
     
     fg.draw(screen) #draw bottom layer of foreground
+
     
 
     if input_handler.should_show_movement_tutorial():
@@ -301,6 +314,7 @@ while run:
     #draw player
     mc.draw(screen)
     fg.draw_top(screen) #draw top layer of foreground
+    ui_hub.draw(screen) #drawing the UIHub for the user (seperate screen)
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
