@@ -44,10 +44,11 @@ def save_game():
     database.save_game(
         player_id=1, #palceholder
         name="Player1",
-        level=room_number,
+        level=0,
         score=0,
         position_x=mc.rect.x,
-        position_y=mc.rect.y
+        position_y=mc.rect.y,
+        room_number=room_number,
     )
     print("Game saved.")
 
@@ -124,7 +125,7 @@ settings_button = button.Button(constants.SCREEN_WIDTH - 150, 10, 'images/settin
 in_settings = False #if the buttton is clicked, that means the settings page is turned on the screen
 pygame.mixer.init() #sound init from python library 
 # menu sound
-pygame.mixer.music.load("cq-menu.mp3") # Load and play the first song
+pygame.mixer.music.load("music/cq-menu.mp3") # Load and play the first song
 pygame.mixer.music.play(-1)
 # pygame.mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
 
@@ -194,9 +195,9 @@ while menu == True:
 # print(door_list)
 
 # game sound
-pygame.mixer.music.load("cq-game-intro.mp3") # Load and play the first song
+pygame.mixer.music.load("music/cq-game-intro.mp3") # Load and play the first song
 pygame.mixer.music.play()
-pygame.mixer.music.queue("cq-game.mp3") # Queue the second song to play after the first one finishes
+pygame.mixer.music.queue("music/cq-game.mp3") # Queue the second song to play after the first one finishes
 
 surface = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
 
