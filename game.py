@@ -183,13 +183,6 @@ while menu == True:
         if settings_button.draw(screen):
             in_settings = True
 
-    #event handler
-    for event in pygame.event.get():
-        # close the game
-        if event.type == pygame.QUIT:
-            run = False
-            menu = False
-
     pygame.display.update()
 
 # print(door_list)
@@ -233,21 +226,6 @@ while run:
         if settings_button.draw(screen):
             in_settings = True
 
-    if in_settings:
-        # Draw the settings menu
-        draw_settings_menu(screen, font)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                menu = False
-                in_settings = False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
-                in_settings = False
-
-            handle_settings_event(event)
-            volume_slider.handle_event(event)
-
         # text_x = volume_slider.x - volume_text.get_width() - 10
         
         pygame.mixer.music.set_volume(volume_slider.get_value())
@@ -266,6 +244,9 @@ while run:
 
     if input_handler.should_show_interaction_tutorial():
         tutorial_manager.show_step("interaction")
+
+    if input_handler.should_show_in_settings():
+        in_settings.
 
     #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
@@ -311,29 +292,28 @@ while run:
             npc.interact = False
 
 
-    #event handler for pause
+    #event handler is not needed, we already have a class with this one.
     for event in pygame.event.get():
-
         # close the game
-        if event.type == pygame.QUIT:
-             run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_p:
-                if pause:
-                    pause = False
-                else:
-                    pause = True
-                    draw_pause(screen, font)
-
-        input_handler.handle_input(event)
-
-    #event handler for the settings
-    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
             menu = False
-        if in_settings and event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
             in_settings = False
+            # handle_settings_event(event)
+            volume_slider.handle_event(event)
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                    if pause:
+                        pause = False
+                    else:
+                        pause = True
+                        draw_pause(screen, font)
+
+        input_handler.handle_input(event)
+
 
         
 
