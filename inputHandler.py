@@ -2,7 +2,6 @@ import pygame
 
 
 class InputHandler:
-    pause = False
     def __init__(self, player, npc_list, tutorial_manager, player_inventory, foreground, world, save_func, load_func):
         self.world = world
         self.fg = foreground
@@ -24,17 +23,13 @@ class InputHandler:
         
     
     
-    def handle_input(self, event):
+    def handle_input(self, event, pause):
         if event.type == pygame.KEYDOWN: 
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
-                    if self.pause:
-                        self.pause = False
-                    else:
-                        self.pause = True
-
-        if event.type == pygame.KEYDOWN and not self.pause: 
+        #     if event.key == pygame.K_p:
+        #         if self.pause:
+        #             self.pause = False
+        #         else:
+        #             self.pause = True
 
             self.mc.facing_right = False 
             self.tutorial_manager.complete_step("movement")
@@ -65,7 +60,7 @@ class InputHandler:
             
         
         
-        elif event.type == pygame.KEYUP and not self.pause:  
+        elif event.type == pygame.KEYUP:
             self.mc.facing_right = False 
             pressed = pygame.key.get_pressed()
             if event.key == pygame.K_a:
@@ -105,16 +100,16 @@ class InputHandler:
             if event.key == pygame.K_i:
                 self.inventory.open = not self.inventory.open
 
-    def handle_movement(self, key):
-        if not self.pause:
-            if key == pygame.K_a:
-                self.mc.move_left()  
-            elif key == pygame.K_d:  
-                self.mc.move_right() 
-            elif key == pygame.K_w:  
-                self.mc.move_up()  
-            elif key == pygame.K_s:  
-                self.mc.move_down() 
+    # def handle_movement(self, key):
+    #     if not self.pause:
+    #         if key == pygame.K_a:
+    #             self.mc.move_left()  
+    #         elif key == pygame.K_d:  
+    #             self.mc.move_right() 
+    #         elif key == pygame.K_w:  
+    #             self.mc.move_up()  
+    #         elif key == pygame.K_s:  
+    #             self.mc.move_down() 
 
     def handle_npc_interaction(self):
         self.tutorial_manager.complete_step("interaction")

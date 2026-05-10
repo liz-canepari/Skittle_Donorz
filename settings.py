@@ -30,9 +30,6 @@ def draw_settings_menu(screen, font):
     back_rect = back_text.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT - 50))
     screen.blit(back_text, back_rect)
 
-    pygame.display.flip()
-
-
 def handle_settings_event(event):
     """Handle input for the settings menu."""
     global volume_slider
