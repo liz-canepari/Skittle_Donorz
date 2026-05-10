@@ -127,9 +127,10 @@ settings_button = CogButton('images/settingsbtn-sheet.png', 1, 0, (constants.SCR
 in_settings = False #if the buttton is clicked, that means the settings page is turned on the screen
 pygame.mixer.init() #sound init from python library 
 # menu sound
-pygame.mixer.music.load("music/cq-menu.mp3") # Load and play the first song
-pygame.mixer.music.play(-1)
-# pygame.mixer.music.queue("cq-song.mp3") # Queue the second song to play after the first one finishes
+pygame.mixer.music.load("music/cq-game-intro.mp3")
+pygame.mixer.music.play()
+pygame.mixer.music.set_endevent(pygame.USEREVENT)
+pygame.mixer.music.queue("music/cq-game.mp3") # Queue the second song to play after the first one finishes
 
 
 # --------------------------------------------------------------------------Tutorial Code---------------------------------------------------------------------------
@@ -181,6 +182,8 @@ while menu:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_b and in_settings:
                 in_settings = False
+        if event.type == pygame.USEREVENT:
+            pygame.mixer.music.play()
         if in_settings:
             handle_settings_event(event)
             volume_slider.handle_event(event)
@@ -194,9 +197,7 @@ pygame.mixer.music.queue("music/cq-game.mp3") # Queue the second song to play af
 
 surface = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
 
-def draw_pause(screen, font):
-    print('pause')
-    
+def draw_pause(screen, font):    
     # Draw a semi-transparent overlay
     overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)  # Enable transparency
     overlay.fill((128, 128, 128, 150))  # Semi-transparent gray
@@ -206,9 +207,6 @@ def draw_pause(screen, font):
     pause_text = font.render('Game Paused: Press "p" to resume', True, 'black')
     text_rect = pause_text.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2))
     screen.blit(pause_text, text_rect)
-
-    # Update the display
-    # pygame.display.flip()
 
 pause = False 
 
@@ -224,48 +222,85 @@ while run:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
-                    if pause:
-                        pause = False
-                    else:
-                        pause = True
-                        draw_pause(screen, font)
+                pause = False
             if event.key == pygame.K_b and in_settings:
                 in_settings = False
+        
+        # music loop
+        if event.type == pygame.USEREVENT:
+            pygame.mixer.music.play()
 
         if in_settings:
-            draw_settings_menu(screen, font)
             handle_settings_event(event)
             volume_slider.handle_event(event)
 
+        if not pause and not in_settings:
+            input_handler.handle_input(event, pause)
 
-    # if not pause we should draw    
-    if not pause:
-        #update background
-        screen.fill((0, 0, 0))
+    # all drawing should be outside of the event loop
+    screen.fill((0,0,0))
 
-        world.draw(screen)
-        #world.draw_grid(screen)
+    # enviroment draw first
+    world.draw(screen)
 
-        input_handler.handle_input(event, pause)
-        #settings button below
-        if settings_button.draw(screen):
-            in_settings = True
-            draw_settings_menu(screen, font)
-
-        # text_x = volume_slider.x - volume_text.get_width() - 10  
-        pygame.mixer.music.set_volume(volume_slider.get_value())
-
+    # dor
     for door in door_list:
         door.draw(screen)
+
+    # draw the foreground layer next behind all characters
+    fg.draw(screen)
+
+    # draw the npcs
+    for n in npc_list:
+        n.draw(screen)
+
+    #draw player
+    mc.draw(screen)
+    fg.draw_top(screen) #draw top layer of foreground
     
-    fg.draw(screen) #draw bottom layer of foreground
-    
+    #settings button below
+    if settings_button.draw(screen):
+        in_settings = True
+
+    pygame.mixer.music.set_volume(volume_slider.get_value())
+
+    # tutorial
     if input_handler.should_show_movement_tutorial():
         tutorial_manager.show_step("movement")
 
     if input_handler.should_show_interaction_tutorial():
         tutorial_manager.show_step("interaction")
 
+    # if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
+    input_handler.update_inventory(screen)
+    current_dialogue = input_handler.get_current_dialogue()
+    if current_dialogue:
+        DialogueManager.display_bubble(DialogueManager, current_dialogue, input_handler.current_speaker.dialogue_img, input_handler.current_speaker.name)
+        mc.stand_still()
+
+    # draw over top of everything else
+    if in_settings:
+        draw_settings_menu(screen, font)
+
+    if pause:
+        draw_pause(screen, font)
+
+
+
+    # # if not pause we should draw    
+    # if not pause:
+    #     #update background
+    #     screen.fill((0, 0, 0))
+
+    #     world.draw(screen)
+    #     #world.draw_grid(screen)
+
+    #     input_handler.handle_input(event, pause)
+
+    #     # text_x = volume_slider.x - volume_text.get_width() - 10  
+
+    # fg.draw(screen) #draw bottom layer of foreground
+    
     #update player animations (currently only chameleon, but can add other animated sprites here)
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= FPS:
@@ -275,6 +310,7 @@ while run:
         if frame >= len(mc.get_animation()):
             mc.set_frame(0)
             frame = mc.get_frame()
+
      #npc animations
     for n in npc_list:
         current_time = pygame.time.get_ticks()
@@ -284,6 +320,7 @@ while run:
             if n.get_frame() >= len(n.get_animation()):
                 n.set_frame(0)
                 npc_frame = n.get_frame()
+
     for group in fg.animated:
         for item in fg.animated[group]:
             current_time = pygame.time.get_ticks()
@@ -294,28 +331,12 @@ while run:
                     item.set_frame(0)
 
     #draw NPCs
-    for n in npc_list:
-        n.draw(screen)
-
-    #draw player
-    mc.draw(screen)
-    fg.draw_top(screen) #draw top layer of foreground
+    # for n in npc_list:
+    #     n.draw(screen)
 
 # threshold is number of pixels the user has to be in order to interact with the object.
     for npc in npc_list:
-        if mc.player_is_near((npc.rect.center), threshold=80):
-            npc.interact = True
-        else:
-            npc.interact = False
-
-# if npc had dialogue, print to the screen. the other stuff is for the text bubble at the bottom of the screen
-    input_handler.update_inventory(screen)
-    
-    current_dialogue = input_handler.get_current_dialogue()
-
-    if current_dialogue:
-        DialogueManager.display_bubble(DialogueManager, current_dialogue, input_handler.current_speaker.dialogue_img, input_handler.current_speaker.name)
-        mc.stand_still()
+        npc.interact = mc.player_is_near((npc.rect.center), threshold=80)
 
 # update objects currently being used in the loops
     if not pause:
@@ -328,12 +349,10 @@ while run:
             
             npc.update(screen_scroll)
         
-        if current_door != None:
+        if current_door is not None:
             # print(current_door.get_new_room_number())
             mc.set_position(current_door.get_new_x(), current_door.get_new_y())
             world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
-            fg.load(current_door.get_new_room_number())
-
             npc_list = load_list(current_door.get_new_room_number())
             current_door = None
 
@@ -341,6 +360,7 @@ while run:
         colors = input_handler.colors
         world.colorize(colors)
         fg.colorize(colors)
+
     pygame.display.update()
 
 pygame.quit()
