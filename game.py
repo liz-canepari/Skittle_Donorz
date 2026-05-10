@@ -186,7 +186,6 @@ while menu:
             pygame.mixer.music.play()
         if in_settings:
             handle_settings_event(event)
-            volume_slider.handle_event(event)
 
     pygame.display.update()
 
@@ -222,7 +221,7 @@ while run:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
-                pause = False
+                pause = not pause
             if event.key == pygame.K_b and in_settings:
                 in_settings = False
         
@@ -232,7 +231,6 @@ while run:
 
         if in_settings:
             handle_settings_event(event)
-            volume_slider.handle_event(event)
 
         if not pause and not in_settings:
             input_handler.handle_input(event, pause)
@@ -353,6 +351,7 @@ while run:
             # print(current_door.get_new_room_number())
             mc.set_position(current_door.get_new_x(), current_door.get_new_y())
             world.load_room(tile_list, world_data, door_list, current_door.get_new_room_number())
+            fg.load(current_door.get_new_room_number())
             npc_list = load_list(current_door.get_new_room_number())
             current_door = None
 
